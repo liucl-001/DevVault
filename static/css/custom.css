@@ -1,0 +1,114 @@
+/* DevVault 自定义样式 */
+
+:root {
+  --main-width: 860px;
+}
+
+/* 首页标题更大更突出 */
+.home-content h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+/* 文章卡片悬停效果 */
+.post-entry {
+  border-radius: 12px;
+  padding: 1.4rem 1.6rem;
+  margin-bottom: 1.2rem;
+  border: 1px solid rgba(128, 128, 128, 0.12);
+  transition: all 0.25s ease;
+  background: transparent;
+}
+
+.post-entry:hover {
+  transform: translateY(-2px);
+  border-color: rgba(64, 150, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.post-entry h2 {
+  font-size: 1.35rem;
+  margin-bottom: 0.4rem;
+}
+
+.post-entry h2 a {
+  background: none;
+}
+
+/* 导航栏更紧凑 */
+.header {
+  padding: 1.2rem 0;
+}
+
+/* 标签样式 */
+.entry-tags a {
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: 0.8rem;
+  background: rgba(64, 150, 255, 0.1);
+  margin-right: 6px;
+}
+
+/* 社交图标 */
+.social-icons {
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+
+.social-icons a {
+  font-size: 1.3rem;
+}
+
+/* 首页信息块 */
+.home-info {
+  margin: 3rem 0 2rem;
+  text-align: left;
+}
+
+.avatar-container {
+  margin-bottom: 1.5rem;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 3px solid var(--primary);
+  box-shadow: 0 4px 20px rgba(122, 162, 247, 0.3);
+}
+
+.home-info .post-content {
+  line-height: 1.8;
+  color: var(--secondary);
+}
+
+/* 暗色模式微调 */
+.dark {
+  --theme: #1a1b26;
+  --entry: #24283b;
+  --primary: #7aa2f7;
+  --secondary: #9aa5ce;
+  --tertiary: #292e42;
+  --content: #c0caf5;
+  --hljs-bg: #24283b;
+  --code-bg: #24283b;
+  --border: #292e42;
+}
+
+/* 亮色模式微调 */
+:not(.dark) {
+  --primary: #2563eb;
+  --tertiary: #f1f5f9;
+  --entry: #ffffff;
+  --border: #e2e8f0;
+}
+
+/* 页脚 */
+.footer {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.85rem;
+}
