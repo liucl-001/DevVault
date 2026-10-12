@@ -4,6 +4,10 @@ date: 2026-10-12T15:30:00+08:00
 draft: false
 tags: ["C++", "Go"]
 summary: "项目作品示例占位，后续替换为真实项目。"
+cover:
+  image: "/images/cover-project.jpg"
+  alt: "项目封面"
+  relativeLinks: false
 ---
 
 ## 项目简介

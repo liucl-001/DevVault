@@ -20,6 +20,7 @@ disableHomeInfo = false
   author = "liucl"
   defaultTheme = "auto"
   displayMode = "relative"
+  avatar = "/images/avatar.png"
   ShowReadingTime = true
   ShowShareButtons = true
   ShowPostNavLinks = true
