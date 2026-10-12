@@ -4,6 +4,7 @@ date: 2026-10-12T16:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
 series: ["C++工程化实战"]
+weight: 0
 summary: "C++工程化实战开篇：版本基线、环境要求与常见问题"
 ---
 # 导读：环境基线与版本说明

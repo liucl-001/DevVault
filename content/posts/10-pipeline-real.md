@@ -4,6 +4,7 @@ date: 2026-10-13T12:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
 series: ["C++工程化实战"]
+weight: 10
 summary: "三平台并行、buildStage函数、依赖缓存、符号处理全链路"
 ---
 # C++ 流水线实战：一套扛住三平台的 Pipeline

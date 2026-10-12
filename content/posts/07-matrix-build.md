@@ -4,6 +4,7 @@ date: 2026-10-13T09:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
 series: ["C++工程化实战"]
+weight: 7
 summary: "三平台并行构建，failFast策略与资源控制"
 ---
 # 多平台并行构建：parallel 与 matrix 怎么选

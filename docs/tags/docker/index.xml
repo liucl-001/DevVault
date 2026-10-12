@@ -9,60 +9,11 @@
     <lastBuildDate>Tue, 13 Oct 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="/tags/docker/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>C&#43;&#43; SDK流水线实战拆解</title>
-      <link>/posts/10-pipeline-real/</link>
-      <pubDate>Tue, 13 Oct 2026 12:00:00 +0800</pubDate>
-      <guid>/posts/10-pipeline-real/</guid>
-      <description>三平台并行、buildStage函数、依赖缓存、符号处理全链路</description>
-    </item>
-    <item>
-      <title>Jenkins Pipeline语法速查</title>
-      <link>/posts/09-pipeline-syntax/</link>
-      <pubDate>Tue, 13 Oct 2026 11:00:00 +0800</pubDate>
-      <guid>/posts/09-pipeline-syntax/</guid>
-      <description>agent/trigger/when/credentials/错误处理一套语法</description>
-    </item>
-    <item>
-      <title>依赖缓存三层体系</title>
-      <link>/posts/08-deps-cache/</link>
-      <pubDate>Tue, 13 Oct 2026 10:00:00 +0800</pubDate>
-      <guid>/posts/08-deps-cache/</guid>
-      <description>finished哨兵、源码下载缓存、CLEAN_BUILD全量开关</description>
-    </item>
-    <item>
-      <title>parallel与matrix怎么选</title>
-      <link>/posts/07-matrix-build/</link>
-      <pubDate>Tue, 13 Oct 2026 09:00:00 +0800</pubDate>
-      <guid>/posts/07-matrix-build/</guid>
-      <description>三平台并行构建，failFast策略与资源控制</description>
-    </item>
-    <item>
-      <title>CMake并发编译三层提速</title>
-      <link>/posts/06-parallel-build/</link>
-      <pubDate>Mon, 12 Oct 2026 22:00:00 +0800</pubDate>
-      <guid>/posts/06-parallel-build/</guid>
-      <description>/MP、&amp;ndash;parallel、ExternalProject依赖并行，MT/MD统一</description>
-    </item>
-    <item>
-      <title>最小CMake工程验证环境</title>
-      <link>/posts/05-min-cmake/</link>
-      <pubDate>Mon, 12 Oct 2026 21:00:00 +0800</pubDate>
-      <guid>/posts/05-min-cmake/</guid>
-      <description>exe/lib/test三件套宏，配置→编译→测试→安装→运行闭环</description>
-    </item>
-    <item>
-      <title>三平台从节点配置</title>
-      <link>/posts/04-jenkins-agents/</link>
-      <pubDate>Mon, 12 Oct 2026 20:00:00 +0800</pubDate>
-      <guid>/posts/04-jenkins-agents/</guid>
-      <description>Ubuntu/Windows/macOS从节点安装、SSH连接、JDK一致性与故障排查</description>
-    </item>
-    <item>
-      <title>Jenkins主节点Docker化部署</title>
-      <link>/posts/03-jenkins-master/</link>
-      <pubDate>Mon, 12 Oct 2026 19:00:00 +0800</pubDate>
-      <guid>/posts/03-jenkins-master/</guid>
-      <description>JDK版本锁死、compose编排、Shared Library配置与定时备份</description>
+      <title>三平台工具链与vcpkg</title>
+      <link>/posts/01-toolchain/</link>
+      <pubDate>Mon, 12 Oct 2026 17:00:00 +0800</pubDate>
+      <guid>/posts/01-toolchain/</guid>
+      <description>Windows/macOS/Linux三套工具链从零配好，vcpkg包管理与调试工具选择</description>
     </item>
     <item>
       <title>Docker环境搭建</title>
@@ -72,11 +23,60 @@
       <description>三平台Docker安装、TCP远程访问、daemon.json配置与故障排查</description>
     </item>
     <item>
-      <title>三平台工具链与vcpkg</title>
-      <link>/posts/01-toolchain/</link>
-      <pubDate>Mon, 12 Oct 2026 17:00:00 +0800</pubDate>
-      <guid>/posts/01-toolchain/</guid>
-      <description>Windows/macOS/Linux三套工具链从零配好，vcpkg包管理与调试工具选择</description>
+      <title>Jenkins主节点Docker化部署</title>
+      <link>/posts/03-jenkins-master/</link>
+      <pubDate>Mon, 12 Oct 2026 19:00:00 +0800</pubDate>
+      <guid>/posts/03-jenkins-master/</guid>
+      <description>JDK版本锁死、compose编排、Shared Library配置与定时备份</description>
+    </item>
+    <item>
+      <title>三平台从节点配置</title>
+      <link>/posts/04-jenkins-agents/</link>
+      <pubDate>Mon, 12 Oct 2026 20:00:00 +0800</pubDate>
+      <guid>/posts/04-jenkins-agents/</guid>
+      <description>Ubuntu/Windows/macOS从节点安装、SSH连接、JDK一致性与故障排查</description>
+    </item>
+    <item>
+      <title>最小CMake工程验证环境</title>
+      <link>/posts/05-min-cmake/</link>
+      <pubDate>Mon, 12 Oct 2026 21:00:00 +0800</pubDate>
+      <guid>/posts/05-min-cmake/</guid>
+      <description>exe/lib/test三件套宏，配置→编译→测试→安装→运行闭环</description>
+    </item>
+    <item>
+      <title>CMake并发编译三层提速</title>
+      <link>/posts/06-parallel-build/</link>
+      <pubDate>Mon, 12 Oct 2026 22:00:00 +0800</pubDate>
+      <guid>/posts/06-parallel-build/</guid>
+      <description>/MP、&amp;ndash;parallel、ExternalProject依赖并行，MT/MD统一</description>
+    </item>
+    <item>
+      <title>parallel与matrix怎么选</title>
+      <link>/posts/07-matrix-build/</link>
+      <pubDate>Tue, 13 Oct 2026 09:00:00 +0800</pubDate>
+      <guid>/posts/07-matrix-build/</guid>
+      <description>三平台并行构建，failFast策略与资源控制</description>
+    </item>
+    <item>
+      <title>依赖缓存三层体系</title>
+      <link>/posts/08-deps-cache/</link>
+      <pubDate>Tue, 13 Oct 2026 10:00:00 +0800</pubDate>
+      <guid>/posts/08-deps-cache/</guid>
+      <description>finished哨兵、源码下载缓存、CLEAN_BUILD全量开关</description>
+    </item>
+    <item>
+      <title>Jenkins Pipeline语法速查</title>
+      <link>/posts/09-pipeline-syntax/</link>
+      <pubDate>Tue, 13 Oct 2026 11:00:00 +0800</pubDate>
+      <guid>/posts/09-pipeline-syntax/</guid>
+      <description>agent/trigger/when/credentials/错误处理一套语法</description>
+    </item>
+    <item>
+      <title>C&#43;&#43; SDK流水线实战拆解</title>
+      <link>/posts/10-pipeline-real/</link>
+      <pubDate>Tue, 13 Oct 2026 12:00:00 +0800</pubDate>
+      <guid>/posts/10-pipeline-real/</guid>
+      <description>三平台并行、buildStage函数、依赖缓存、符号处理全链路</description>
     </item>
     <item>
       <title>环境基线与版本说明</title>
@@ -84,13 +84,6 @@
       <pubDate>Mon, 12 Oct 2026 16:00:00 +0800</pubDate>
       <guid>/posts/00-env-baseline/</guid>
       <description>C++工程化实战开篇：版本基线、环境要求与常见问题</description>
-    </item>
-    <item>
-      <title>C&#43;&#43;工程化实战：目录</title>
-      <link>/posts/cpp-engineering/</link>
-      <pubDate>Mon, 12 Oct 2026 15:00:00 +0800</pubDate>
-      <guid>/posts/cpp-engineering/</guid>
-      <description>从零搭建三平台C++工程化流水线：工具链→Docker→Jenkins→CMake→缓存→Pipeline实战</description>
     </item>
   </channel>
 </rss>

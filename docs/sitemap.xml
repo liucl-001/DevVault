@@ -2,10 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>/posts/01-toolchain/</loc>
+    <lastmod>2026-10-12T17:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/02-docker-setup/</loc>
+    <lastmod>2026-10-12T18:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/03-jenkins-master/</loc>
+    <lastmod>2026-10-12T19:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/04-jenkins-agents/</loc>
+    <lastmod>2026-10-12T20:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/05-min-cmake/</loc>
+    <lastmod>2026-10-12T21:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/06-parallel-build/</loc>
+    <lastmod>2026-10-12T22:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/07-matrix-build/</loc>
+    <lastmod>2026-10-13T09:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/08-deps-cache/</loc>
+    <lastmod>2026-10-13T10:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/09-pipeline-syntax/</loc>
+    <lastmod>2026-10-13T11:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/10-pipeline-real/</loc>
+    <lastmod>2026-10-13T12:00:00+08:00</lastmod>
+  </url><url>
     <loc>/tags/c&#43;&#43;/</loc>
     <lastmod>2026-10-13T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>/posts/10-pipeline-real/</loc>
+    <loc>/series/c&#43;&#43;%E5%B7%A5%E7%A8%8B%E5%8C%96%E5%AE%9E%E6%88%98/</loc>
     <lastmod>2026-10-13T12:00:00+08:00</lastmod>
   </url><url>
     <loc>/tags/ci/cd/</loc>
@@ -26,35 +56,11 @@
     <loc>/posts/</loc>
     <lastmod>2026-10-13T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>/tags/</loc>
+    <loc>/series/</loc>
     <lastmod>2026-10-13T12:00:00+08:00</lastmod>
   </url><url>
-    <loc>/posts/09-pipeline-syntax/</loc>
-    <lastmod>2026-10-13T11:00:00+08:00</lastmod>
-  </url><url>
-    <loc>/posts/08-deps-cache/</loc>
-    <lastmod>2026-10-13T10:00:00+08:00</lastmod>
-  </url><url>
-    <loc>/posts/07-matrix-build/</loc>
-    <lastmod>2026-10-13T09:00:00+08:00</lastmod>
-  </url><url>
-    <loc>/posts/06-parallel-build/</loc>
-    <lastmod>2026-10-12T22:00:00+08:00</lastmod>
-  </url><url>
-    <loc>/posts/05-min-cmake/</loc>
-    <lastmod>2026-10-12T21:00:00+08:00</lastmod>
-  </url><url>
-    <loc>/posts/04-jenkins-agents/</loc>
-    <lastmod>2026-10-12T20:00:00+08:00</lastmod>
-  </url><url>
-    <loc>/posts/03-jenkins-master/</loc>
-    <lastmod>2026-10-12T19:00:00+08:00</lastmod>
-  </url><url>
-    <loc>/posts/02-docker-setup/</loc>
-    <lastmod>2026-10-12T18:00:00+08:00</lastmod>
-  </url><url>
-    <loc>/posts/01-toolchain/</loc>
-    <lastmod>2026-10-12T17:00:00+08:00</lastmod>
+    <loc>/tags/</loc>
+    <lastmod>2026-10-13T12:00:00+08:00</lastmod>
   </url><url>
     <loc>/posts/00-env-baseline/</loc>
     <lastmod>2026-10-12T16:00:00+08:00</lastmod>
@@ -71,9 +77,6 @@
     <loc>/projects/sample-project/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/posts/cpp-engineering/</loc>
-    <lastmod>2026-10-12T15:00:00+08:00</lastmod>
-  </url><url>
     <loc>/posts/hello-devvault/</loc>
     <lastmod>2026-10-11T10:00:00+08:00</lastmod>
   </url><url>
@@ -83,7 +86,7 @@
     <loc>/tags/%E5%BB%BA%E7%AB%99/</loc>
     <lastmod>2026-10-11T10:00:00+08:00</lastmod>
   </url><url>
-    <loc>/categories/</loc>
+    <loc>/false/</loc>
   </url><url>
     <loc>/archives/</loc>
   </url><url>

@@ -4,6 +4,7 @@ date: 2026-10-12T20:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
 series: ["C++工程化实战"]
+weight: 4
 summary: "Ubuntu/Windows/macOS从节点安装、SSH连接、JDK一致性与故障排查"
 ---
 # Jenkins 三平台从节点配置：Ubuntu / Windows / macOS

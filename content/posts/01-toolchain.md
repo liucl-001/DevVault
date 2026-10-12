@@ -4,6 +4,7 @@ date: 2026-10-12T17:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
 series: ["C++工程化实战"]
+weight: 1
 summary: "Windows/macOS/Linux三套工具链从零配好，vcpkg包管理与调试工具选择"
 ---
 # C++ 构建环境：三平台工具链与 vcpkg

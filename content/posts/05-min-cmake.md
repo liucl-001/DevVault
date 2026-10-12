@@ -4,6 +4,7 @@ date: 2026-10-12T21:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
 series: ["C++工程化实战"]
+weight: 5
 summary: "exe/lib/test三件套宏，配置→编译→测试→安装→运行闭环"
 ---
 # 构建环境验证：从零跑通第一个 CMake 工程

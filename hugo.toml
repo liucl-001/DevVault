@@ -9,6 +9,10 @@ enableEmoji = true
 buildFuture = true
 relativeURLs = true
 
+[taxonomies]
+  tag = "tags"
+  series = "series"
+
 # 首页直接显示文章列表（不用homeInfo）
 disableHomeInfo = false
 

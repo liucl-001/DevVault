@@ -4,6 +4,7 @@ date: 2026-10-12T22:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
 series: ["C++工程化实战"]
+weight: 6
 summary: "/MP、--parallel、ExternalProject依赖并行，MT/MD统一"
 ---
 # CMake 并发编译：从 /MP 到依赖并行
