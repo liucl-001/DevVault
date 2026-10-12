@@ -72,8 +72,8 @@
   <meta property="og:locale" content="zh_cn">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-10-13T00:00:00+08:00">
-    <meta property="article:modified_time" content="2026-10-13T00:00:00+08:00">
+    <meta property="article:published_time" content="2026-10-13T10:00:00+08:00">
+    <meta property="article:modified_time" content="2026-10-13T10:00:00+08:00">
     <meta property="article:tag" content="C&#43;&#43;">
     <meta property="article:tag" content="CI/CD">
     <meta property="article:tag" content="CMake">
@@ -118,8 +118,8 @@
   "articleBody": "依赖缓存与增量构建：把几十分钟压缩成秒 本节解决：C++ 依赖编译一次几十分钟，每次构建都重编就是灾难。用生产流水线（Jenkinsfile.fdm）的真实代码，讲透三层缓存体系：finished 哨兵、源码下载缓存、CLEAN_BUILD 全量开关。 相关代码以OrcaSlicer的依赖为例说明。\n依赖编译是 C++ CI 最大的时间黑洞 前端 npm install 有锁文件和全局缓存，Go 有 module cache——C++ 呢？vcpkg 只是把源码拉下来，几百个第三方库（fmt、spdlog、nlohmann-json…）要一个个现场编译，动辄几十分钟；而且分平台、分架构、分构建类型（macOS 要编 arm64 和 x86_64 两套，每套还分 Debug/RelWithDebInfo）——缓存失效一次就是几十分钟白费。\n生产流水线的依赖编译矩阵是这样的（后面会反复用到）：\ndef foreachBuild(String platform, Closure call) { def arch_list = platform == 'macos' ? ['arm64', 'x86_64'] : ['x86_64'] [\"Debug\",\"RelWithDebInfo\"].each {buildType -\u003e arch_list.each { arch -\u003e call(arch, buildType) } } } macOS 4 个组合（arm64/x86_64 × Debug/RelWithDebInfo），Linux/Windows 各 2 个。每个组合的依赖都要编译一份——这就是为什么缓存设计必须是\"按组合隔离\"的。\n缓存全景：一次构建的三个时间黑洞 构 建 开 │ ├ │ ├ │ └ 始 ─ ─ ─ ① ② ③ V 几 依 几 自 C 十 赖 十 身 — P 分 编 分 编 — K 钟 译 钟 译 但 G ， ： ： 下 只 d × 源 载 环 该 e 码 依 境 装 p N 每 赖 ： 一 s 次 源 b 次 / 个 变 码 o 组 ， 本 o 目 合 每 身 t 录 ， 次 也 s 编 日 都 要 t 源 常 全 时 r 码 构 编 间 a 自 建 （ ， p 己 应 不 需 的 该 能 要 + 依 全 缓 源 赖 跳 存 码 安 （ 过 ） 下 装 每 载 基 个 缓 础 存 库 架 构 × 构 建 类 型 一 份 ） 三层缓存分别对应 ① ② ③ 的三个时间黑洞。下面用真实代码逐个讲。\n第一层：文件 哨兵——“装过没\"用文件存在性当缓存 VCPKG 环境（对应 ①） def source = \"${WORKSPACE}/${env.VCPKG_ROOT_DIR}\" dir(source) { if (fileExists(\"${source}/finished\")) { return // 缓存命中：vcpkg 已就绪，直接跳过 } if (isUnix()) { if (!fileExists(\"${source}/vcpkg\")) { // vcpkg 可执行文件不在才 bootstrap sh 'bash bootstrap-vcpkg.sh -disableMetrics' } def triplets = (plat == 'linux') ? ['x64-linux'] : ['arm64-osx', 'x64-osx'] triplets.each { triplet -\u003e sh \"${source}/vcpkg install fmt --triplet ${triplet}\" } } else { if (!fileExists(\"${source}/vcpkg.exe\")) { bat \"${source}\\\\bootstrap-vcpkg.bat\" } bat \"${source}/vcpkg.exe install fmt --triplet x64-windows\" } writeFile(file: \"${source}/finished\", text: \"1\") // 全部装完，写标记 } 完整处理逻辑：\n缓存 key = ${VCPKG_ROOT}/finished 文件的存在性； 不存在 → 完整执行：bootstrap vcpkg（Windows 用 bat、Unix 用 sh）→ 按平台装 triplets（Linux 一套、macOS 两套、Windows 一套）→ 写 finished； 存在 → 整段跳过，bootstrap 和基础库安装只发生一次。 依赖编译（对应 ②，核心中的核心） C:\\\\BuildTools\\\\VC\\\\Auxiliary\\\\Build\\\\vcvars64.bat 是假设vs2019 buildtool安装在这里了 foreachBuild(plat, { arch, buildType -\u003e def build_dir = \"${WORKSPACE}/${env.BUILD_DIR}/deps/${buildType}_${arch}\" def install_dir = \"${WORKSPACE}/${env.DEPS_INSTALL_DIR}/${arch}_${buildType}\" if (fileExists(\"${install_dir}/finished\")) { return // 缓存命中：该组合已编译过，跳过 } removeDir(build_dir) // 平台差异只在这里：Windows 必须先用 vcvars64 加载 VS 环境 def run = isUnix() ? { cmd -\u003e sh cmd } : { cmd -\u003e bat \"call \\\"C:\\\\BuildTools\\\\VC\\\\Auxiliary\\\\Build\\\\vcvars64.bat\\\" \u0026\u0026 ${cmd}\" } def config_cmd = \"cmake -S \\\"${WORKSPACE}/${env.SRC_DIR}/deps\\\" -B \\\"${build_dir}\\\"\" + \" -DCMAKE_BUILD_TYPE=${buildType} -DDESTDIR=\\\"${install_dir}\\\"\" + \" -DDEP_DOWNLOAD_DIR=\\\"${WORKSPACE}/${env.DEPS_CACHE_DIR}\\\" \" if (isUnix()) { config_cmd += \" -DCMAKE_OSX_ARCHITECTURES=${arch} -DCMAKE_OSX_DEPLOYMENT_TARGET:STRING=${params.MACOS_DEPLOYMENT_TARGET} -G 'Unix Makefiles'\" } else { config_cmd += \" -G \\\"Visual Studio 16 2019\\\" -A x64 -T host=x64\" } def build_cmd = \"cmake --build ${build_dir} --config ${buildType}\" run(config_cmd) run(build_cmd) writeFile(file: \"${install_dir}/finished\", text: \"1\") // 该组合编译完，写标记 }) 完整处理逻辑（这是本节最关键的一段，逐行理解）：\n按组合遍历：foreachBuild 展开成 macOS 4 个组合 / Linux+Windows 各 2 个，每个组合独立处理； 缓存 key = ${DEPS_INSTALL_DIR}/${arch}_${buildType}/finished——粒度是架构 × 构建类型，目录名天然隔离：arm64_Debug、x86_64_RelWithDebInfo…互不污染； miss 时：清掉该组合的 build_dir（防残留）→ cmake 配置（关键参数见下）→ 编译 → 写 finished； hit 时：整段跳过——日常构建 8 个组合全部命中，直接到源码编译。 cmake 配置里的四个关键参数（决定了缓存能复用）：\n-DDESTDIR=\"${install_dir}\"：依赖装到哪，install_dir 带 arch+buildType，产物和缓存 key 一一对应； -DDEP_DOWNLOAD_DIR=\"${WORKSPACE}/${env.DEPS_CACHE_DIR}\"：源码下载目录全局共享（这就是第三层，见下）； Windows 先 vcvars64.bat 再 cmake（VS 环境，第 1/10 章踩坑的实战体现）。 为什么 文件 比插件可靠 不依赖任何 Jenkins 插件，任何环境都能跑； 缓存 key 就是路径——天然按平台、架构、构建类型隔离，不会串； 逻辑透明：文件在 = 装过，文件不在 = 重装，谁都能看懂、出问题也好排查。 第二层：DEPS_CACHE_DIR 源码下载缓存——跨组合共享 上面依赖编译里传的 -DDEP_DOWNLOAD_DIR 就是这层：deps 里的第三方源码（ExternalProject 下载）统一放 DEPS_CACHE_DIR，8 个组合共用一份。\n首 后 次 续 构 构 建 建 ： ： m 其 a 余 c O 7 S 个 a 组 r 合 m 6 c 4 m - a D k e e b u 配 g 置 时 下 发 载 现 f f m m t t 源 已 码 存 在 → → D E 不 P 再 S 下 _ 载 C ， A 直 C 接 H 编 E 译 _ D I R / f m t / 这解决的是下载这个时间黑洞：依赖要下载几十个源码包，GitHub 慢的时候光下载就十几分钟；有了共享缓存，下载只发生一次，8 个组合复用。这也是为什么环境清理时 DEPS_CACHE_DIR 绝不能被清（见第三层）。\n第三层：环境清理 + CLEAN_BUILD——缓存什么时候失效 缓存最大的敌人是\"假成功”：三方库源码更新了，但旧编译产物还躺着，新版本不生效——构建\"成功\"了，产物是旧的。生产环境的解法是分层清理 + 显式全量开关：\n// 来源：Jenkinsfile.fdm → buildStage('xxx') → stage('环境清理') [env.INSTALL_DIR, env.DEBUG_SYMBOLS_DIR, env.BUILD_DIR, env.CACHE_DIR, env.VCPKG_ROOT_DIR + \"/buildtrees\", env.VCPKG_ROOT_DIR + \"/packages\", env.VCPKG_ROOT_DIR + \"/downloads\" ].each {subdir -\u003e removeDir(subdir) // 每次必清 } if(params.CLEAN_BUILD){ removeDir(env.DEPS_INSTALL_DIR) // 仅全量构建才清 } 完整处理逻辑——每次构建什么被清、什么保留：\n清理对象 时机 原因 编译产物（BUILD_DIR/INSTALL_DIR/CACHE_DIR） 每次 保证本次构建可复现，不留上一轮残留 调试符号（DEBUG_SYMBOLS_DIR） 每次 上一轮的符号必须清，否则混淆版本 vcpkg 编译缓存（buildtrees/packages/downloads） 每次 三方库升级后旧编译产物会\"假成功\" vcpkg 已装库（VCPKG_ROOT/installed） 不清 finished 已标记，重装浪费几十分钟 vcpkg 源码（VCPKG_ROOT 本体） 不清 代码拉取 stage 靠它存在跳过 checkout 依赖安装目录（DEPS_INSTALL_DIR） 仅 CLEAN_BUILD 依赖编译一次几十分钟 × 8 组合，日常必须复用 源码下载缓存（DEPS_CACHE_DIR） 绝不清 下载一次跨 8 组合复用 三个关键认知：\nfinished 不等于\"依赖永远不更新\"——日常构建跳过依赖编译（快），依赖真正升级时勾选 CLEAN_BUILD 显式失效（稳）； 每次清 vcpkg 的 buildtrees——省空间 + 防部分三方库假成功；已装库靠 finished 保护，不受影响； DEPS_CACHE_DIR 是\"只增不清\"的——源码下载缓存是纯增益，清了就白下载。 完整串起来：一次日常构建的缓存路径 构 建 触 │ ├ │ ├ ├ ├ │ ├ │ ├ └ 发 ─ ─ ─ ─ ─ ─ ─ （ C 环 代 V 依 编 打 符 L 境 码 C 赖 译 包 号 E 清 拉 P 编 ： ： ： A 理 取 K 译 每 B c N ： ： G ： 次 U r _ 清 源 8 全 I e B 编 码 环 编 L a U 译 全 境 个 （ D t I 产 新 ： 组 源 _ e L 物 f 合 码 N S D D c i 源 变 - U y = + E h n f 码 了 D M m f P e i i 下 ） C B b a v S c s n 载 ， M E o l c _ k h i 链 A R l s p I o e s D 接 K _ s e k N u d h E E $ ， g S t e P D _ { → 全 T ； 命 d S E P p 部 b A v 中 _ P R l 命 u L c 全 C S E a _ 中 i L p → 命 A _ F t s ） l _ k 中 C I I } y d D g 跳 H N X _ m t I 过 → E S _ b b r R 源 （ T P i o e 码 b 全 全 A A n l e 保 已 o 跳 命 L T a s s 留 存 o 过 中 L H r . / 、 在 t （ （ = y z p D s 几 下 产 D . i a E → t 十 载 物 E z p c P r 分 P i k S 跳 a 钟 → S p a _ 过 p _ g C + → 0 I e A 基 ） N s C 础 0 S / H 库 ） T d E 只 A o _ 装 L w D 过 L n I 一 _ l R 次 D o ） I a 保 R d 留 / s $ { a r c h } _ $ { b u i l d T y p e } / u s r / l o c a l 发版构建（CLEAN_BUILD=true）只多一步：DEPS_INSTALL_DIR 被清 → 依赖全重编 → 新的 finished 重新写入——之后日常构建又回到秒级。\n缓存失效的三个场景（务必知道） 依赖源码更新：deps 仓库/三方库有更新，但 finished 还在 → 勾 CLEAN_BUILD 全量重编（这是唯一正式通道）； 编译器/工具链升级：镜像换了新 MSVC/GCC，旧产物 ABI 不兼容 → 同样 CLEAN_BUILD（镜像升级后第一次构建必开）； vcpkg ports 更新：vcpkg 源码重新 checkout 后基础库版本变了 → 清 VCPKG_ROOT/finished 让基础库重装。 小结 三层缓存对应三个时间黑洞：finished 哨兵（VCPKG 环境 + 依赖编译，本任务幂等）→ DEPS_CACHE_DIR 源码下载缓存（8 个组合共享，下载只发生一次）→ CLEAN_BUILD 全量开关（显式失效依赖缓存）； 缓存 key 用路径天然隔离：${arch}_${buildType} 目录名保证 8 个组合互不污染； 分层清理是精确的：编译产物每次清（可复现）、vcpkg 编译缓存每次清（防假成功）、依赖安装保留（日常快）、下载缓存永不清（纯增益）； 源码编译通过 -DCMAKE_PREFIX_PATH 链接依赖缓存产物——缓存不是\"存着好看\"，是被编译真正消费的。 延伸：依赖怎么组织（vcpkg + deps/CMake，第 1 章）、并发构建怎么配合缓存（第 7 章）、这段 buildStage 在整条流水线的位置（第 10/20 章）。\n",
   "wordCount" : "1165",
   "inLanguage": "en",
-  "datePublished": "2026-10-13T00:00:00+08:00",
-  "dateModified": "2026-10-13T00:00:00+08:00",
+  "datePublished": "2026-10-13T10:00:00+08:00",
+  "dateModified": "2026-10-13T10:00:00+08:00",
   "author":{
     "@type": "Person",
     "name": "liucl"
@@ -217,10 +217,35 @@
     </h1>
     <div class="post-meta">
 
-<span title='2026-10-13 00:00:00 +0800 CST'>October 13, 2026</span>&nbsp;·&nbsp;<span>6 min</span>&nbsp;·&nbsp;<span>liucl</span>
+<span title='2026-10-13 10:00:00 +0800 CST'>October 13, 2026</span>&nbsp;·&nbsp;<span>6 min</span>&nbsp;·&nbsp;<span>liucl</span>
 
 </div>
-  </header> 
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#依赖编译是-c-ci-最大的时间黑洞">依赖编译是 C++ CI 最大的时间黑洞</a></li>
+    <li><a href="#缓存全景一次构建的三个时间黑洞">缓存全景：一次构建的三个时间黑洞</a></li>
+    <li><a href="#第一层文件-哨兵装过没用文件存在性当缓存">第一层：<code>文件</code> 哨兵——&ldquo;装过没&quot;用文件存在性当缓存</a>
+      <ul>
+        <li><a href="#vcpkg-环境对应-">VCPKG 环境（对应 ①）</a></li>
+        <li><a href="#依赖编译对应-核心中的核心">依赖编译（对应 ②，核心中的核心）</a></li>
+        <li><a href="#为什么-文件-比插件可靠">为什么 <code>文件</code> 比插件可靠</a></li>
+      </ul>
+    </li>
+    <li><a href="#第二层deps_cache_dir-源码下载缓存跨组合共享">第二层：<code>DEPS_CACHE_DIR</code> 源码下载缓存——跨组合共享</a></li>
+    <li><a href="#第三层环境清理--clean_build缓存什么时候失效">第三层：环境清理 + CLEAN_BUILD——缓存什么时候失效</a></li>
+    <li><a href="#完整串起来一次日常构建的缓存路径">完整串起来：一次日常构建的缓存路径</a></li>
+    <li><a href="#缓存失效的三个场景务必知道">缓存失效的三个场景（务必知道）</a></li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+    </div>
+</details>
+
   <div class="post-content md-content"><h1 id="依赖缓存与增量构建把几十分钟压缩成秒">依赖缓存与增量构建：把几十分钟压缩成秒<a hidden class="anchor" aria-hidden="true" href="#依赖缓存与增量构建把几十分钟压缩成秒">#</a></h1>
 <blockquote>
 <p>本节解决：C++ 依赖编译一次几十分钟，每次构建都重编就是灾难。用生产流水线（Jenkinsfile.fdm）的真实代码，讲透三层缓存体系：<code>finished</code> 哨兵、源码下载缓存、CLEAN_BUILD 全量开关。

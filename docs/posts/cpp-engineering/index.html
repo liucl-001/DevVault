@@ -72,8 +72,8 @@
   <meta property="og:locale" content="zh_cn">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-10-12T16:00:00+08:00">
-    <meta property="article:modified_time" content="2026-10-12T16:00:00+08:00">
+    <meta property="article:published_time" content="2026-10-12T15:00:00+08:00">
+    <meta property="article:modified_time" content="2026-10-12T15:00:00+08:00">
     <meta property="article:tag" content="C&#43;&#43;">
     <meta property="article:tag" content="CI/CD">
     <meta property="article:tag" content="CMake">
@@ -118,8 +118,8 @@
   "articleBody": "系列简介 这套小册来自生产环境的真实沉淀，讲清楚一件事：怎么给一个跨 Windows / macOS / Linux 三平台的 C++ 项目搭一套可复现、可并行、可缓存的 CI/CD 流水线。\n不是 hello world，是跑在公司 Jenkins 上的真实配置——vcpkg 依赖编译、三平台从节点、依赖缓存三层体系、调试符号归档，全部基于实际项目（OrcaSlicer 类 FDM 切片软件 SDK）脱敏而来。\n章节列表 章节 主题 00 环境基线与版本说明 版本锁死、环境要求、常见问题 01 三平台工具链与vcpkg Windows/macOS/Linux工具链、vcpkg、调试器 02 Docker环境搭建 三平台Docker安装、远程访问、故障排查 03 Jenkins主节点部署 JDK版本锁死、compose编排、备份 04 三平台从节点 Ubuntu/Windows/macOS从节点、SSH连接 05 最小CMake工程 exe/lib/test三件套宏、验证闭环 06 CMake并发编译 /MP、–parallel、依赖并行、MT/MD 07 多平台并行构建 parallel vs matrix、failFast、资源控制 08 依赖缓存与增量构建 finished哨兵、下载缓存、CLEAN_BUILD 09 Pipeline基础语法 agent/trigger/when/credentials/错误处理 10 C++流水线实战 三平台并行、buildStage、符号处理全链路 核心思路 整条流水线的设计围绕三个杠杆：\n并行：三平台同时跑，总耗时 = 最慢平台； 缓存：依赖编译一次几十分钟，日常构建靠 inished 哨兵全跳过； 函数化：三平台共用 \buildStage(plat)，差异收敛在函数内部。 日常构建从小时级压到分钟级，发版构建勾 CLEAN_BUILD 保证可复现。\n",
   "wordCount" : "73",
   "inLanguage": "en",
-  "datePublished": "2026-10-12T16:00:00+08:00",
-  "dateModified": "2026-10-12T16:00:00+08:00",
+  "datePublished": "2026-10-12T15:00:00+08:00",
+  "dateModified": "2026-10-12T15:00:00+08:00",
   "author":{
     "@type": "Person",
     "name": "liucl"
@@ -217,10 +217,24 @@
     </h1>
     <div class="post-meta">
 
-<span title='2026-10-12 16:00:00 +0800 CST'>October 12, 2026</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>liucl</span>
+<span title='2026-10-12 15:00:00 +0800 CST'>October 12, 2026</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>liucl</span>
 
 </div>
-  </header> 
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#系列简介">系列简介</a></li>
+    <li><a href="#章节列表">章节列表</a></li>
+    <li><a href="#核心思路">核心思路</a></li>
+  </ul>
+</nav>
+    </div>
+</details>
+
   <div class="post-content md-content"><h2 id="系列简介">系列简介<a hidden class="anchor" aria-hidden="true" href="#系列简介">#</a></h2>
 <p>这套小册来自生产环境的真实沉淀，讲清楚一件事：<strong>怎么给一个跨 Windows / macOS / Linux 三平台的 C++ 项目搭一套可复现、可并行、可缓存的 CI/CD 流水线。</strong></p>
 <p>不是 hello world，是跑在公司 Jenkins 上的真实配置——vcpkg 依赖编译、三平台从节点、依赖缓存三层体系、调试符号归档，全部基于实际项目（OrcaSlicer 类 FDM 切片软件 SDK）脱敏而来。</p>
@@ -300,13 +314,13 @@
       <li><a href="../../tags/docker/">Docker</a></li>
     </ul>
 <nav class="paginav">
-  <a class="prev" href="../../posts/01-toolchain/">
+  <a class="prev" href="../../projects/sample-project/">
     <span class="title">« Prev</span>
-    <span>三平台工具链与vcpkg</span>
+    <span>示例项目</span>
   </a>
-  <a class="next" href="../../posts/00-env-baseline/">
+  <a class="next" href="../../posts/hello-devvault/">
     <span class="title">Next »</span>
-    <span>环境基线与版本说明</span>
+    <span>DevVault 建站开篇</span>
   </a>
 </nav>
 

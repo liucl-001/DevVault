@@ -1,6 +1,6 @@
 ---
 title: "依赖缓存三层体系"
-date: 2026-10-13T00:00:00+08:00
+date: 2026-10-13T10:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
 series: ["C++工程化实战"]

@@ -6,12 +6,12 @@
     <description>Recent content in 建站 on DevVault</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 12 Oct 2026 15:30:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 11 Oct 2026 10:00:00 +0800</lastBuildDate>
     <atom:link href="/tags/%E5%BB%BA%E7%AB%99/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>DevVault 建站开篇</title>
       <link>/posts/hello-devvault/</link>
-      <pubDate>Mon, 12 Oct 2026 15:30:00 +0800</pubDate>
+      <pubDate>Sun, 11 Oct 2026 10:00:00 +0800</pubDate>
       <guid>/posts/hello-devvault/</guid>
       <description>用 Hugo + GitHub Pages 搭一个个人技术站，记录文章与作品。</description>
     </item>

@@ -6,33 +6,33 @@
     <description>Recent content in CMake on DevVault</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 13 Oct 2026 02:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 13 Oct 2026 12:00:00 +0800</lastBuildDate>
     <atom:link href="/tags/cmake/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>C&#43;&#43; SDK流水线实战拆解</title>
       <link>/posts/10-pipeline-real/</link>
-      <pubDate>Tue, 13 Oct 2026 02:00:00 +0800</pubDate>
+      <pubDate>Tue, 13 Oct 2026 12:00:00 +0800</pubDate>
       <guid>/posts/10-pipeline-real/</guid>
       <description>三平台并行、buildStage函数、依赖缓存、符号处理全链路</description>
     </item>
     <item>
       <title>Jenkins Pipeline语法速查</title>
       <link>/posts/09-pipeline-syntax/</link>
-      <pubDate>Tue, 13 Oct 2026 01:00:00 +0800</pubDate>
+      <pubDate>Tue, 13 Oct 2026 11:00:00 +0800</pubDate>
       <guid>/posts/09-pipeline-syntax/</guid>
       <description>agent/trigger/when/credentials/错误处理一套语法</description>
     </item>
     <item>
       <title>依赖缓存三层体系</title>
       <link>/posts/08-deps-cache/</link>
-      <pubDate>Tue, 13 Oct 2026 00:00:00 +0800</pubDate>
+      <pubDate>Tue, 13 Oct 2026 10:00:00 +0800</pubDate>
       <guid>/posts/08-deps-cache/</guid>
       <description>finished哨兵、源码下载缓存、CLEAN_BUILD全量开关</description>
     </item>
     <item>
       <title>parallel与matrix怎么选</title>
       <link>/posts/07-matrix-build/</link>
-      <pubDate>Mon, 12 Oct 2026 23:00:00 +0800</pubDate>
+      <pubDate>Tue, 13 Oct 2026 09:00:00 +0800</pubDate>
       <guid>/posts/07-matrix-build/</guid>
       <description>三平台并行构建，failFast策略与资源控制</description>
     </item>
@@ -79,18 +79,18 @@
       <description>Windows/macOS/Linux三套工具链从零配好，vcpkg包管理与调试工具选择</description>
     </item>
     <item>
-      <title>C&#43;&#43;工程化实战：目录</title>
-      <link>/posts/cpp-engineering/</link>
-      <pubDate>Mon, 12 Oct 2026 16:00:00 +0800</pubDate>
-      <guid>/posts/cpp-engineering/</guid>
-      <description>从零搭建三平台C++工程化流水线：工具链→Docker→Jenkins→CMake→缓存→Pipeline实战</description>
-    </item>
-    <item>
       <title>环境基线与版本说明</title>
       <link>/posts/00-env-baseline/</link>
       <pubDate>Mon, 12 Oct 2026 16:00:00 +0800</pubDate>
       <guid>/posts/00-env-baseline/</guid>
       <description>C++工程化实战开篇：版本基线、环境要求与常见问题</description>
+    </item>
+    <item>
+      <title>C&#43;&#43;工程化实战：目录</title>
+      <link>/posts/cpp-engineering/</link>
+      <pubDate>Mon, 12 Oct 2026 15:00:00 +0800</pubDate>
+      <guid>/posts/cpp-engineering/</guid>
+      <description>从零搭建三平台C++工程化流水线：工具链→Docker→Jenkins→CMake→缓存→Pipeline实战</description>
     </item>
   </channel>
 </rss>

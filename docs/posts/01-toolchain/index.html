@@ -220,7 +220,52 @@
 <span title='2026-10-12 17:00:00 +0800 CST'>October 12, 2026</span>&nbsp;·&nbsp;<span>3 min</span>&nbsp;·&nbsp;<span>liucl</span>
 
 </div>
-  </header> 
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#跨平台-c-的第一个敌人是环境">跨平台 C++ 的第一个敌人是&quot;环境&quot;</a></li>
+    <li><a href="#windowswinget-一键装两个必做的性能坑">Windows：winget 一键装，两个必做的性能坑</a>
+      <ul>
+        <li><a href="#用-winget-装开发环境按自己需求选">用 winget 装开发环境（按自己需求选）</a></li>
+        <li><a href="#两个必做的性能坑">两个必做的性能坑</a></li>
+      </ul>
+    </li>
+    <li><a href="#linux换源--一键编译环境--调试符号">Linux：换源 + 一键编译环境 + 调试符号</a>
+      <ul>
+        <li><a href="#换国内镜像必做否则-apt-龟速">换国内镜像（必做，否则 apt 龟速）</a></li>
+        <li><a href="#装编译环境按需选不是全装">装编译环境（按需选，不是全装）</a></li>
+        <li><a href="#调试符号和第-19-章呼应">调试符号（和第 19 章呼应）</a></li>
+      </ul>
+    </li>
+    <li><a href="#macosbrew--xcode-select">macOS：brew + xcode-select</a>
+      <ul>
+        <li><a href="#命令行工具不需要整个-xcode">命令行工具（不需要整个 Xcode）</a></li>
+        <li><a href="#装-brew国内镜像脚本">装 brew（国内镜像脚本）</a></li>
+      </ul>
+    </li>
+    <li><a href="#包管理vcpkg-是默认答案">包管理：vcpkg 是默认答案</a>
+      <ul>
+        <li><a href="#目录结构知道每个目录干啥">目录结构（知道每个目录干啥）</a></li>
+        <li><a href="#三平台安装">三平台安装</a></li>
+        <li><a href="#搜索与安装">搜索与安装</a></li>
+        <li><a href="#集成cmake-presets">集成（CMake Presets）</a></li>
+        <li><a href="#缓存策略">缓存策略</a></li>
+        <li><a href="#为什么-ci-里-vcpkg-要特别处理">为什么 CI 里 vcpkg 要特别处理</a></li>
+      </ul>
+    </li>
+    <li><a href="#调试工具按平台选">调试工具：按平台选</a></li>
+    <li><a href="#验证环境就绪">验证环境就绪</a></li>
+    <li><a href="#踩过的坑">踩过的坑</a></li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+    </div>
+</details>
+
   <div class="post-content md-content"><h1 id="c-构建环境三平台工具链与-vcpkg">C++ 构建环境：三平台工具链与 vcpkg<a hidden class="anchor" aria-hidden="true" href="#c-构建环境三平台工具链与-vcpkg">#</a></h1>
 <blockquote>
 <p>本节解决：跨平台 C++ 开发的第一道坎——Windows/macOS/Linux 三套工具链怎么从零配好、包管理用什么、调试工具怎么选。</p></blockquote>
@@ -422,9 +467,9 @@
     <span class="title">« Prev</span>
     <span>Docker环境搭建</span>
   </a>
-  <a class="next" href="../../posts/cpp-engineering/">
+  <a class="next" href="../../posts/00-env-baseline/">
     <span class="title">Next »</span>
-    <span>C&#43;&#43;工程化实战：目录</span>
+    <span>环境基线与版本说明</span>
   </a>
 </nav>
 

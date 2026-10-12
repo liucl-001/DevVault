@@ -220,7 +220,24 @@
 <span title='2026-10-12 22:00:00 +0800 CST'>October 12, 2026</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>liucl</span>
 
 </div>
-  </header> 
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#编译慢是-c-的宿命但可以治">编译慢是 C++ 的宿命，但可以治</a></li>
+    <li><a href="#第一层msvc-的-mp一行配置全工程并发">第一层：MSVC 的 /MP——一行配置全工程并发</a></li>
+    <li><a href="#第二层cmake-build-parallel构建系统级并发">第二层：cmake &ndash;build &ndash;parallel——构建系统级并发</a></li>
+    <li><a href="#第三层依赖编译并行externalproject-的并发与隔离">第三层：依赖编译并行——ExternalProject 的并发与隔离</a></li>
+    <li><a href="#附mtmd比并发更隐蔽的编译坑">附：MT/MD——比并发更隐蔽的编译坑</a></li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+    </div>
+</details>
+
   <div class="post-content md-content"><h1 id="cmake-并发编译从-mp-到依赖并行">CMake 并发编译：从 /MP 到依赖并行<a hidden class="anchor" aria-hidden="true" href="#cmake-并发编译从-mp-到依赖并行">#</a></h1>
 <blockquote>
 <p>本节解决：C++ 编译慢是常态——MSVC 的 /MP、cmake &ndash;build &ndash;parallel、依赖编译并行，三个层面把编译时间压下来。</p></blockquote>

@@ -220,7 +220,46 @@
 <span title='2026-10-12 18:00:00 +0800 CST'>October 12, 2026</span>&nbsp;·&nbsp;<span>2 min</span>&nbsp;·&nbsp;<span>liucl</span>
 
 </div>
-  </header> 
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#一切从环境开始">一切从环境开始</a></li>
+    <li><a href="#第一步安装">第一步：安装</a>
+      <ul>
+        <li><a href="#linuxubuntu">Linux（Ubuntu）</a></li>
+        <li><a href="#windows关键坑ssh-访问">Windows（关键坑：SSH 访问）</a></li>
+      </ul>
+    </li>
+    <li><a href="#第二步开-tcp-远程访问ci-的关键">第二步：开 TCP 远程访问（CI 的关键）</a></li>
+    <li><a href="#第三步daemonjson-配置">第三步：daemon.json 配置</a>
+      <ul>
+        <li><a href="#linux">Linux</a></li>
+        <li><a href="#windows">Windows</a></li>
+      </ul>
+    </li>
+    <li><a href="#第四步目录权限与容器工作目录">第四步：目录权限与容器工作目录</a>
+      <ul>
+        <li><a href="#目录权限linux">目录权限（Linux）</a></li>
+        <li><a href="#容器工作目录windows-关键坑">容器工作目录（Windows 关键坑）</a></li>
+        <li><a href="#linux-dockersock-权限">Linux docker.sock 权限</a></li>
+      </ul>
+    </li>
+    <li><a href="#第五步故障处理">第五步：故障处理</a>
+      <ul>
+        <li><a href="#端口冲突">端口冲突</a></li>
+        <li><a href="#服务重置">服务重置</a></li>
+      </ul>
+    </li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+    </div>
+</details>
+
   <div class="post-content md-content"><h1 id="docker-环境搭建三平台安装远程访问与国内源">Docker 环境搭建：三平台安装、远程访问与国内源<a hidden class="anchor" aria-hidden="true" href="#docker-环境搭建三平台安装远程访问与国内源">#</a></h1>
 <blockquote>
 <p>本节解决：CI/CD 的地基——Docker 怎么装、怎么开 TCP 远程访问（Jenkins 节点要用）、daemon.json 怎么配、目录权限与容器工作目录问题怎么排。</p></blockquote>

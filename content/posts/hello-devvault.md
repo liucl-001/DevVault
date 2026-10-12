@@ -1,6 +1,6 @@
 ---
 title: "DevVault 建站开篇"
-date: 2026-10-12T15:30:00+08:00
+date: 2026-10-11T10:00:00+08:00
 draft: false
 tags: ["建站", "Hugo"]
 summary: "用 Hugo + GitHub Pages 搭一个个人技术站，记录文章与作品。"

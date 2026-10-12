@@ -220,7 +220,40 @@
 <span title='2026-10-12 19:00:00 +0800 CST'>October 12, 2026</span>&nbsp;·&nbsp;<span>3 min</span>&nbsp;·&nbsp;<span>liucl</span>
 
 </div>
-  </header> 
+  </header> <details class="toc" >
+    <summary accesskey="c" title="(Alt + C)">
+        <span class="title">Table of Contents</span>
+    </summary>
+
+    <div class="inner"><nav id="TableOfContents">
+  <ul>
+    <li><a href="#主节点是-ci-的中枢但别把它当一台装好的服务器">主节点是 CI 的中枢，但别把它当&quot;一台装好的服务器&quot;</a></li>
+    <li><a href="#第一步docker-基础配置">第一步：Docker 基础配置</a></li>
+    <li><a href="#第二步env--compose-启动">第二步：.env + compose 启动</a></li>
+    <li><a href="#第三步初始化">第三步：初始化</a></li>
+    <li><a href="#第四步必需插件与关键配置">第四步：必需插件与关键配置</a></li>
+    <li><a href="#第五步shared-librarybase_lib配置">第五步：Shared Library（base_lib）配置</a>
+      <ul>
+        <li><a href="#什么是-shared-library">什么是 Shared Library</a></li>
+        <li><a href="#jenkins-里怎么配置">Jenkins 里怎么配置</a></li>
+        <li><a href="#怎么用">怎么用</a></li>
+        <li><a href="#和第-12-章的关系">和第 12 章的关系</a></li>
+      </ul>
+    </li>
+    <li><a href="#第六步定时备份关键运维">第六步：定时备份（关键运维）</a>
+      <ul>
+        <li><a href="#备份脚本">备份脚本</a></li>
+        <li><a href="#定时执行crontab">定时执行（crontab）</a></li>
+        <li><a href="#备份内容说明">备份内容说明</a></li>
+      </ul>
+    </li>
+    <li><a href="#踩过的坑">踩过的坑</a></li>
+    <li><a href="#小结">小结</a></li>
+  </ul>
+</nav>
+    </div>
+</details>
+
   <div class="post-content md-content"><h1 id="jenkins-主节点部署docker-化一键拉起">Jenkins 主节点部署：Docker 化一键拉起<a hidden class="anchor" aria-hidden="true" href="#jenkins-主节点部署docker-化一键拉起">#</a></h1>
 <blockquote>
 <p>本节解决：CI 中枢——Jenkins 主节点怎么用 Docker 部署、JDK 版本为什么要锁死、.env/compose 怎么组织、初始化与关键配置。</p></blockquote>

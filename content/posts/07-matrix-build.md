@@ -1,6 +1,6 @@
 ---
 title: "parallel与matrix怎么选"
-date: 2026-10-12T23:00:00+08:00
+date: 2026-10-13T09:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
 series: ["C++工程化实战"]
