@@ -64,6 +64,19 @@
 /* 首页信息块 */
 .home-info {
   margin: 3rem 0 2rem;
+  text-align: left;
+}
+
+.avatar-container {
+  margin-bottom: 1.5rem;
+}
+
+.avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  border: 3px solid var(--primary);
+  box-shadow: 0 4px 20px rgba(122, 162, 247, 0.3);
 }
 
 .home-info .post-content {
