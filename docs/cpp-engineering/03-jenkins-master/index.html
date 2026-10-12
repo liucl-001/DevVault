@@ -1,0 +1,1497 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="技术文章与工程笔记">
+      
+      
+        <meta name="author" content="liucl">
+      
+      
+      
+        <link rel="prev" href="../02-docker/">
+      
+      
+        <link rel="next" href="../04-jenkins-agents/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>03 Jenkins主节点 - DevVault</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#jenkins-docker" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="DevVault" class="md-header__button md-logo" aria-label="DevVault" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DevVault
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              03 Jenkins主节点
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换暗色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换暗色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换亮色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换亮色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  C++工程化实战
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DevVault" class="md-nav__button md-logo" aria-label="DevVault" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DevVault
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++工程化实战
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    C++工程化实战
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    导读
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-toolchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 工具链与vcpkg
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Docker环境
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Jenkins主节点
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Jenkins主节点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        主节点是 CI 的中枢，但别把它当"一台装好的服务器"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第一步：Docker 基础配置
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#env-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第二步：.env + compose 启动
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第三步：初始化
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第四步：必需插件与关键配置
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shared-librarybase_lib" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第五步：Shared Library（base_lib）配置
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="第五步：Shared Library（base_lib）配置">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shared-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        什么是 Shared Library
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jenkins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jenkins 里怎么配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        怎么用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        和第 12 章的关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第六步：定时备份（关键运维）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="第六步：定时备份（关键运维）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        备份脚本
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crontab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        定时执行（crontab）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        备份内容说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        踩过的坑
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        小结
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-jenkins-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 三平台从节点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-min-cmake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 最小CMake工程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 CMake并发编译
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 多平台并行构建
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 依赖缓存与增量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Pipeline语法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-pipeline-real/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 C++流水线实战
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ci" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        主节点是 CI 的中枢，但别把它当"一台装好的服务器"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第一步：Docker 基础配置
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#env-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第二步：.env + compose 启动
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第三步：初始化
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第四步：必需插件与关键配置
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#shared-librarybase_lib" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第五步：Shared Library（base_lib）配置
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="第五步：Shared Library（base_lib）配置">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#shared-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        什么是 Shared Library
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jenkins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jenkins 里怎么配置
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        怎么用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        和第 12 章的关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第六步：定时备份（关键运维）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="第六步：定时备份（关键运维）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        备份脚本
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#crontab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        定时执行（crontab）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        备份内容说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        踩过的坑
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        小结
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+
+<h1 id="jenkins-docker">Jenkins 主节点部署：Docker 化一键拉起<a class="headerlink" href="#jenkins-docker" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>本节解决：CI 中枢——Jenkins 主节点怎么用 Docker 部署、JDK 版本为什么要锁死、.env/compose 怎么组织、初始化与关键配置。</p>
+</blockquote>
+<h2 id="ci">主节点是 CI 的中枢，但别把它当"一台装好的服务器"<a class="headerlink" href="#ci" title="Permanent link">&para;</a></h2>
+<p>很多团队装 Jenkins 的方式是"找个机器、下载 war 包、java -jar 跑起来"——然后这台机器的状态就成了玄学：JDK 升级了、插件装乱了、数据目录在系统盘打满了，谁都不知道。生产环境的正确姿势是 <strong>Docker 化部署</strong>：Jenkins 跑在容器里，数据卷挂出来，版本、端口、配置全用文件管理，重建一台主节点 = 一条命令。</p>
+<h2 id="docker">第一步：Docker 基础配置<a class="headerlink" href="#docker" title="Permanent link">&para;</a></h2>
+<p>主节点本身要先配好 Docker（参考第 2 章），但多了两个 CI 特有的配置：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// /etc/docker/daemon.json</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">"insecure-registries"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"&lt;registry&gt;:5000"</span><span class="p">],</span><span class="w">   </span><span class="c1">// 私有镜像仓库（http，必须加 insecure）</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="nt">"data-root"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/var/lib/docker/data"</span><span class="w">            </span><span class="c1">// 数据目录</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li><strong><code>insecure-registries</code></strong>：私有仓库（第 15 章部署）走 HTTP，Docker 默认拒绝非 HTTPS 仓库，必须在这里白名单——<strong>不配的话 <code>docker pull</code> 直接报 <code>certificate signed by unknown authority</code></strong>；</li>
+<li><strong><code>data-root</code></strong>：镜像、容器、卷全在数据盘，别占系统盘。</li>
+</ul>
+<h2 id="env-compose">第二步：.env + compose 启动<a class="headerlink" href="#env-compose" title="Permanent link">&para;</a></h2>
+<p>Jenkins 官方镜像 + docker compose 是标准组合。版本和端口用 <code>.env</code> 管理：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># .env（与 compose.yaml 同目录）
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a># 版本选择要点：1、必须锁死 jdk 版本；2、只选 lts 版本
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>JENKINS_VERSION=2.555.2-lts-jdk21
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>JENKINS_PORT=9527            # 外部访问端口
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>JENKINS_AGENT_PORT=50000     # 代理端口（从节点连接用）
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># compose.yaml</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">services</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">jenkins</span><span class="p">:</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jenkins/jenkins:${JENKINS_VERSION}</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/data/docker_volumes/jenkins:/var/jenkins_home</span><span class="w">   </span><span class="c1"># 数据卷挂出来</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"${JENKINS_PORT}:8080"</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"${JENKINS_AGENT_PORT}:50000"</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">      </span><span class="nt">TZ</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Asia/Shanghai</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+</code></pre></div>
+<p>两个设计点：</p>
+<ol>
+<li><strong><code>JENKINS_VERSION</code> 必须锁 JDK 版本</strong>：<code>2.555.2-lts-jdk21</code> 明确带上 <code>jdk21</code>——因为<strong>主节点用什么 JDK，所有从节点就必须用什么 JDK</strong>（Jenkins 通过 SSH 启动 agent 时用同一套 Java 协议）。版本不锁，主节点悄悄升级 JDK，从节点全部连不上，这是生产事故级的问题。</li>
+<li><strong>数据卷挂到 /data</strong>：<code>/var/jenkins_home</code> 里是全部配置、插件、构建历史，必须挂到数据盘——Jenkins 数据丢了等于重搭整个 CI。</li>
+</ol>
+<h2 id="_1">第三步：初始化<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>jenkins
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># 拿初始密码</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>docker<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>jenkins<span class="w"> </span>cat<span class="w"> </span>/var/jenkins_home/secrets/initialAdminPassword
+</code></pre></div>
+<p>初始化五步：访问 <code>http://&lt;IP&gt;:${JENKINS_PORT}</code> → 输入初始密码 → 安装推荐插件 → 创建管理员 → 配置 Jenkins URL → 完成。</p>
+<h2 id="_2">第四步：必需插件与关键配置<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><strong>插件</strong>（推荐插件装完后再补，避免版本冲突）：</p>
+<table>
+<thead>
+<tr>
+<th>插件</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Docker Pipeline</td>
+<td>流水线里用 <code>agent { docker }</code></td>
+</tr>
+<tr>
+<td>Copy Artifacts</td>
+<td>跨任务复制制品（第 8/16 章）</td>
+</tr>
+<tr>
+<td>Generic Webhook Trigger</td>
+<td>接收 GitLab/GitHub webhook（第 9 章）</td>
+</tr>
+<tr>
+<td>Git Parameter</td>
+<td>构建时从仓库拉分支列表</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键配置</strong>（每个流水线任务都要配）：</p>
+<ul>
+<li><strong>主节点不跑构建任务</strong>：主节点只做调度/编排，不跑任何构建任务——<strong>避免主节点卡死</strong>（构建任务吃 CPU/内存，主节点卡死整个 CI 都停）；</li>
+<li><strong>从节点禁用并发</strong>：每个流水线勾选"Do not allow concurrent builds"——<strong>让单个任务尽量快完成</strong>（一个节点同时跑多个任务会互相抢资源，单个任务反而变慢）；</li>
+<li><strong>Permission to Copy Artifact = <code>*</code></strong>：允许下游复制制品，否则 <code>copyArtifacts</code> 报权限不足；</li>
+<li><strong>Webhook token 一致性</strong>：GitLab 里配的 token 必须和 Jenkinsfile 里 <code>GenericTrigger(token: ...)</code> 一致（第 9 章）。</li>
+</ul>
+<h2 id="shared-librarybase_lib">第五步：Shared Library（base_lib）配置<a class="headerlink" href="#shared-librarybase_lib" title="Permanent link">&para;</a></h2>
+<h3 id="shared-library">什么是 Shared Library<a class="headerlink" href="#shared-library" title="Permanent link">&para;</a></h3>
+<p>Shared Library 是 Jenkins 的"公共代码库"——把多个流水线重复用的函数（构建/打包/通知/上传）抽出来放一个 Git 仓库，所有流水线 <code>@Library</code> 引用即可。<strong>避免每个流水线复制粘贴同一套代码</strong>，改一处全生效。</p>
+<h3 id="jenkins">Jenkins 里怎么配置<a class="headerlink" href="#jenkins" title="Permanent link">&para;</a></h3>
+<p><strong>Manage Jenkins → System → Global Pipeline Libraries</strong>：</p>
+<blockquote>
+<p><strong><img alt="Global Pipeline Libraries" src="https://www.jenkins.io/zh/doc/book/resources/pipeline/add-global-pipeline-libraries.png" /></strong>：Jenkins → Manage Jenkins → System → Global Pipeline Libraries 页面，配置 Library Name/Default Version/Retrieval Method 的完整截图。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>配置项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Library Name</td>
+<td><code>base_lib</code></td>
+</tr>
+<tr>
+<td>Default Version</td>
+<td><code>master</code>（或分支名）</td>
+</tr>
+<tr>
+<td>Retrieval Method</td>
+<td>Modern SCM → Git</td>
+</tr>
+<tr>
+<td>Project Repository</td>
+<td><code>&lt;共享库 Git 仓库地址&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_3">怎么用<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>流水线开头引用：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nd">@Library</span><span class="o">(</span><span class="s1">'base_lib@master'</span><span class="o">)</span><span class="w"> </span><span class="n">_</span><span class="o">;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">pipeline</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="n">agent</span><span class="w"> </span><span class="n">any</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="n">stages</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span><span class="n">stage</span><span class="o">(</span><span class="s1">'构建'</span><span class="o">)</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">            </span><span class="n">steps</span><span class="w"> </span><span class="o">{</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">                </span><span class="n">buildStage</span><span class="o">(</span><span class="s1">'linux'</span><span class="o">)</span><span class="w">    </span><span class="c1">// 共享库里的函数</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">            </span><span class="o">}</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">        </span><span class="o">}</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="o">}</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="o">}</span>
+</code></pre></div>
+<h3 id="12">和第 12 章的关系<a class="headerlink" href="#12" title="Permanent link">&para;</a></h3>
+<p>本节只讲"怎么在 Jenkins 里注册"；<strong>共享库怎么写（vars/ 目录、函数模板、共享库骨架）见第 12 章</strong>。</p>
+<h2 id="_4">第六步：定时备份（关键运维）<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>Jenkins 数据丢了等于重搭整个 CI——<strong>必须定时备份</strong>。备份内容是 <code>JENKINS_HOME</code>（配置/凭据/任务/插件），排除可重建的 workspace/caches。</p>
+<h3 id="_5">备份脚本<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="ch">#!/bin/bash</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="c1"># /data/backup/jenkins_backup.sh</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="nv">BACKUP_DIR</span><span class="o">=</span>/data/backup/jenkins
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nv">JENKINS_HOME</span><span class="o">=</span>/data/docker_volumes/jenkins<span class="w">    </span><span class="c1"># compose 挂载的 Jenkins 数据目录</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="nv">DATE</span><span class="o">=</span><span class="k">$(</span>date<span class="w"> </span>+%Y%m%d_%H%M%S<span class="k">)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="nv">KEEP_DAYS</span><span class="o">=</span><span class="m">7</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="nv">COMPOSE_DIR</span><span class="o">=</span>/opt/jenkins<span class="w">    </span><span class="c1"># compose.yaml 所在目录</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$BACKUP_DIR</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="c1"># 关键：先停 Jenkins（运行中备份可能不一致，文件正在写入）</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nb">cd</span><span class="w"> </span><span class="nv">$COMPOSE_DIR</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>docker<span class="w"> </span>compose<span class="w"> </span>stop<span class="w"> </span>jenkins
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="c1"># 备份（排除 workspace/caches/war）</span>
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>tar<span class="w"> </span>-czf<span class="w"> </span><span class="nv">$BACKUP_DIR</span>/jenkins_<span class="nv">$DATE</span>.tar.gz<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">    </span>--exclude<span class="o">=</span><span class="s1">'workspace'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">    </span>--exclude<span class="o">=</span><span class="s1">'caches'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">    </span>--exclude<span class="o">=</span><span class="s1">'war'</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">    </span>-C<span class="w"> </span><span class="nv">$JENKINS_HOME</span><span class="w"> </span>.
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="c1"># 备份完立即启动</span>
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>docker<span class="w"> </span>compose<span class="w"> </span>start<span class="w"> </span>jenkins
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="c1"># 保留最近 7 天，自动清理旧备份</span>
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>find<span class="w"> </span><span class="nv">$BACKUP_DIR</span><span class="w"> </span>-name<span class="w"> </span><span class="s2">"jenkins_*.tar.gz"</span><span class="w"> </span>-mtime<span class="w"> </span>+<span class="nv">$KEEP_DAYS</span><span class="w"> </span>-delete
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>
+<a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="nb">echo</span><span class="w"> </span><span class="s2">"备份完成: jenkins_</span><span class="nv">$DATE</span><span class="s2">.tar.gz（Jenkins 已重启）"</span>
+</code></pre></div>
+<blockquote>
+<p><strong>为什么要先停</strong>：Jenkins 运行时会持续写入 jobs/secrets/config.xml，tar 打包时文件正处于修改中间态，备份出来的可能损坏。凌晨 2 点备份停机几分钟影响小。</p>
+</blockquote>
+<h3 id="crontab">定时执行（crontab）<a class="headerlink" href="#crontab" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 每天凌晨 2 点备份</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="m">0</span><span class="w"> </span><span class="m">2</span><span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>*<span class="w"> </span>/data/backup/jenkins_backup.sh<span class="w"> </span>&gt;&gt;<span class="w"> </span>/data/backup/jenkins_backup.log<span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+</code></pre></div>
+<h3 id="_6">备份内容说明<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th>备份？</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>jobs/</code></td>
+<td>✅</td>
+<td>所有任务配置</td>
+</tr>
+<tr>
+<td><code>users/</code></td>
+<td>✅</td>
+<td>用户</td>
+</tr>
+<tr>
+<td><code>secrets/</code></td>
+<td>✅</td>
+<td>凭据（Git/Registry SSH key）</td>
+</tr>
+<tr>
+<td><code>plugins/</code></td>
+<td>✅</td>
+<td>插件（或备份插件列表）</td>
+</tr>
+<tr>
+<td><code>config.xml</code></td>
+<td>✅</td>
+<td>全局配置</td>
+</tr>
+<tr>
+<td><code>workspace/</code></td>
+<td>❌</td>
+<td>构建工作空间，可重建</td>
+</tr>
+<tr>
+<td><code>caches/</code></td>
+<td>❌</td>
+<td>缓存，可重建</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>进阶</strong>：备份可以 rsync 到备份服务器（异地容灾），或推到对象存储（Minio/S3）。</p>
+</blockquote>
+<h2 id="_7">踩过的坑<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>JDK 版本漂移 = 从节点全挂</strong>：主节点镜像带 <code>-jdk21</code> 后缀就是为了锁死，别换成不带后缀的 latest；</li>
+<li><strong>数据卷不挂 = 重建丢一切</strong>：容器重建后插件、凭据、构建历史全没，务必挂卷；</li>
+<li><strong>私有仓库忘配 insecure-registries</strong>：拉构建镜像（第 14/18 章）直接失败，且报错容易误判成网络问题。</li>
+</ol>
+<h2 id="_8">小结<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<ul>
+<li>主节点用 Docker + compose 部署：<code>.env</code> 锁版本端口、数据卷挂 /data、<code>restart: unless-stopped</code> 保活；</li>
+<li><strong>JDK 版本必须锁死且与从节点一致</strong>——<code>-jdk21</code> 后缀就是干这个的；</li>
+<li>插件按需补装：Docker Pipeline / Copy Artifacts / Generic Webhook / Git Parameter；</li>
+<li>关键配置：共享库 <code>base_lib</code>、禁用并发、Copy Artifact 权限、Webhook token 一致。</li>
+</ul>
+<blockquote>
+<p>延伸：主节点就绪后，配三平台从节点（第 4 章）——构建机才是真正干活的地方。</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  <a href="/" class="back-to-home" title="返回首页">&#8962;</a>
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../02-docker/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 02 Docker环境">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                02 Docker环境
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../04-jenkins-agents/" class="md-footer__link md-footer__link--next" aria-label="下一页: 04 三平台从节点">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                04 三平台从节点
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "navigation.footer", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

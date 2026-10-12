@@ -1,0 +1,1147 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="技术文章与工程笔记">
+      
+      
+        <meta name="author" content="liucl">
+      
+      
+      
+        <link rel="prev" href="../04-jenkins-agents/">
+      
+      
+        <link rel="next" href="../06-parallel/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>05 最小CMake工程 - DevVault</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#cmake" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="DevVault" class="md-header__button md-logo" aria-label="DevVault" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DevVault
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              05 最小CMake工程
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换暗色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换暗色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换亮色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换亮色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  C++工程化实战
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DevVault" class="md-nav__button md-logo" aria-label="DevVault" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DevVault
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++工程化实战
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    C++工程化实战
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    导读
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-toolchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 工具链与vcpkg
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Docker环境
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-jenkins-master/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Jenkins主节点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-jenkins-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 三平台从节点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 最小CMake工程
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 最小CMake工程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        环境搭好了，怎么知道"能用"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第一步：全局基础配置
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exe-lib-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第二步：三件套宏——exe / lib / test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第三步：验证清单（环境是否就绪的验收标准）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        小结
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 CMake并发编译
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 多平台并行构建
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 依赖缓存与增量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Pipeline语法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-pipeline-real/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 C++流水线实战
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        环境搭好了，怎么知道"能用"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第一步：全局基础配置
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exe-lib-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第二步：三件套宏——exe / lib / test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第三步：验证清单（环境是否就绪的验收标准）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        小结
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+
+<h1 id="cmake">构建环境验证：从零跑通第一个 CMake 工程<a class="headerlink" href="#cmake" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>本节解决：环境搭好后（第 1-4 章），怎么快速验证它真的能用——一套 exe/lib/test 分离的 CMake 工程骨架，从零建起、一次跑通。</p>
+</blockquote>
+<h2 id="_1">环境搭好了，怎么知道"能用"<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>第 1-4 章我们搭好了 C++ 工具链、Docker、Jenkins 主从节点——但"装好了"不等于"能用"。验证环境最快的方式：<strong>从零建一个最小 CMake 工程，编译、运行、出产物</strong>。如果这一步 10 分钟内跑通，说明工具链、CMake、依赖管理全部就位，后面的流水线才有意义。</p>
+<p>这一节给一套生产沉淀的工程骨架：<strong>exe / lib / test 三类目录用宏自动生成工程</strong>，这是后面所有 C++ 章节的地基。</p>
+<h2 id="_2">第一步：全局基础配置<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><code>CMakeLists.txt</code> 顶部是一套必配的基础设施：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.8.1</span><span class="p">)</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="c"># vcpkg 集成：设置了 VCPKG_ROOT 就用 vcpkg 工具链（必须在 project 之前！）</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nb">if</span><span class="p">(</span><span class="s">DEFINED</span><span class="w"> </span><span class="s">ENV{VCPKG_ROOT}</span><span class="w"> </span><span class="s">AND</span><span class="w"> </span><span class="s">NOT</span><span class="w"> </span><span class="s">DEFINED</span><span class="w"> </span><span class="s">CMAKE_TOOLCHAIN_FILE</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_TOOLCHAIN_FILE</span><span class="w"> </span><span class="s2">"$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"</span><span class="w"> </span><span class="s">CACHE</span><span class="w"> </span><span class="s">STRING</span><span class="w"> </span><span class="s2">""</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nb">endif</span><span class="p">()</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nb">project</span><span class="p">(</span><span class="s">demo</span><span class="w"> </span><span class="s">CXX</span><span class="w"> </span><span class="s">C</span><span class="p">)</span><span class="w">    </span><span class="c"># project 必须在 vcpkg 配置之后</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c"># 默认 Debug 构建（没指定时，防止生成空的构建类型）</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nb">if</span><span class="p">(</span><span class="s">NOT</span><span class="w"> </span><span class="s">CMAKE_BUILD_TYPE</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_BUILD_TYPE</span><span class="w"> </span><span class="s">Debug</span><span class="w"> </span><span class="s">CACHE</span><span class="w"> </span><span class="s">STRING</span><span class="w"> </span><span class="s2">"default set build type Debug"</span><span class="w"> </span><span class="s">FORCE</span><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nb">endif</span><span class="p">()</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c"># 锁 C++17</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD</span><span class="w"> </span><span class="s">17</span><span class="p">)</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_STANDARD_REQUIRED</span><span class="w"> </span><span class="s">ON</span><span class="p">)</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_CXX_EXTENSIONS</span><span class="w"> </span><span class="s">OFF</span><span class="p">)</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c"># 输出目录统一：bin 放可执行/DLL，lib 放静态库</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_LIBRARY_OUTPUT_DIRECTORY</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_BINARY_DIR</span><span class="o">}</span><span class="s">/</span><span class="o">${</span><span class="nv">CMAKE_BUILD_TYPE</span><span class="o">}</span><span class="s">/lib</span><span class="p">)</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_ARCHIVE_OUTPUT_DIRECTORY</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_BINARY_DIR</span><span class="o">}</span><span class="s">/</span><span class="o">${</span><span class="nv">CMAKE_BUILD_TYPE</span><span class="o">}</span><span class="s">/lib</span><span class="p">)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="nb">set</span><span class="p">(</span><span class="s">CMAKE_RUNTIME_OUTPUT_DIRECTORY</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_BINARY_DIR</span><span class="o">}</span><span class="s">/</span><span class="o">${</span><span class="nv">CMAKE_BUILD_TYPE</span><span class="o">}</span><span class="s">/bin</span><span class="p">)</span>
+<a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+<a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c"># VS 工程分组</span>
+<a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="nb">set_property</span><span class="p">(</span><span class="s">GLOBAL</span><span class="w"> </span><span class="s">PROPERTY</span><span class="w"> </span><span class="s">USE_FOLDERS</span><span class="w"> </span><span class="s">On</span><span class="p">)</span>
+</code></pre></div>
+<p>几个"非抄不可"的细节：</p>
+<ul>
+<li><strong>vcpkg 工具链必须在 <code>project()</code> 之前设置</strong>——放后面，<code>find_package</code> 找不到 vcpkg 装的库，报错还难排查；</li>
+<li><strong>默认 Debug</strong>：开发环境没指定构建类型时，CMake 会生成空字符串类型，产物路径全是 <code>bin/</code>（没子目录），多配置下容易乱——强制默认 Debug 后路径里带构建类型；</li>
+<li><strong>输出目录三分</strong>：<code>bin</code>（可执行 + Windows DLL）、<code>lib</code>（静态库/导入库）——Windows 的 DLL 属于 "runtime"，不分开的话 DLL 和 exe 混在一个目录，部署时还得自己找。</li>
+</ul>
+<h2 id="exe-lib-test">第二步：三件套宏——exe / lib / test<a class="headerlink" href="#exe-lib-test" title="Permanent link">&para;</a></h2>
+<p>生产工程的核心套路是三个宏，把"加一个模块"缩成一行：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c"># ---- 可执行程序 ----</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="c"># 自动收集子目录下所有 .h/.cpp/.rc，支持链接库、VS 工程分组、统一 install 规则</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nb">macro</span><span class="p">(</span><span class="s">add_subdirExe</span><span class="w"> </span><span class="s">dir</span><span class="p">)</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nb">cmake_parse_arguments</span><span class="p">(</span><span class="s">P_ARGS</span><span class="w"> </span><span class="s2">""</span><span class="w"> </span><span class="s2">"PNAME;LIBRARY;GROUP"</span><span class="w"> </span><span class="s2">"ARGS"</span><span class="w"> </span><span class="o">${</span><span class="nv">ARGN</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nb">file</span><span class="p">(</span><span class="s">GLOB_RECURSE</span><span class="w"> </span><span class="s">HDRS_G</span><span class="w"> </span><span class="s2">"${dir}/*.h*"</span><span class="p">)</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nb">file</span><span class="p">(</span><span class="s">GLOB_RECURSE</span><span class="w"> </span><span class="s">SRCS_G</span><span class="w"> </span><span class="s2">"${dir}/*.cpp"</span><span class="p">)</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nb">file</span><span class="p">(</span><span class="s">GLOB_RECURSE</span><span class="w"> </span><span class="s">RCS_G</span><span class="w">  </span><span class="s2">"${dir}/*.rc"</span><span class="p">)</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">P_ARGS_PNAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">HDRS_G</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">SRCS_G</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">RCS_G</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nb">if</span><span class="p">(</span><span class="s">P_ARGS_LIBRARY</span><span class="p">)</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">        </span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">P_ARGS_PNAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">P_ARGS_LIBRARY</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nb">endif</span><span class="p">()</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="nb">if</span><span class="p">(</span><span class="s">P_ARGS_GROUP</span><span class="p">)</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">        </span><span class="nb">set_target_properties</span><span class="p">(</span><span class="o">${</span><span class="nv">P_ARGS_PNAME</span><span class="o">}</span><span class="w"> </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">FOLDER</span><span class="w"> </span><span class="o">${</span><span class="nv">P_ARGS_GROUP</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="nb">endif</span><span class="p">()</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="nb">INSTALL</span><span class="p">(</span><span class="s">TARGETS</span><span class="w"> </span><span class="o">${</span><span class="nv">P_ARGS_PNAME</span><span class="o">}</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">        </span><span class="s">RUNTIME</span><span class="w"> </span><span class="s">DESTINATION</span><span class="w"> </span><span class="s">bin/</span><span class="w">  </span><span class="s">LIBRARY</span><span class="w"> </span><span class="s">DESTINATION</span><span class="w"> </span><span class="s">lib/</span><span class="w">  </span><span class="s">ARCHIVE</span><span class="w"> </span><span class="s">DESTINATION</span><span class="w"> </span><span class="s">lib/</span><span class="p">)</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="nb">endmacro</span><span class="p">()</span>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="c"># ---- 库（静态/动态）----</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="c"># 自动收集源文件、按类型建库、头文件统一安装到 include/&lt;subname&gt;/</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="c"># 动态库场景：Windows 上需要导出宏（本模板默认 STATIC，导出宏见注释）</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="nb">macro</span><span class="p">(</span><span class="s">add_subdirLibrary</span><span class="w"> </span><span class="s">dir</span><span class="p">)</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">    </span><span class="nb">cmake_parse_arguments</span><span class="p">(</span><span class="s">P_ARGS</span><span class="w"> </span><span class="s2">""</span><span class="w"> </span><span class="s2">"PNAME;TYPE;GROUP"</span><span class="w"> </span><span class="s2">""</span><span class="w"> </span><span class="o">${</span><span class="nv">ARGN</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">    </span><span class="nb">file</span><span class="p">(</span><span class="s">GLOB_RECURSE</span><span class="w"> </span><span class="s">HDRS_G</span><span class="w"> </span><span class="s2">"${dir}/*.h*"</span><span class="p">)</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="nb">file</span><span class="p">(</span><span class="s">GLOB_RECURSE</span><span class="w"> </span><span class="s">SRCS_G</span><span class="w"> </span><span class="s2">"${dir}/*.cpp"</span><span class="p">)</span>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">    </span><span class="nb">add_library</span><span class="p">(</span><span class="o">${</span><span class="nv">P_ARGS_PNAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">P_ARGS_TYPE</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">HDRS_G</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">SRCS_G</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">    </span><span class="c"># PUBLIC 传播 include 根：链接方自动获得 &lt;模块名/xx.h&gt; 的查找路径</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">    </span><span class="c"># （子目录约定：src/&lt;模块名&gt;/xx.h，include 根是 src/）</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">    </span><span class="nb">target_include_directories</span><span class="p">(</span><span class="o">${</span><span class="nv">P_ARGS_PNAME</span><span class="o">}</span><span class="w"> </span><span class="s">PUBLIC</span><span class="w"> </span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="nb">if</span><span class="p">(</span><span class="s">NOT</span><span class="w"> </span><span class="s">P_ARGS_TYPE</span><span class="w"> </span><span class="s">STREQUAL</span><span class="w"> </span><span class="s2">"STATIC"</span><span class="p">)</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">        </span><span class="c"># 动态库：Windows 上生成导出宏（示例）：</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">        </span><span class="c"># target_compile_definitions(${P_ARGS_PNAME} PRIVATE ${P_ARGS_PNAME}_BUILD_DLL)</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">        </span><span class="c"># 头文件里： #if defined(${P_ARGS_PNAME}_BUILD_DLL) #define API __declspec(dllexport)</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">        </span><span class="c">#           #else #define API __declspec(dllimport) #endif</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">    </span><span class="nb">endif</span><span class="p">()</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">    </span><span class="nb">if</span><span class="p">(</span><span class="s">P_ARGS_GROUP</span><span class="p">)</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">        </span><span class="nb">set_target_properties</span><span class="p">(</span><span class="o">${</span><span class="nv">P_ARGS_PNAME</span><span class="o">}</span><span class="w"> </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">FOLDER</span><span class="w"> </span><span class="o">${</span><span class="nv">P_ARGS_GROUP</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">    </span><span class="nb">endif</span><span class="p">()</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">    </span><span class="nb">INSTALL</span><span class="p">(</span><span class="s">TARGETS</span><span class="w"> </span><span class="o">${</span><span class="nv">P_ARGS_PNAME</span><span class="o">}</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">        </span><span class="s">RUNTIME</span><span class="w"> </span><span class="s">DESTINATION</span><span class="w"> </span><span class="s">bin/</span><span class="w">  </span><span class="s">LIBRARY</span><span class="w"> </span><span class="s">DESTINATION</span><span class="w"> </span><span class="s">lib/</span><span class="w">  </span><span class="s">ARCHIVE</span><span class="w"> </span><span class="s">DESTINATION</span><span class="w"> </span><span class="s">lib/</span><span class="p">)</span>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">    </span><span class="nb">INSTALL</span><span class="p">(</span><span class="s">DIRECTORY</span><span class="w"> </span><span class="s2">"${dir}/"</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">            </span><span class="s">DESTINATION</span><span class="w"> </span><span class="s">include/</span><span class="o">${</span><span class="nv">dir</span><span class="o">}</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="w">            </span><span class="s">FILES_MATCHING</span><span class="w"> </span><span class="s">PATTERN</span><span class="w"> </span><span class="s2">"*.h*"</span><span class="p">)</span>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="nb">endmacro</span><span class="p">()</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="c"># ---- 测试可执行 ----</span>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="c"># 默认零外部依赖（测试文件自带 main + assert），ctest 一键跑。</span>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="c"># 要切换 GTest：见 README「启用 GTest」与 cmake/deps.cmake。</span>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="nb">if</span><span class="p">(</span><span class="o">${</span><span class="nv">CMAKE_BUILD_TYPE</span><span class="o">}</span><span class="w"> </span><span class="s">STREQUAL</span><span class="w"> </span><span class="s2">"Debug"</span><span class="p">)</span>
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="w">    </span><span class="nb">option</span><span class="p">(</span><span class="s">ENABLE_TEST</span><span class="w"> </span><span class="s2">"TEST project build"</span><span class="w"> </span><span class="s">OFF</span><span class="p">)</span>
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="nb">else</span><span class="p">()</span>
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="w">    </span><span class="nb">set</span><span class="w"> </span><span class="p">(</span><span class="s">ENABLE_TEST</span><span class="w"> </span><span class="s">OFF</span><span class="p">)</span>
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w">    </span><span class="nb">message</span><span class="p">(</span><span class="s2">"google test only support Debug"</span><span class="p">)</span>
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="nb">endif</span><span class="p">()</span>
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="nb">macro</span><span class="p">(</span><span class="s">add_subdirTEST</span><span class="w"> </span><span class="s">subname</span><span class="p">)</span>
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="w">    </span><span class="nb">if</span><span class="p">(</span><span class="s">ENABLE_TEST</span><span class="p">)</span>
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="w">        </span><span class="nb">find_package</span><span class="p">(</span><span class="s">GTest</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="w">        </span><span class="nb">INCLUDE_DIRECTORIES</span><span class="p">(</span><span class="o">${</span><span class="nv">GTEST_INCLUDE_DIRS</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="w">        </span><span class="nb">include_directories</span><span class="p">(</span>
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="w">            </span><span class="o">${</span><span class="nv">CMAKE_CURRENT_BINARY_DIR</span><span class="o">}</span><span class="s">/</span><span class="o">${</span><span class="nv">subname</span><span class="o">}</span>
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="w">            </span><span class="o">${</span><span class="nv">CMAKE_CURRENT_SOURCE_DIR</span><span class="o">}</span><span class="s">/</span><span class="o">${</span><span class="nv">subname</span><span class="o">}</span>
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="w">            </span><span class="p">)</span>
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="w">        </span><span class="nb">file</span><span class="p">(</span><span class="s">GLOB_RECURSE</span><span class="w"> </span><span class="s">HDRS_G</span><span class="w"> </span><span class="s2">"${CMAKE_CURRENT_SOURCE_DIR}/${subname}/*.h*"</span><span class="w"> </span><span class="p">)</span>
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a><span class="w">        </span><span class="nb">file</span><span class="p">(</span><span class="s">GLOB_RECURSE</span><span class="w"> </span><span class="s">SRCS_G</span><span class="w"> </span><span class="s2">"${CMAKE_CURRENT_SOURCE_DIR}/${subname}/*_Test.cpp"</span><span class="w"> </span><span class="p">)</span>
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="w">        </span><span class="nb">file</span><span class="p">(</span><span class="s">GLOB_RECURSE</span><span class="w"> </span><span class="s">OtherSRC_G</span><span class="w"> </span><span class="s2">"${CMAKE_CURRENT_SOURCE_DIR}/${subname}/*cpp"</span><span class="w"> </span><span class="p">)</span>
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a><span class="w">        </span><span class="nb">foreach</span><span class="p">(</span><span class="s">item</span><span class="w"> </span><span class="o">${</span><span class="nv">SRCS_G</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a><span class="w">            </span><span class="nb">list</span><span class="p">(</span><span class="s">REMOVE_ITEM</span><span class="w"> </span><span class="s">OtherSRC_G</span><span class="w"> </span><span class="o">${</span><span class="nv">item</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a><span class="w">        </span><span class="nb">endforeach</span><span class="p">(</span><span class="s">item</span><span class="p">)</span>
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a>
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a><span class="w">        </span><span class="nb">foreach</span><span class="p">(</span><span class="s">FILE</span><span class="w"> </span><span class="o">${</span><span class="nv">SRCS_G</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a><span class="w">            </span><span class="nb">STRING</span><span class="p">(</span><span class="s">REGEX</span><span class="w"> </span><span class="s">REPLACE</span><span class="w"> </span><span class="s2">".+/(.+)\\..*"</span><span class="w"> </span><span class="s2">"\\1"</span><span class="w"> </span><span class="s">SUB_NAME</span><span class="w"> </span><span class="o">${</span><span class="nv">FILE</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a><span class="w">            </span><span class="nb">add_executable</span><span class="p">(</span><span class="o">${</span><span class="nv">SUB_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">FILE</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">OtherSRC_G</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a><span class="w">            </span><span class="nb">target_link_libraries</span><span class="p">(</span><span class="o">${</span><span class="nv">SUB_NAME</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">GTEST_BOTH_LIBRARIES</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">ARGN</span><span class="o">}</span><span class="p">)</span>
+<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a><span class="w">            </span><span class="nb">set_target_properties</span><span class="p">(</span><span class="o">${</span><span class="nv">SUB_NAME</span><span class="o">}</span><span class="w"> </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">FOLDER</span><span class="w"> </span><span class="s2">"Test"</span><span class="p">)</span>
+<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a><span class="w">        </span><span class="nb">endforeach</span><span class="p">(</span><span class="s">FILE</span><span class="p">)</span>
+<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a><span class="w">    </span><span class="nb">endif</span><span class="p">(</span><span class="s">ENABLE_TEST</span><span class="p">)</span>
+<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a><span class="nb">endmacro</span><span class="p">()</span>
+</code></pre></div>
+<p>配套的 <code>add_subdirLibrary</code>（生成导出头、隐藏符号可见性）和 <code>add_subdirTEST</code>（自动找 <code>*_Test.cpp</code> 生成 GTest 可执行）结构相同，只改 <code>add_executable</code> 为 <code>add_library</code>/GTest 链接。工程里加一个新模块就是一行：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">add_subdirExe</span><span class="p">(</span><span class="s">app</span><span class="w">      </span><span class="s">PNAME</span><span class="w"> </span><span class="s">app</span><span class="w">      </span><span class="s">GROUP</span><span class="w"> </span><span class="s">execute</span><span class="p">)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">add_subdirLibrary</span><span class="p">(</span><span class="s">core</span><span class="w">  </span><span class="s">PNAME</span><span class="w"> </span><span class="s">core</span><span class="w">    </span><span class="s">TYPE</span><span class="w"> </span><span class="s">STATIC</span><span class="w"> </span><span class="s">GROUP</span><span class="w"> </span><span class="s">libs</span><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nb">add_subdirTEST</span><span class="p">(</span><span class="s">core_test</span><span class="p">)</span>
+</code></pre></div>
+<p>三个宏解决的问题：<strong>模块目录约定 + 自动收集源文件 + install 规则统一</strong>——新模块快速配置加入构建。</p>
+<h2 id="_3">第三步：验证清单（环境是否就绪的验收标准）<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>按顺序执行，全过 = 环境就绪：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1. 配置生成（应该看到 vcpkg 工具链 + 默认 Debug 的消息）</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>cmake<span class="w"> </span>-S<span class="w"> </span>.<span class="w"> </span>-B<span class="w"> </span>Build
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># 2. 编译（看到所有目标，无报错）</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>cmake<span class="w"> </span>--build<span class="w"> </span>Build
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c1"># 3. 运行测试（GTest 全绿）</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>ctest<span class="w"> </span>--test-dir<span class="w"> </span>Build
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="c1"># 4. 安装产物（bin/lib/include 齐全）</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>cmake<span class="w"> </span>--install<span class="w"> </span>Build<span class="w"> </span>--prefix<span class="w"> </span>Install
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="c1"># 5. 产物可执行（直接运行出结果）</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>./Install/bin/demo
+</code></pre></div>
+<p>第 5 步是整个工程化体系的"最小闭环"：<strong>配置 → 编译 → 测试 → 安装 → 运行</strong>。这五步跑通，后续流水线里的 <code>buildStage</code>（第 10 章）才有意义——它本质上就是执行这几条命令。</p>
+<h2 id="_4">小结<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<ul>
+<li>验证环境最快的方式：从零建最小 CMake 工程，跑通"配置→编译→测试→安装→运行"闭环；</li>
+<li>全局配置四个要点：vcpkg 工具链在 project 前、默认 Debug、C++17、输出目录三分（bin/lib）；</li>
+<li>三件套宏（exe/lib/test）让新模块一行接入，工程骨架统一；</li>
+<li>验证清单五步全过 = 工具链、CMake、依赖管理全部就绪。</li>
+</ul>
+<blockquote>
+<p>延伸：骨架有了，怎么并发编译提速（第 6 章）、怎么管理依赖缓存（第 8 章）、怎么把这套命令搬上流水线（第 10 章）——下一节讲编译提速。</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  <a href="/" class="back-to-home" title="返回首页">&#8962;</a>
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../04-jenkins-agents/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 04 三平台从节点">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                04 三平台从节点
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../06-parallel/" class="md-footer__link md-footer__link--next" aria-label="下一页: 06 CMake并发编译">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                06 CMake并发编译
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "navigation.footer", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
