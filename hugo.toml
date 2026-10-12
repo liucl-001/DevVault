@@ -1,4 +1,4 @@
-baseURL = "/dev-vault/"
+baseURL = "/"
 languageCode = "zh-cn"
 title = "DevVault"
 theme = "PaperMod"
@@ -6,6 +6,7 @@ theme = "PaperMod"
 enableRobotsTXT = true
 enableEmoji = true
 buildFuture = true
+relativeURLs = true
 
 [pagination]
   pagerSize = 8

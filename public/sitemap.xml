@@ -2,39 +2,39 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>/dev-vault/tags/c&#43;&#43;/</loc>
+    <loc>/tags/c&#43;&#43;/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/dev-vault/</loc>
+    <loc>/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/dev-vault/posts/hello-devvault/</loc>
+    <loc>/posts/hello-devvault/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/dev-vault/tags/go/</loc>
+    <loc>/tags/go/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/dev-vault/tags/hugo/</loc>
+    <loc>/tags/hugo/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/dev-vault/posts/</loc>
+    <loc>/posts/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/dev-vault/projects/</loc>
+    <loc>/projects/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/dev-vault/tags/</loc>
+    <loc>/tags/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/dev-vault/about/</loc>
+    <loc>/about/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/dev-vault/tags/%E5%BB%BA%E7%AB%99/</loc>
+    <loc>/tags/%E5%BB%BA%E7%AB%99/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/dev-vault/projects/sample-project/</loc>
+    <loc>/projects/sample-project/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/dev-vault/categories/</loc>
+    <loc>/categories/</loc>
   </url>
 </urlset>
