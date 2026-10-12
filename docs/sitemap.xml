@@ -3,10 +3,61 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/tags/c&#43;&#43;/</loc>
-    <lastmod>2026-10-12T15:30:00+08:00</lastmod>
+    <lastmod>2026-10-13T02:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/10-pipeline-real/</loc>
+    <lastmod>2026-10-13T02:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/tags/ci/cd/</loc>
+    <lastmod>2026-10-13T02:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/tags/cmake/</loc>
+    <lastmod>2026-10-13T02:00:00+08:00</lastmod>
   </url><url>
     <loc>/</loc>
-    <lastmod>2026-10-12T15:30:00+08:00</lastmod>
+    <lastmod>2026-10-13T02:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/tags/docker/</loc>
+    <lastmod>2026-10-13T02:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/tags/jenkins/</loc>
+    <lastmod>2026-10-13T02:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/</loc>
+    <lastmod>2026-10-13T02:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/tags/</loc>
+    <lastmod>2026-10-13T02:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/09-pipeline-syntax/</loc>
+    <lastmod>2026-10-13T01:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/08-deps-cache/</loc>
+    <lastmod>2026-10-13T00:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/07-matrix-build/</loc>
+    <lastmod>2026-10-12T23:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/06-parallel-build/</loc>
+    <lastmod>2026-10-12T22:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/05-min-cmake/</loc>
+    <lastmod>2026-10-12T21:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/04-jenkins-agents/</loc>
+    <lastmod>2026-10-12T20:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/03-jenkins-master/</loc>
+    <lastmod>2026-10-12T19:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/02-docker-setup/</loc>
+    <lastmod>2026-10-12T18:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/01-toolchain/</loc>
+    <lastmod>2026-10-12T17:00:00+08:00</lastmod>
+  </url><url>
+    <loc>/posts/00-env-baseline/</loc>
+    <lastmod>2026-10-12T16:00:00+08:00</lastmod>
   </url><url>
     <loc>/posts/hello-devvault/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
@@ -17,13 +68,7 @@
     <loc>/tags/hugo/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
-    <loc>/posts/</loc>
-    <lastmod>2026-10-12T15:30:00+08:00</lastmod>
-  </url><url>
     <loc>/projects/</loc>
-    <lastmod>2026-10-12T15:30:00+08:00</lastmod>
-  </url><url>
-    <loc>/tags/</loc>
     <lastmod>2026-10-12T15:30:00+08:00</lastmod>
   </url><url>
     <loc>/about/</loc>
