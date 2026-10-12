@@ -3,6 +3,7 @@ title: "Jenkins Pipeline语法速查"
 date: 2026-10-13T01:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
+series: ["C++工程化实战"]
 summary: "agent/trigger/when/credentials/错误处理一套语法"
 ---
 # Pipeline 基础：把构建流程写成代码

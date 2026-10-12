@@ -79,6 +79,13 @@
       <description>Windows/macOS/Linux三套工具链从零配好，vcpkg包管理与调试工具选择</description>
     </item>
     <item>
+      <title>C&#43;&#43;工程化实战：目录</title>
+      <link>/posts/cpp-engineering/</link>
+      <pubDate>Mon, 12 Oct 2026 16:00:00 +0800</pubDate>
+      <guid>/posts/cpp-engineering/</guid>
+      <description>从零搭建三平台C++工程化流水线：工具链→Docker→Jenkins→CMake→缓存→Pipeline实战</description>
+    </item>
+    <item>
       <title>环境基线与版本说明</title>
       <link>/posts/00-env-baseline/</link>
       <pubDate>Mon, 12 Oct 2026 16:00:00 +0800</pubDate>

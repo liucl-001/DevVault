@@ -3,6 +3,7 @@ title: "Jenkins主节点Docker化部署"
 date: 2026-10-12T19:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
+series: ["C++工程化实战"]
 summary: "JDK版本锁死、compose编排、Shared Library配置与定时备份"
 ---
 # Jenkins 主节点部署：Docker 化一键拉起

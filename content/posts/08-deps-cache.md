@@ -3,6 +3,7 @@ title: "依赖缓存三层体系"
 date: 2026-10-13T00:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
+series: ["C++工程化实战"]
 summary: "finished哨兵、源码下载缓存、CLEAN_BUILD全量开关"
 ---
 # 依赖缓存与增量构建：把几十分钟压缩成秒

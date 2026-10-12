@@ -3,6 +3,7 @@ title: "Docker环境搭建"
 date: 2026-10-12T18:00:00+08:00
 draft: false
 tags: ["C++", "CI/CD", "CMake", "Jenkins", "Docker"]
+series: ["C++工程化实战"]
 summary: "三平台Docker安装、TCP远程访问、daemon.json配置与故障排查"
 ---
 # Docker 环境搭建：三平台安装、远程访问与国内源
