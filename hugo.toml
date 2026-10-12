@@ -9,6 +9,9 @@ enableEmoji = true
 buildFuture = true
 relativeURLs = true
 
+# 首页直接显示文章列表（不用homeInfo）
+disableHomeInfo = false
+
 [pagination]
   pagerSize = 8
 
@@ -26,15 +29,38 @@ relativeURLs = true
   UseHugoToc = true
   disableSpecial1stPost = false
   comments = false
+  hideMeta = false
+  hideSummary = false
 
+  # 首页显示最新文章数量
+  mainSections = ["posts", "projects"]
+
+  # 搜索
+  fuseOpts.keys = ["title", "permalink", "summary", "content"]
+  fuseOpts.location = 0
+  fuseOpts.isCaseSensitive = false
+  fuseOpts.minMatchCharLength = 2
+  fuseOpts.shouldSort = true
+  fuseOpts.threshold = 0.3
+  fuseOpts.distance = 100
+
+# 首页信息块
 [params.homeInfoParams]
   Title = "DevVault"
-  Content = "系统开发手记  |  C++ / Go  |  工程实践与项目作品\n\n这里沉淀技术文章、踩坑记录与开源作品。"
+  Content = "系统开发手记  |  C++ / Go  |  工程实践与项目作品\n\n沉淀技术文章、踩坑记录与开源作品。"
 
+# 社交图标
+[[params.socialIcons]]
+  name = "github"
+  url = "https://github.com/liucl-001"
 [[params.socialIcons]]
   name = "gitee"
   url = "https://gitee.com/goccoder"
+[[params.socialIcons]]
+  name = "email"
+  url = "mailto:goccoder@users.noreply.gitee.com"
 
+# 菜单
 [menu]
   [[menu.main]]
     identifier = "posts"
@@ -47,7 +73,20 @@ relativeURLs = true
     url = "/projects/"
     weight = 2
   [[menu.main]]
+  identifier = "archives"
+  name = "归档"
+  url = "/archives/"
+  weight = 3
+  [[menu.main]]
     identifier = "about"
     name = "关于"
     url = "/about/"
-    weight = 3
+    weight = 4
+  [[menu.main]]
+    name = "搜索"
+    url = "/search/"
+    weight = 5
+
+# 搜索页需要 JSON output
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
