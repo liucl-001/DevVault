@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>DevVault</title>
+    <link>/dev-vault/</link>
+    <description>Recent content on DevVault</description>
+    <generator>Hugo</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 12 Oct 2026 15:30:00 +0800</lastBuildDate>
+    <atom:link href="/dev-vault/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DevVault 建站开篇</title>
+      <link>/dev-vault/posts/hello-devvault/</link>
+      <pubDate>Mon, 12 Oct 2026 15:30:00 +0800</pubDate>
+      <guid>/dev-vault/posts/hello-devvault/</guid>
+      <description>用 Hugo + Gitee Pages 搭一个个人技术站，记录文章与作品。</description>
+    </item>
+    <item>
+      <title>关于</title>
+      <link>/dev-vault/about/</link>
+      <pubDate>Mon, 12 Oct 2026 15:30:00 +0800</pubDate>
+      <guid>/dev-vault/about/</guid>
+      <description>&lt;h1 id=&#34;关于-devvault&#34;&gt;关于 DevVault&lt;/h1&gt;
+&lt;p&gt;DevVault 是我的个人技术站点，用来沉淀技术文章与项目作品。&lt;/p&gt;
+&lt;h2 id=&#34;我是谁&#34;&gt;我是谁&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;方向：C++ / Go 系统开发&lt;/li&gt;
+&lt;li&gt;关注：跨平台工程、网络编程、CI/CD、性能调优&lt;/li&gt;
+&lt;li&gt;Gitee：&lt;a href=&#34;https://gitee.com/goccoder&#34;&gt;goccoder&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;这个站是什么&#34;&gt;这个站是什么&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;文章&lt;/strong&gt;：踩坑记录、技术方案、源码阅读笔记&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;作品&lt;/strong&gt;：开源工具与个人项目&lt;/li&gt;
+&lt;/ul&gt;</description>
+    </item>
+    <item>
+      <title>示例项目</title>
+      <link>/dev-vault/projects/sample-project/</link>
+      <pubDate>Mon, 12 Oct 2026 15:30:00 +0800</pubDate>
+      <guid>/dev-vault/projects/sample-project/</guid>
+      <description>项目作品示例占位，后续替换为真实项目。</description>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,51 @@
+baseURL = "/dev-vault/"
+languageCode = "zh-cn"
+title = "DevVault"
+theme = "PaperMod"
+
+enableRobotsTXT = true
+enableEmoji = true
+buildFuture = true
+
+[pagination]
+  pagerSize = 8
+
+[params]
+  description = "开发者宝库 · C++ / Go 系统开发手记与项目作品"
+  author = "liucl"
+  defaultTheme = "auto"
+  displayMode = "relative"
+  ShowReadingTime = true
+  ShowShareButtons = true
+  ShowPostNavLinks = true
+  ShowBreadCrumbs = true
+  ShowCodeCopyButtons = true
+  ShowRssButtonInSectionTermList = true
+  UseHugoToc = true
+  disableSpecial1stPost = false
+  comments = false
+
+[params.homeInfoParams]
+  Title = "DevVault"
+  Content = "系统开发手记  |  C++ / Go  |  工程实践与项目作品\n\n这里沉淀技术文章、踩坑记录与开源作品。"
+
+[[params.socialIcons]]
+  name = "gitee"
+  url = "https://gitee.com/goccoder"
+
+[menu]
+  [[menu.main]]
+    identifier = "posts"
+    name = "文章"
+    url = "/posts/"
+    weight = 1
+  [[menu.main]]
+    identifier = "projects"
+    name = "作品"
+    url = "/projects/"
+    weight = 2
+  [[menu.main]]
+    identifier = "about"
+    name = "关于"
+    url = "/about/"
+    weight = 3

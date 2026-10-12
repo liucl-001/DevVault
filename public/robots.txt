@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: /dev-vault/sitemap.xml
