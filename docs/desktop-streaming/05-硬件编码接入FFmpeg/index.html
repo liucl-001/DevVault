@@ -1,0 +1,1906 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="技术文章与工程笔记">
+      
+      
+        <meta name="author" content="liucl">
+      
+      
+      
+        <link rel="prev" href="../04-%E9%87%87%E9%9B%86%E8%87%AA%E5%8A%A8%E9%99%8D%E7%BA%A7%E9%93%BE/">
+      
+      
+        <link rel="next" href="../06-RTP%E6%8E%A8%E6%B5%81%E4%B8%8ERTCP%E5%8F%8D%E9%A6%88/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>05 硬件编码接入FFmpeg - DevVault</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#05-gpu-nvencqsvamf-ffmpeg" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="DevVault" class="md-header__button md-logo" aria-label="DevVault" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DevVault
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              05 硬件编码接入FFmpeg
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换暗色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换暗色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换亮色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换亮色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../cpp-engineering/" class="md-tabs__link">
+          
+  
+  
+  C++工程化实战
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  低延迟桌面串流
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DevVault" class="md-nav__button md-logo" aria-label="DevVault" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DevVault
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++工程化实战
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    C++工程化实战
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    导读
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/01-toolchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 工具链与vcpkg
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/02-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Docker环境
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/03-jenkins-master/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Jenkins主节点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/04-jenkins-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 三平台从节点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/05-min-cmake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 最小CMake工程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/06-parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 CMake并发编译
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/07-matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 多平台并行构建
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/08-cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 依赖缓存与增量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/09-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Pipeline语法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/10-pipeline-real/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 C++流水线实战
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    低延迟桌面串流
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    低延迟桌面串流
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    导读(术语表)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-%E7%B3%BB%E7%BB%9F%E6%80%BB%E8%A7%88%E4%B8%8E%E6%9E%B6%E6%9E%84/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 系统总览与架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-FFmpeg%E5%9F%BA%E7%A1%80/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 FFmpeg 基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-%E5%B1%8F%E5%B9%95%E9%87%87%E9%9B%86%E6%8E%A5%E5%8F%A3%E4%B8%8E%E4%B8%A4%E7%A7%8D%E5%90%8E%E7%AB%AF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 屏幕采集接口
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-%E9%87%87%E9%9B%86%E8%87%AA%E5%8A%A8%E9%99%8D%E7%BA%A7%E9%93%BE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 采集自动降级链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 硬件编码接入FFmpeg
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 硬件编码接入FFmpeg
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计意图
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-hw_codec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 硬件能力探测：hw_codec（编解码共用一张"厂商→编码器"映射）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 编码器厂商匹配
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 三条输入路径（本系列最核心的编码知识点）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 三条输入路径（本系列最核心的编码知识点）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-anvencamf-d3d11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 路径 A：NVENC/AMF 直接消费 D3D11 帧
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-bqsv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 路径 B：QSV 硬件直通（最精巧的部分）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-cgdi-cpu-nv12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 路径 C：GDI 软路径（CPU NV12）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#34-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 零拷贝的真义：与"显示器绑定 GPU"的硬前提
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35-qsv-av_hwframe_map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 为什么 QSV 绝不能用 av_hwframe_map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#36-intel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 真机结论与回退决策（Intel 核显实测）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 按后端设置编码参数
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-encode-idr-eagaineinval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 编码一帧 encode()：强制 IDR 与 EAGAIN/EINVAL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 一句话总结
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-RTP%E6%8E%A8%E6%B5%81%E4%B8%8ERTCP%E5%8F%8D%E9%A6%88/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 RTP推流与RTCP反馈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-%E7%A7%81%E6%9C%89%E6%8E%A7%E5%88%B6%E9%9D%A2%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89SEI/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 私有控制面与自定义SEI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-RTP%E6%8E%A5%E6%94%B6%E4%B8%8E%E7%A1%AC%E4%BB%B6%E8%A7%A3%E7%A0%81/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 RTP接收与硬件解码
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-SDL%E4%B8%8A%E5%B1%8F%E4%B8%8EQt%E5%B5%8C%E5%85%A5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 SDL上屏与Qt嵌入
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-%E9%87%87%E9%9B%86%E7%AB%AF%E7%8A%B6%E6%80%81%E6%9C%BA%E4%B8%8E%E5%BB%B6%E8%BF%9F%E6%8E%A7%E5%88%B6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 采集端状态机与延迟控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计意图
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-hw_codec" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 硬件能力探测：hw_codec（编解码共用一张"厂商→编码器"映射）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 编码器厂商匹配
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 三条输入路径（本系列最核心的编码知识点）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 三条输入路径（本系列最核心的编码知识点）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-anvencamf-d3d11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 路径 A：NVENC/AMF 直接消费 D3D11 帧
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-bqsv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 路径 B：QSV 硬件直通（最精巧的部分）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-cgdi-cpu-nv12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 路径 C：GDI 软路径（CPU NV12）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#34-gpu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 零拷贝的真义：与"显示器绑定 GPU"的硬前提
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35-qsv-av_hwframe_map" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 为什么 QSV 绝不能用 av_hwframe_map
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#36-intel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 真机结论与回退决策（Intel 核显实测）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 按后端设置编码参数
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-encode-idr-eagaineinval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 编码一帧 encode()：强制 IDR 与 EAGAIN/EINVAL
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 一句话总结
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="05-gpu-nvencqsvamf-ffmpeg">05 · 硬件编码：把 GPU 编码器（NVENC/QSV/AMF）接进 FFmpeg<a class="headerlink" href="#05-gpu-nvencqsvamf-ffmpeg" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>系列第 5 篇。核心：怎么把采集到的帧喂给 GPU 编码器，做到零拷贝、低延迟。
+涉及模块：<strong>编解码层</strong>（策略 <code>hw_codec</code>，编码器 <code>hevc_encoder</code>）
+术语约定：NVENC/QSV/AMF、hw_device_ctx/hw_frames_ctx、EAGAIN 等见 《系列导读 · 术语表》。</p>
+</blockquote>
+<hr />
+<h2 id="_1">设计意图<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><strong>先回答一个前置问题：为什么码流只用 HEVC（H.265），不引入其他编码标准？</strong></p>
+<p>桌面串流对"流量"极敏感——同一块画面，标准越新，同画质下码率越低。HEVC 在同画质下
+约比 H.264 省 30~50% 码率；局域网/WiFi 带宽有限且天然抖动，码率越低越稳、越抗丢包，
+也越能留出 RTCP PLI 等反馈的余量。VP9/AV1 压缩率虽更高，但<strong>硬编在桌面端不成熟</strong>
+（AV1 硬编要 2023+ 显卡，VP9 几乎没有硬编），串流要的是低延迟硬编硬解，不能用软编兜底。
+所以最终<strong>只锁定 HEVC</strong>：三大家（NVENC/QSV/AMF）都支持 HEVC 硬编，2016+ 的独显/核显
+普遍 HEVC 硬解，硬编硬解生态最成熟。代价是<strong>硬解门槛</strong>——解码端必须有 HEVC 硬解，
+纯软解/老显卡用不了。这正是后面"按厂商绑定硬编 + 接收端 HEVC 硬解（无软解回退）"整套
+设计的由来。H.264 不是不能做（三大家的 H.264 硬编同样成熟），只是同画质码率更高，
+不符合"更低流量"这个首要目标。</p>
+<hr />
+<p>延迟预算里，编码是除采集外最大的开销。这一篇要解决三个问题：</p>
+<ol>
+<li><strong>编码器是显卡决定的，软件不做"选择"</strong>——一台机器用哪张显卡，硬件就只支持它那
+   一家的编码器（NVIDIA→NVENC / Intel→QSV / AMD→AMF），这是死的、软件改不了。
+   软件唯一能做的，是探测 GPU 厂商（vendor），把"这张卡"映射到<strong>它唯一支持的编码器名</strong>，
+   再配上统一的低延迟参数。编码端与接收端共用这张"厂商→编码器/解码器"映射，是为了
+   <strong>解码端一定能解出编码端选的格式</strong>（格式对齐），而不是软件去"挑"编码器。</li>
+<li><strong>怎么把采集帧喂进去还保持零拷贝</strong>——DXGI 抓到的是 D3D11 纹理，NVENC/AMF 原生就吃
+   这种纹理，QSV 只吃 NV12 表面，GDI 抓到的是 CPU 像素。三种输入，三种接法。</li>
+<li><strong>怎么应对异步编码的边界</strong>——<code>EAGAIN</code>/<code>EINVAL</code> 的语义不搞清，要么丢帧要么卡死。</li>
+</ol>
+<hr />
+<h2 id="1-hw_codec">1. 硬件能力探测：hw_codec（编解码共用一张"厂商→编码器"映射）<a class="headerlink" href="#1-hw_codec" title="Permanent link">&para;</a></h2>
+<p>这张表不是"可选的候选"，而是"<strong>厂商 → 编码器/解码器名 + 统一低延迟参数</strong>"的固定映射：
+探测到哪个 vendor，就绑定到它唯一支持的编码器。<strong>编码端与接收端解码共用同一张表</strong>，
+保证解码端能解编码端用的格式——这是"格式对齐"，不是"挑编码器"。</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">// 厂商→编码器名映射（按 vendor 匹配，非遍历择优），绝不回退 libx265</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">encoderCandidates</span><span class="p">()</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">{{</span><span class="s">"hevc_nvenc"</span><span class="p">,</span><span class="w"> </span><span class="n">kNvidia</span><span class="p">,</span><span class="w"> </span><span class="s">"NVENC"</span><span class="p">},</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">                       </span><span class="p">{</span><span class="s">"hevc_qsv"</span><span class="p">,</span><span class="w">   </span><span class="n">kIntel</span><span class="p">,</span><span class="w">  </span><span class="s">"QSV"</span><span class="p">},</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">                       </span><span class="p">{</span><span class="s">"hevc_amf"</span><span class="p">,</span><span class="w">   </span><span class="n">kAmd</span><span class="p">,</span><span class="w">    </span><span class="s">"AMF"</span><span class="p">}};</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c1">// 厂商→解码器名映射（同一张表给接收端用）</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">decoderCandidates</span><span class="p">()</span><span class="w"> </span><span class="err">→</span><span class="w"> </span><span class="p">{{</span><span class="s">"hevc_cuvid"</span><span class="p">,</span><span class="w">  </span><span class="n">AV_HWDEVICE_TYPE_CUDA</span><span class="p">,</span><span class="w">   </span><span class="s">"CUVID"</span><span class="p">},</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">                       </span><span class="p">{</span><span class="s">"hevc_nvdec"</span><span class="p">,</span><span class="w">  </span><span class="n">AV_HWDEVICE_TYPE_CUDA</span><span class="p">,</span><span class="w">   </span><span class="s">"NVDEC"</span><span class="p">},</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">                       </span><span class="p">{</span><span class="s">"hevc_qsv"</span><span class="p">,</span><span class="w">    </span><span class="n">AV_HWDEVICE_TYPE_QSV</span><span class="p">,</span><span class="w">    </span><span class="s">"QSV"</span><span class="p">},</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">                       </span><span class="p">{</span><span class="s">"hevc_d3d11va"</span><span class="p">,</span><span class="n">AV_HWDEVICE_TYPE_D3D11VA</span><span class="p">,</span><span class="s">"D3D11VA"</span><span class="p">}};</span>
+</code></pre></div>
+<p>统一低延迟旗标（编解码共用）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">applyLowLatencyFlags</span><span class="p">(</span><span class="n">AVCodecContext</span><span class="o">*</span><span class="w"> </span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">decoding</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">flags</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="n">AV_CODEC_FLAG_LOW_DELAY</span><span class="p">;</span><span class="w">  </span><span class="c1">// 不允许为吞吐做帧级缓冲</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">has_b_frames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w">                  </span><span class="c1">// 无 B 帧 → 无重排序 → 解码端无需 reorder</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">decoding</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">thread_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">ctx</span><span class="o">-&gt;</span><span class="n">thread_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span><span class="w">  </span><span class="c1">// 单线程解码</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
+</code></pre></div>
+<p>设计意图：<strong>一张映射表两端共用</strong>——采集端按本机显卡绑定到唯一编码器，接收端用同一张表
+选对应的解码器，保证"编码端用什么格式，解码端就能解什么"；改一处即全同步。
+<strong>LOW_DELAY + 无 B 帧 + 单线程解码</strong>是贯穿全系统的三条延迟红线。</p>
+<h2 id="2">2. 编码器厂商匹配<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<p><strong>硬件直通要求抓屏与编码在同一 GPU</strong>，编码器必须匹配设备厂商。通过 DXGI 读 GPU VendorId：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1">// 共享 D3D11VA 设备路径：d3d-&gt;device → IDXGIDevice → GetAdapter → GetDesc</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c1">// 软路径：CreateDXGIFactory1 → EnumAdapters1(0) → GetDesc1</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">vendor_id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="mh">0x10DE</span><span class="p">:</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"hevc_nvenc"</span><span class="p">;</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w">  </span><span class="c1">// NVIDIA</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="mh">0x1002</span><span class="p">:</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"hevc_amf"</span><span class="p">;</span><span class="w">   </span><span class="k">break</span><span class="p">;</span><span class="w">  </span><span class="c1">// AMD</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="k">case</span><span class="w"> </span><span class="mh">0x8086</span><span class="p">:</span><span class="w"> </span><span class="n">want</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"hevc_qsv"</span><span class="p">;</span><span class="w">   </span><span class="k">break</span><span class="p">;</span><span class="w">  </span><span class="c1">// Intel</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">}</span>
+</code></pre></div>
+<p>显式传 <code>--encoder libx265</code> 之类软件编码器会被拒绝（只接受 hw_codec 登记的硬件编码器），
+实现"只走硬件、无软回退"对用户输入的覆盖。</p>
+<p>设计意图：<strong>编码器必须和抓屏同一家 GPU</strong>——NVENC 不能编码 AMD 的 D3D11 纹理。
+而软件编码器被拒绝，是因为软编一帧几十毫秒，直接击穿延迟预算，宁可启动即失败，
+也不悄悄变卡（符合第 1 篇的取舍表）。</p>
+<h2 id="3">3. 三条输入路径（本系列最核心的编码知识点）<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<p><code>HevcEncoder::init(opts, shared_hw_ctx, shared_frames_ctx)</code> 按输入来源分流：</p>
+<table>
+<thead>
+<tr>
+<th>路径</th>
+<th>触发条件</th>
+<th>输入帧</th>
+<th>pix_fmt</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A. DXGI 硬件直通</strong></td>
+<td><code>shared_hw_ctx != nullptr</code> 且非 QSV</td>
+<td>D3D11 BGRA 纹理</td>
+<td><code>AV_PIX_FMT_D3D11</code></td>
+<td>NVENC/AMF 原生消费 B8G8R8A8，<strong>零转换零拷贝</strong></td>
+</tr>
+<tr>
+<td><strong>B. QSV 硬件直通</strong></td>
+<td><code>shared_hw_ctx != nullptr</code> 且 QSV</td>
+<td>D3D11 纹理(BGRA/NV12)</td>
+<td><code>AV_PIX_FMT_QSV</code></td>
+<td>QSV 只吃 NV12，需 GPU 内 BGRA→NV12</td>
+</tr>
+<tr>
+<td><strong>C. GDI 软路径</strong></td>
+<td><code>shared_hw_ctx == nullptr</code></td>
+<td>CPU NV12</td>
+<td><code>AV_PIX_FMT_NV12</code> / <code>AV_PIX_FMT_QSV</code></td>
+<td>硬件编码器原生支持 CPU NV12 输入</td>
+</tr>
+</tbody>
+</table>
+<p>设计意图：路径由"采集器是否共享了硬件上下文"自动决定——采集是 DXGI 就走硬件直通
+（A/B），是 GDI 就走软路径（C）。<strong>编码器不感知采集后端，只看有没有共享 hw 上下文。</strong></p>
+<h3 id="31-anvencamf-d3d11">3.1 路径 A：NVENC/AMF 直接消费 D3D11 帧<a class="headerlink" href="#31-anvencamf-d3d11" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">hw_ctx_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AvBufferRefPtr</span><span class="p">(</span><span class="n">av_buffer_ref</span><span class="p">(</span><span class="n">shared_hw_ctx</span><span class="p">));</span><span class="w">   </span><span class="c1">// 复用采集器的 D3D11VA 设备</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">hw_device_ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">av_buffer_ref</span><span class="p">(</span><span class="n">hw_ctx_</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">// 优先复用采集器的帧池——ffmpeg 校验输入帧的 hw_frames_ctx 与编码器的是同一 data</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">shared_frames_ctx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="n">hw_frames_ref_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AvBufferRefPtr</span><span class="p">(</span><span class="n">av_buffer_ref</span><span class="p">(</span><span class="n">shared_frames_ctx</span><span class="p">));</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="n">hw_frames_ref_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AvBufferRefPtr</span><span class="p">(</span><span class="n">av_hwframe_ctx_alloc</span><span class="p">(</span><span class="n">hw_ctx_</span><span class="p">.</span><span class="n">get</span><span class="p">()));</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">  </span><span class="n">AVHWFramesContext</span><span class="o">*</span><span class="w"> </span><span class="n">fc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="n">fc</span><span class="o">-&gt;</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AV_PIX_FMT_D3D11</span><span class="p">;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="n">fc</span><span class="o">-&gt;</span><span class="n">sw_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AV_PIX_FMT_BGRA</span><span class="p">;</span><span class="w">   </span><span class="c1">// 与抓屏帧同格式，免 GPU 格式转换</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="n">fc</span><span class="o">-&gt;</span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">opts</span><span class="p">.</span><span class="n">width</span><span class="p">;</span><span class="w"> </span><span class="n">fc</span><span class="o">-&gt;</span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">opts</span><span class="p">.</span><span class="n">height</span><span class="p">;</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="n">av_hwframe_ctx_init</span><span class="p">(</span><span class="n">hw_frames_ref_</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="p">}</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">hw_frames_ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">av_buffer_ref</span><span class="p">(</span><span class="n">hw_frames_ref_</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+</code></pre></div>
+<blockquote>
+<p>关键：<strong>swscale 不支持 D3D11 hw 帧作为输入</strong>，所以硬件直通绝不能走 sws 转格式，
+必须靠编码器原生消费 BGRA，或走下面的 GPU VideoProcessor。
+设计意图：零拷贝不是"少一次 memcpy"这么简单，而是<strong>避免 CPU/GPU 之间任何往返</strong>——
+从采集帧池到编码器输入，全在 GPU 上。</p>
+</blockquote>
+<h3 id="32-bqsv">3.2 路径 B：QSV 硬件直通（最精巧的部分）<a class="headerlink" href="#32-bqsv" title="Permanent link">&para;</a></h3>
+<p>QSV 编码器只吃 NV12 表面，且<strong>只认自家帧池里的表面</strong>（绝不能用 <code>av_hwframe_map</code> 映射
+外部纹理，会 <code>MFX_ERR_UNSUPPORTED=-3</code>）。方案：</p>
+<ol>
+<li><strong>从采集器共享的 D3D11VA 设备派生 QSV 设备</strong>（底层复用同一 D3D11 device、同一 GPU
+   显存，无跨设备拷贝）：
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">AVDictionary</span><span class="o">*</span><span class="w"> </span><span class="n">qsv_opts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">av_dict_set</span><span class="p">(</span><span class="o">&amp;</span><span class="n">qsv_opts</span><span class="p">,</span><span class="w"> </span><span class="s">"child_device_type"</span><span class="p">,</span><span class="w"> </span><span class="s">"d3d11va"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">av_hwdevice_ctx_create_derived_opts</span><span class="p">(</span><span class="o">&amp;</span><span class="n">qsv_dev</span><span class="p">,</span><span class="w"> </span><span class="n">AV_HWDEVICE_TYPE_QSV</span><span class="p">,</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">                                    </span><span class="n">shared_hw_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">qsv_opts</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</code></pre></div>
+   设计意图：<code>create_derived_opts</code> 让 QSV 设备<strong>长在采集器的 D3D11 设备之上</strong>，
+   等于"同一个 GPU、同一块显存"，没有跨设备拷贝。</li>
+<li><strong>建立 NV12 QSV 帧池</strong>（<code>format=AV_PIX_FMT_QSV</code>，<code>sw_format=NV12</code>）。一个实测坑：
+   <code>initial_pool_size</code> 设 &gt;0 在 Intel 核显上会触发 <code>0x80070057(E_INVALIDARG)</code>，必须用 <code>0</code>
+   （动态池，av_buffer_pool 按需扩容）。</li>
+<li><strong>用 D3D11 VideoProcessor 在 GPU 内把抓屏纹理渲染进 QSV 池表面</strong>：
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// encode() 中：先取一帧 QSV 池表面</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">av_hwframe_get_buffer</span><span class="p">(</span><span class="n">hw_frames_ref_</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="n">qsv_frame</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">// 再用 VideoProcessor 把 BGRA 抓屏帧渲染进去（BGRA→NV12 转换 / NV12→NV12 纯拷贝）</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">qsv_conv_</span><span class="o">-&gt;</span><span class="n">convertInto</span><span class="p">(</span><span class="n">d3d11_bgra</span><span class="p">,</span><span class="w"> </span><span class="n">qsv_frame</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+</code></pre></div>
+   <code>QsvGpuConverter</code> 用 <code>ID3D11VideoDevice/Context</code> 创建 <code>VideoProcessor</code>，
+   <code>VideoProcessorBlt</code> 把 src 纹理渲染进 dst（QSV 池 surface 的 d3d11 子纹理），全程 GPU。
+   并显式设 <code>VideoProcessorSetStreamColorSpace</code>：<code>Nominal_Range=0</code>(有限范围)、
+   <code>YCbCr_Matrix=0</code>(BT.601)。
+   设计意图：<strong>格式转换也用 GPU 做</strong>（VideoProcessor 是硬件颜色转换器），
+   BGRA→NV12 不落 CPU；同时显式指定色彩空间，避免默认值导致偏色/黑位错误。</li>
+</ol>
+<h3 id="33-cgdi-cpu-nv12">3.3 路径 C：GDI 软路径（CPU NV12）<a class="headerlink" href="#33-cgdi-cpu-nv12" title="Permanent link">&para;</a></h3>
+<ul>
+<li>NVENC/AMF：直接送 CPU NV12 帧，<strong>不需要</strong> <code>hw_device_ctx/hw_frames_ctx</code>
+  （ffmpeg 编码器内部自动上传 GPU）。</li>
+<li>QSV 软路径例外：<strong>必须有</strong> <code>hw_device_ctx</code>(MFX 会话) + <code>hw_frames_ctx</code>，否则 open2 虽成功
+  但编码空转无输出（Intel 核显实测 <code>pushed</code> 恒为 0）。用 <code>av_hwdevice_ctx_create(QSV, d3d11va)</code>
+  建独立 QSV 设备，然后 <code>av_hwframe_transfer_data</code> 把 CPU NV12 上传到 QSV 表面。
+  设计意图：QSV 对"软输入"也要 MFX 会话 + 帧池，缺一个就静默无输出——
+  <strong>这是硬件编码器里最容易"看起来成功实则白跑"的坑，必须专门记住</strong>。</li>
+</ul>
+<h2 id="34-gpu">3.4 零拷贝的真义：与"显示器绑定 GPU"的硬前提<a class="headerlink" href="#34-gpu" title="Permanent link">&para;</a></h2>
+<p>Intel Media SDK 语境下，<strong>零拷贝 = 避免 D3D 表面 ↔ 系统内存的往返</strong>；在<strong>显存内</strong>做一次
+格式转换（由 GPU 完成）<strong>仍算零拷贝</strong>——它不是"免拷贝"，而是"用 GPU 拷贝代替 CPU 拷贝
+（sws_scale）"。所以 QSV 的正确做法不是"像 NVENC/AMF 那样免转换直通"，而是"必须做一次
+GPU 内 NV12 转换再喂给编码器，但全程零 CPU、零跨设备"。</p>
+<p><strong>D3D11 零拷贝直通只在"与显示器绑定的那块 GPU"上成立</strong>，且与编码器厂商无关：</p>
+<ul>
+<li>桌面纹理由<strong>主显卡（接显示器的那块）</strong>产生；</li>
+<li>NVENC/AMF 要绑定到<strong>它自己的 D3D11 设备</strong>做零拷贝；</li>
+<li>若桌面纹理来自核显、编码器在独显 → 采集纹理与编码器<strong>跨 GPU</strong>，NVENC 直接报
+  <code>OpenEncodeSessionEx failed: no encode device (1)</code>，无法打开编码会话；</li>
+<li>即便强行走通也只能<strong>跨 GPU 拷贝</strong>（核显纹理→显存→NVIDIA 编码），退化为 CPU 软路径，
+  回到 ~27ms 级别，测不到零拷贝收益。</li>
+</ul>
+<p>真机三机对照（同一工程实测）：</p>
+<table>
+<thead>
+<tr>
+<th>机器</th>
+<th>主显卡（接显示器）</th>
+<th>编码器</th>
+<th>零拷贝</th>
+<th>采集实测</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AMD 核显机</td>
+<td>AMD 核显</td>
+<td>AMF</td>
+<td>✅</td>
+<td>capture ≈ 1.6~2.0ms（D3D11 直通，降 93%）</td>
+</tr>
+<tr>
+<td>Intel QSV 机（DPI 开）</td>
+<td>Intel 核显</td>
+<td>QSV</td>
+<td>❌（CPU 软路径）</td>
+<td>capture ≈ 27ms（拷贝 + sws）</td>
+</tr>
+<tr>
+<td>混合显卡笔记本</td>
+<td>AMD 核显</td>
+<td>NVENC</td>
+<td>❌（编码器打不开）</td>
+<td>启动即失败</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>结论：要测 NVENC/AMF 零拷贝收益，需<strong>显示器直接接在该编码器所在 GPU</strong> 上
+（台式机独显输出 / 笔记本外接屏并设独显为主输出）。</p>
+<p><strong>三家验证状态（如实标注，避免把外推当实测）</strong>：
+- <strong>AMD AMF：完整验证</strong>——在"零拷贝硬前提满足"（显示器直连 AMD 核显）的环境下跑通，
+  有实测数据（capture 1.6~2.0ms）。<strong>这是唯一完整验证过的零拷贝路径</strong>。
+- <strong>Intel QSV：已实测，但受条件限制</strong>——在核显 + 该驱动组合下 GPU 直通失败，走 CPU
+  NV12 软路径（见 3.6、3.5）；不是"没测"，是条件不满足。
+- <strong>NVIDIA NVENC：受条件限制，未能在零拷贝前提满足下验证</strong>——缺一台"显示器直接接
+  NVIDIA 独显"的主机，故 NVENC 的 D3D11 直通零拷贝尚未在本工程实测；当前唯一相关实测是
+  混合显卡笔记本（显示器接核显、编码器在独显）<strong>跨 GPU 打不开编码会话</strong>。因此文中关于
+  "NVENC 原生消费 D3D11、可零拷贝"的表述<strong>基于厂商能力 + AMD 类比推断，非本工程实测</strong>，
+  若照抄需先在你自己的 NVIDIA 独显直连主机上验证。</p>
+</blockquote>
+<h2 id="35-qsv-av_hwframe_map">3.5 为什么 QSV 绝不能用 av_hwframe_map<a class="headerlink" href="#35-qsv-av_hwframe_map" title="Permanent link">&para;</a></h2>
+<p>QSV 编码器只认<strong>自己帧池里分配的表面</strong>。ffmpeg 的 <code>qsv_map_to</code> 只在自己池
+<code>hwctx-&gt;surfaces[]</code> 里按 <code>data[0]</code> 纹理指针逐个匹配；抓屏/独立中转纹理不在池里 →
+匹配不到 → <strong><code>MFX_ERR_UNSUPPORTED</code>（=-3）</strong>。NVENC/AMF 能消费任意外部纹理，QSV 不行。</p>
+<p>两个最小复现实测：
+- <code>av_hwframe_map(D3D11 NV12 → QSV surface)</code>：返回 0、<code>data[3]</code> 有 MemId，但 send 5 帧
+  receive 0 帧——编码器不认 map 出来的外部表面，encode() 恒 EAGAIN（pushed=0、viewer
+  收不到视频帧）；
+- <code>av_hwframe_transfer_data(D3D11 hw 源 → QSV)</code>：返回 <strong>-22（EINVAL）</strong>，不支持该方向。</p>
+<p><strong>对策</strong>：不再 map/transfer 外部纹理，而是用 <strong>D3D11 VideoProcessor 把抓屏纹理直接
+<code>VideoProcessorBlt</code> 渲染进「QSV 帧池自己的 d3d11 子纹理」</strong>（<code>av_hwframe_get_buffer(QSV池)</code>
+取得的表面，其 <code>data[0]</code> 即该纹理），随后直接送编码。该表面本就是 QSV 自家池成员，
+绕开池内匹配问题——这正是 3.2 路径 B 的设计根因。</p>
+<h2 id="36-intel">3.6 真机结论与回退决策（Intel 核显实测）<a class="headerlink" href="#36-intel" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>两个根因已修复</strong>：① QSV <code>derive</code> 返回 -16 = 采集器 D3D11 设备缺多线程保护
+  （oneVPL 要求 <code>SetMultithreadProtected(TRUE)</code> 才能绑定，否则 <code>MFX_ERR_INVALID_HANDLE</code>）；
+  ② QSV NV12 帧池 <code>initial_pool_size&gt;0</code> 在 Intel 核显触发 <code>0x80070057</code>，必须用 <code>0</code>（动态池）。</li>
+<li><strong>本机 QSV 最终只接受 CPU NV12 输入</strong>：GPU 直通（map/render）在该组合
+  （FFmpeg 8.x + Intel 核显 + 该驱动）上只能出首帧 IDR、P 帧不消费/卡死，属<strong>硬限制</strong>。</li>
+<li><strong>保底决策</strong>：QSV 走 CPU NV12 软路径（稳定出帧，非零拷贝）；真正跑通的零拷贝硬编路径
+  是 <strong>AMF（D3D11 直通）</strong>——已在 AMD 核显机实测 capture 1.6~2.0ms、enc+push 2.1~2.3ms、
+  dropped 0%。</li>
+</ul>
+<blockquote>
+<p>教训：<strong>"零拷贝"是有硬前提的（同 GPU、同设备、自家帧池）</strong>，不是换个编码器名就成立。</p>
+<p><strong>补充实测（Intel N150 入门级主机）</strong>：在 Intel N150（Alder Lake-N 平台，Gracemont 4 核 +
+Intel UHD 核显，Xe-LP 24 EU）主机上，抓屏 → QSV 编码同样<strong>无法建立 GPU 直通零拷贝</strong>，
+与前述核显机结论一致，最终走 CPU NV12 软路径（capture 含拷贝 + sws）。</p>
+<p><strong>原因归类</strong>：按现有证据<strong>倾向"平台/机器组合限制"而非单一因素</strong>，但<strong>根因尚未最终定位</strong>，
+这里如实标注，不做武断结论。可能叠加的诱因包括：
+1. 入门级核显（Alder Lake-N）与显示绑定的 D3D11 设备在 oneVPL/QSV 驱动下的 enablement
+   覆盖不全，未必满足 3.4 的"同 GPU、同设备"零拷贝前提；
+2. 桌面纹理来源（合成器/DPI 路径）与该 GPU 的绑定关系，未进入编码器可消费的帧池；
+3. FFmpeg 版本 + Intel 驱动 + oneVPL 的组合问题——QSV 只认自家帧池，map/render 常表现为
+   "只出首帧 IDR、P 帧不消费/卡死"（见 3.5），N150 上同样复现。</p>
+<p>若要进一步定位，建议从"该核显上 <code>qsv_map</code> / <code>VideoProcessorBlt</code> 的结果是否真正进入编码器
+消费"逐段抓取 trace 入手，而不是直接归因硬件。</p>
+</blockquote>
+<h2 id="4">4. 按后端设置编码参数<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">encoder_name_</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"hevc_nvenc"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="n">av_opt_set</span><span class="p">(</span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">priv_data</span><span class="p">,</span><span class="w"> </span><span class="s">"preset"</span><span class="p">,</span><span class="w"> </span><span class="s">"p1"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">       </span><span class="c1">// 最低延迟档</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="n">av_opt_set</span><span class="p">(</span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">priv_data</span><span class="p">,</span><span class="w"> </span><span class="s">"tune"</span><span class="p">,</span><span class="w"> </span><span class="s">"ull"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="n">av_opt_set</span><span class="p">(</span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">priv_data</span><span class="p">,</span><span class="w"> </span><span class="s">"zerolatency"</span><span class="p">,</span><span class="w"> </span><span class="s">"1"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="n">av_opt_set</span><span class="p">(</span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">priv_data</span><span class="p">,</span><span class="w"> </span><span class="s">"repeat_headers"</span><span class="p">,</span><span class="w"> </span><span class="s">"1"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="c1">// 每 IDR 重复 SPS/PPS（in-band）</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">max_b_frames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="c1">// cbr ? "rc=cbr" : "rc=vbr + cq=23"（静态自动降码率省资源）</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">encoder_name_</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"hevc_qsv"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="n">av_opt_set</span><span class="p">(</span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">priv_data</span><span class="p">,</span><span class="w"> </span><span class="s">"preset"</span><span class="p">,</span><span class="w"> </span><span class="s">"medium"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">  </span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">global_quality</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span><span class="w">                            </span><span class="c1">// ICQ 智能恒定质量</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="n">av_opt_set</span><span class="p">(</span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">priv_data</span><span class="p">,</span><span class="w"> </span><span class="s">"forced_idr"</span><span class="p">,</span><span class="w"> </span><span class="s">"1"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">    </span><span class="c1">// 手动 I 帧输出真 IDR</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">max_b_frames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">encoder_name_</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"hevc_amf"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="n">av_opt_set</span><span class="p">(</span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">priv_data</span><span class="p">,</span><span class="w"> </span><span class="s">"usage"</span><span class="p">,</span><span class="w"> </span><span class="s">"lowlatency"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="n">av_opt_set</span><span class="p">(</span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">priv_data</span><span class="p">,</span><span class="w"> </span><span class="s">"quality"</span><span class="p">,</span><span class="w"> </span><span class="s">"speed"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="n">av_opt_set</span><span class="p">(</span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">priv_data</span><span class="p">,</span><span class="w"> </span><span class="s">"lookahead"</span><span class="p">,</span><span class="w"> </span><span class="s">"0"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w">     </span><span class="c1">// 显式关 lookahead</span>
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span><span class="n">av_opt_set</span><span class="p">(</span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">priv_data</span><span class="p">,</span><span class="w"> </span><span class="s">"frame_skipping"</span><span class="p">,</span><span class="w"> </span><span class="s">"0"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span><span class="n">av_opt_set</span><span class="p">(</span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">priv_data</span><span class="p">,</span><span class="w"> </span><span class="s">"forced_idr"</span><span class="p">,</span><span class="w"> </span><span class="s">"1"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span><span class="n">av_opt_set</span><span class="p">(</span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">priv_data</span><span class="p">,</span><span class="w"> </span><span class="s">"header_insertion_mode"</span><span class="p">,</span><span class="w"> </span><span class="s">"2"</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="c1">// 每帧插参数集</span>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a><span class="w">  </span><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">max_b_frames</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="p">}</span>
+</code></pre></div>
+<blockquote>
+<p>AMF 的 <code>header_insertion_mode=2</code>（每帧插 SPS/PPS）是关键坑的解药：WiFi 乱序下参数集包
+与 IDR 分片乱序到达，接收端 cuvid 报 "PPS id out of range" 解不出帧。每帧插参数集使
+任何时刻可解，带宽开销 ~100B/帧 @25fps ≈ 2.5KB/s，可忽略。
+设计意图：<strong>接收端何时都能入解</strong> 比省那 2.5KB/s 重要得多——这就是"健壮性优先于带宽"。</p>
+</blockquote>
+<h2 id="5-encode-idr-eagaineinval">5. 编码一帧 encode()：强制 IDR 与 EAGAIN/EINVAL<a class="headerlink" href="#5-encode-idr-eagaineinval" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kt">int</span><span class="w"> </span><span class="nf">HevcEncoder::encode</span><span class="p">(</span><span class="n">AVFrame</span><span class="o">*</span><span class="w"> </span><span class="n">d3d11_bgra</span><span class="p">,</span><span class="w"> </span><span class="n">AVPacket</span><span class="o">*</span><span class="w"> </span><span class="n">out_packet</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="n">d3d11_bgra</span><span class="o">-&gt;</span><span class="n">pict_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AV_PICTURE_TYPE_NONE</span><span class="p">;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">keyframe_requested_</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">d3d11_bgra</span><span class="o">-&gt;</span><span class="n">pict_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AV_PICTURE_TYPE_I</span><span class="p">;</span><span class="w"> </span><span class="n">keyframe_requested_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="c1">// ... QSV 路径：先取 QSV surface 再送</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">sret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">avcodec_send_frame</span><span class="p">(</span><span class="n">ctx_</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="n">frame_to_send</span><span class="p">);</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sret</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">AVERROR</span><span class="p">(</span><span class="n">EINVAL</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="c1">// AMF 同步编码：上一帧仍在编码中时 send 返回 EINVAL 而非 EAGAIN。</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="c1">// Drain 已完成帧并等待 50ms 后重试同一帧（上限 20 次）。重试期间若编码器</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="c1">// 输出了帧（含强制 IDR），必须 av_packet_move_ref 交付——此前直接 unref 丢弃，</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="c1">// 导致静止重推场景视频帧永远推不出去、viewer 等不到 IDR 黑屏。</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">tries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">tries</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">sret</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">AVERROR</span><span class="p">(</span><span class="n">EINVAL</span><span class="p">);</span><span class="w"> </span><span class="o">++</span><span class="n">tries</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">      </span><span class="n">AVPacket</span><span class="w"> </span><span class="n">tmp</span><span class="p">{};</span><span class="w">  </span><span class="c1">// 必须零初始化</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="n">rret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">avcodec_receive_packet</span><span class="p">(</span><span class="n">ctx_</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tmp</span><span class="p">);</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">      </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rret</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">av_packet_move_ref</span><span class="p">(</span><span class="n">out_packet</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tmp</span><span class="p">);</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">this_thread</span><span class="o">::</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="p">(</span><span class="mi">50</span><span class="p">));</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">      </span><span class="n">sret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">avcodec_send_frame</span><span class="p">(</span><span class="n">ctx_</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="n">frame_to_send</span><span class="p">);</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sret</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">sret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">AVERROR</span><span class="p">(</span><span class="n">EAGAIN</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">  </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">avcodec_receive_packet</span><span class="p">(</span><span class="n">ctx_</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="n">out_packet</span><span class="p">);</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">AVERROR</span><span class="p">(</span><span class="n">EAGAIN</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">AVERROR_EOF</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">av_packet_unref</span><span class="p">(</span><span class="n">out_packet</span><span class="p">);</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="p">}</span>
+</code></pre></div>
+<p>要点：</p>
+<ul>
+<li><strong>外部强制关键帧</strong>：置 <code>pict_type=AV_PICTURE_TYPE_I</code> 触发编码器输出 IDR。
+  设计意图：丢包/首连/静止恢复都需要"立刻来一帧可解码的关键帧"，这是全系统唯一的
+  高效恢复手段（配合第 6 篇的 PLI）。</li>
+<li><strong>EAGAIN ≠ 失败</strong>：表示编码器内部缓冲未就绪（AMF/NVENC 首帧入队后需继续喂帧才输出），
+  视为入队成功继续。设计意图：<strong>把 EAGAIN 当错误 = 把正常缓冲当故障</strong>，实时流会丢帧抖动。</li>
+<li><strong>EINVAL 重试</strong>：AMF（尤其核显驱动）同步编码，上一帧仍在编码中时 send 返回 EINVAL，
+  需要 drain + 重试，且<strong>重试期间产出必须交付</strong>。设计意图：这个坑的教训是"编码器在
+  重试中吐出的帧（含强制 IDR）也是有效输出"，曾因直接 unref 丢弃导致 viewer 一直
+  等不到 IDR 而黑屏。</li>
+</ul>
+<h2 id="6">6. 一句话总结<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<p><strong>编码器 = 显卡决定、按厂商映射绑定（软件不"选"）；喂帧 = 三路输入（硬件直通 / QSV 派生 /
+软路径）按共享 hw 上下文自动分流；编码 = 强制 IDR + 把 EAGAIN 当正常、把 EINVAL 当需要
+drain</strong>。所有设计都指向同一个目标：<strong>帧从采集到编码只待在 GPU 上，且异步语义被正确消费。</strong></p>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../04-%E9%87%87%E9%9B%86%E8%87%AA%E5%8A%A8%E9%99%8D%E7%BA%A7%E9%93%BE/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 04 采集自动降级链">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                04 采集自动降级链
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../06-RTP%E6%8E%A8%E6%B5%81%E4%B8%8ERTCP%E5%8F%8D%E9%A6%88/" class="md-footer__link md-footer__link--next" aria-label="下一页: 06 RTP推流与RTCP反馈">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                06 RTP推流与RTCP反馈
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "navigation.footer", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

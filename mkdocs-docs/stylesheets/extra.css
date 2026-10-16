@@ -1,20 +1,40 @@
-/* 首页卡片美化 */
+/* 首页卡片 */
 .home-cards {
   margin-top: 1.5rem;
 }
 
 .home-cards .card {
   border-radius: 12px;
-  padding: 1.5rem;
+  overflow: hidden;
+  padding: 0;
   transition: transform .2s, box-shadow .2s;
 }
 
 .home-cards .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,.12);
+  box-shadow: 0 8px 24px rgba(0,0,0,.2);
 }
 
-/* 返回首页浮动按钮 */
+.home-cards .card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px 12px 0 0;
+}
+
+.home-cards .card > *:not(img) {
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+.home-cards .card a {
+  text-decoration: none;
+}
+
+.home-cards .card img {
+  display: block;
+}
+
+/* 返回首页按钮 */
 .back-to-home {
   position: fixed;
   bottom: 2rem;
@@ -36,4 +56,17 @@
 
 .back-to-home:hover {
   transform: scale(1.1);
+}
+
+/* header里的首页链接 */
+.md-header__home {
+  color: var(--md-primary-bg-color);
+  text-decoration: none;
+  margin-left: 1rem;
+  font-size: .8rem;
+  opacity: .8;
+}
+
+.md-header__home:hover {
+  opacity: 1;
 }
