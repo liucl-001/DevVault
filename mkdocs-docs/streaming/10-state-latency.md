@@ -1,0 +1,208 @@
+---
+title: "采集端状态机与延迟控制"
+date: 2026-10-16T14:00:00+08:00
+draft: false
+tags: ["FFmpeg", "桌面串流", "状态机", "延迟", "Windows"]
+series: ["低延迟桌面串流全栈实战"]
+weight: 10
+summary: "状态机串起整条链路，量化并压住端到端延迟"
+---
+
+# 10 · 采集端状态机与延迟控制
+
+> 系列收官篇。把前九篇串成一条能跑的链路：状态机怎么驱动采集→编码→推流，延迟怎么测。
+> 涉及模块：**应用层状态机**（`StreamApp`：空闲⇄推流）
+> 术语约定：状态机/SEI/PLI/时钟偏移等见本系列《导读与术语表》。
+
+---
+
+## 设计意图
+
+前面九篇是"零件"，这一篇是"总装"。它回答三个"整体"问题：
+
+1. **怎么把 采集→编码→推流 串成一个持续运行的守护进程**——用有限状态机（FSM）表达
+   "空闲/推流"两个大态，把所有事件（心跳、PLI、锁屏、帧率变化）塞进一个主循环。
+2. **静止桌面不该空推 60fps**——静态画面降帧 + 缓存帧重推，是带宽与功耗的良心工程。
+3. **端到端延迟到底是多少、怎么测**——用 SEI 时间戳 + 时钟偏移估计，得到可信的帧级延迟。
+
+一句话：**状态机管"活不活、推不推"，延迟控制管"准不准、低不低"。**
+
+---
+
+## 1. StreamApp 状态机
+
+```
+kStartup → kReady(空闲等推) ⇄ kStreaming(推流)
+```
+
+主循环 `run()` 每帧节拍执行：
+
+1. **帧率协商**：`control_->consumeFpsInfo()` 取显示端刷新率，`min(local_hz, reported_hz)`
+   作为推流帧率；变化则重建编码器/重开推流。
+2. **会话事件**：`handleSessionEvents()` → `setSessionLocked()` 切换采集后端（第 4 篇）。
+3. **空闲态（doIdlePhase）**：
+   - 消费 pause/resume；
+   - 无显示端心跳（`lastPeerMs()==0`）→ 零采集零编码空转；
+   - 有心跳 → 尝试起推（指数退避 100ms×2^n，上限 2s；成功即复位）：
+     - 数据面目标 = 显示端真实 IP（UDP connect=1 不能连 0.0.0.0）；
+     - open 成功 → 置 `force_idr_left_=3`（**连接即连发 IDR 带 SPS/PPS**，首帧即出画）。
+4. **推流态（doStreamingPhase）**：
+   - 消费 pause/resume、心跳超时（8s）停流、帧率变化重开、RTCP PLI（force IDR x10）；
+   - `pumpCapture()` 采集 → `onFrame()` 编码+推流；
+   - 无新帧 → `doStaticKeepalive()`（静止降帧重推缓存帧）+ `doStaticSei()`（保活 SEI）。
+
+### 状态转换全图
+
+```
+kStartup
+   │ init
+   ▼
+kReady ────(有心跳 & open 成功)──► kStreaming
+   ▲                                  │
+   └──(心跳超时8s / pause / 帧率变化 / 后端格式变化)──┘
+```
+
+设计意图：**两个大态已足够**——`kReady` 表示"没在推"（空闲空转/等待），`kStreaming`
+表示"在推"。任何中间态（起推中、重连中）都用"指数退避 + 重试"在循环里表达，不新增
+状态机节点，避免状态爆炸。**所有事件都汇聚到主循环消费**，天然单线程、免并发锁。
+
+### onFrame 串联采集→编码→推流
+
+```cpp
+void StreamApp::onFrame(const AVFrame* f, bool keepalive) {
+  // SEI 时间戳（e2e 测量用）——需在编码前写入流，因为它独立成 AU
+  ...
+  int ret = encoder_.encode(f, &pkt);
+  if (ret == 1) {   // 有输出包
+    if (force_idr_left_ > 0) { /* 首个 IDR 起推标志 */ }
+    if (pusher_.write(&pkt)) stats_.frames_pushed++;
+  }
+}
+```
+
+设计意图：`onFrame` 是**三者的交汇点**——一帧从采集器来，先写 SEI 时间戳，再进编码器，
+编码输出交给推流器。所有统计（推了多少帧、当前延迟）都在这里更新。
+
+## 2. 静止画面处理（带宽/功耗优化）
+
+```cpp
+void StreamApp::doStaticKeepalive(const StreamAppConfig& cfg) {
+  const AVFrame* cached = capturer_->lastFrame();   // 持久缓存帧
+  if (force_idr_left_ > 0) { /* 连推缓存帧 xN，让显示端立刻拿关键帧 */ }
+  // 静止持续越久，帧率逐步减半（下限 5fps）
+  static_fps_ = max(5.0, static_fps_ / 2.0);
+  if (now - last_static_push_ >= step_ms) {
+    ++const_cast<AVFrame*>(cached)->pts;
+    onFrame(cached, /*keepalive=*/true);
+  }
+}
+```
+
+- **静止恢复检测**：>1s 没有新帧后画面又变化 → 强制 IDR，保证远端立刻出画。
+- **输入活动检测**：鼠标移动或方向键/空格等按下 → 恢复全速帧率。
+
+设计意图：**静止桌面是常态**。逐帧减半帧率（60→30→15→…→5fps 下限）+ 重推缓存帧，
+把"没变化的桌面"的带宽/编码开销降到最低；同时保活 SEI 保证接收端知道流还活着。
+画面一变（或用户动鼠标/按键盘）立即强制 IDR + 恢复全速——**省在平时，快在变化瞬间**。
+
+## 3. 帧级端到端延迟测量
+
+- 采集端每帧写 SEI 时间戳（墙上时钟 ms，XOR 扰码——第 7 篇）；
+- 接收端 `last_e2e_ms_ = now_viewer - sei_host + clock_offset`（扣掉跨机墙钟差异）；
+- 时钟偏移用控制面 RTT 探测的 Cristian 算法估计；
+- **时钟偏差校正**（`correctClockSkew`）：观测到负延迟说明采集端墙钟超前，滑窗（5min）内
+  仅吸收负值作偏差下界，校正后 `raw - win_min`——正延迟（含真实积压）原样保留，避免把
+  持续积压当时钟偏差消掉。
+
+设计意图：**延迟测量最怕"把问题当时钟偏差消掉"**。校正逻辑只吸收负值（时钟漂移造成的
+假象），真实的正延迟（积压、抖动）一律保留——这样 `last_e2e_ms_` 永远是"可信的最坏
+情况"，不会虚报低延迟掩盖问题。
+
+## 4. 采集端硬件直通不可行时的自动回退
+
+`initEncoder` 失败时若未强制 DPI 直通，则回退 CPU 软路径（采集 CPU NV12 + 硬件编码器
+原生 NV12 输入），软路径不可行才硬失败：
+
+```cpp
+if (!encoder_.init(enc_opts, shared_hw, shared_frames)) {
+  if (!cfg.dpi_scale) {
+    encoder_.reset();
+    initCapture(cfg, /*force_soft=*/true);
+    initEncoder(cfg);   // 软路径
+  } else return false;
+}
+```
+
+设计意图：**能跑总比启动失败好**——硬件直通（DXGI）不可行时（如某些虚拟环境/驱动异常），
+回退到"软采集 + 硬件编码"；只有连这条路都走不通（用户又开了 DPI 直通）才诚实失败。
+回退是**降级路径**而非替代品，故只在软路径可行时自动切换。
+
+## 5. 延迟预算与关键路径
+
+```
+采集 DXGI(≤8ms) + 编码(≤8ms) + 网络(1~3ms)
++ 接收/排序(≤4ms) + 解码(≤5ms) + 渲染(≤1帧) ≈ 40~60ms 端到端
+首帧：连接(≈5ms) + 起推 IDR(≈10ms) + 收齐(≈16ms) ≈ 30~50ms
+```
+
+各环节的"降低延迟手段"回顾（对应各篇）：
+
+| 环节 | 手段 |
+|---|---|
+| 采集 | DXGI GPU 零拷贝 + D3D11 帧池共享（第 3 篇） |
+| 编码 | 硬件直通、无 B 帧、LOW_DELAY、EAGAIN 正确消费（第 5 篇） |
+| 传输 | UDP 无重传、pkt_size=1200、连接式 UDP（第 6 篇） |
+| 接收 | reorder_queue_size=4、nobuffer、中断回调（第 8 篇） |
+| 解码 | 单线程、延迟 0、设备复用秒开、lazy init（第 8 篇） |
+| 显示 | 渲染线程锁外 present、只显示最新帧（第 9 篇） |
+| 恢复 | RTCP PLI → 强制 IDR、同步窗口等干净关键帧（第 6、8 篇） |
+
+### 5.1 实测延迟拆解（真实主机，活跃态 e2e ≈ 66ms）
+
+| 段 | 实测 | 占比 | 说明 |
+|---|---|---|---|
+| 采集 capture | ~27ms | 43% | 最大头（DPI 缩放时 GPU→CPU 拷贝 + sws） |
+| 编码+推流 | ~4ms | 6% | QSV/AMF 硬件，已高效 |
+| 网络 one-way | 初测 25ms → 归因 ~1.5ms | 38% → 2% | 物理 RTT 仅 ~3ms，"25ms"是 25fps 流水线量化误判 |
+| 解码+渲染 | ~10ms | 15% | 硬件解码，已快 |
+
+关键结论：
+
+- **物理网络不是瓶颈**（单向 ~1.5ms，占 e2e ~2%）。25fps 流水线每帧 40ms 周期，把
+  capture 处理时刻、SEI 时间戳、RTP 到达都量化到该粒度，被误读成网络延迟。
+- **优化重心在采集**：AMD AMF 原生 D3D11 零拷贝（`--no-dpi-scale`）实测 capture 从
+  27ms 降到 **1.6~2.0ms（降 93%）**；QSV（Intel）走 CPU NV12 软路径 ~27ms 基本固有。
+- **首帧**：连接(≈5ms) + 起推 IDR(≈10ms) + 收齐(≈16ms) ≈ 30~50ms，达标。
+
+> 优化优先级：采集段 DXGI 直通（P0）> 流水线帧周期量化（P1）> 空闲态 e2e 虚高标注（P2）。
+
+### 5.2 已知限制与后续工作
+
+1. **RTCP RR（接收端报告）未实现**：当前无重传、无码率自适应，不需要；需丢包统计时可加
+   RR 构造/解析。
+2. **GDI 锁屏采集路径每帧分配帧缓冲**：换取实现简单与正确性
+   （异步硬件编码器可能持有输入帧）；主路径 DXGI 是 GPU 帧池零拷贝，不受影响。
+3. **接收端解复用/时钟补偿与解码循环耦合**：厂商→解码器映射与低延迟旗标已统一到 `hw_codec`，
+   后续可把解码循环也抽到编解码层，与采集侧完全对称。
+4. **安全（以 SYSTEM 权限运行时尤其重要）**：应落实最小权限（杀进程/降权到受限服务账户）、
+   锁屏抓屏能力单独 gating、命名管道门控对端鉴权 + 会话随机数（防任意本地进程冒充
+   server 触发"屏幕已切换"）。控制报文已有 magic/version。
+5. **健壮性**：推流重连宜加指数退避 + 熔断（避免空转/日志刷屏）；关停建议收敛为统一状态机
+   `Startup→Ready→Streaming→Idle→Shutdown`；补端到端延迟自测与控制报文 fuzz。
+
+## 6. 全系列一句话总结
+
+**这套系统 = 两层采集（DXGI/GDI 自动降级）× 硬件编码（NVENC/QSV/AMF 三路直通）×
+标准 RTP/UDP 数据面 + 私有控制面（8555）+ RTCP PLI 反馈 × 硬件解码（候选表+同步窗口）×
+SDL/Qt 显示（零拷贝三缓冲）**——每一环都在为"首帧 50ms、端到端 100ms"服务，
+而全链路唯一能做的高效恢复手段是 **PLI 请求关键帧**。
+
+---
+
+🎉 全系列完。若想再往深走，可顺这些权威线索继续：
+
+- **RTP / RTCP**：RFC 3550（RTP/RTCP 基础）、RFC 7798（HEVC over RTP）、RFC 4585（PLI 等反馈）。
+- **FFmpeg 硬件加速**：官方 `doc/examples/hw_decode.c`、`hw_encode.c`（最权威的参照实现）。
+- **采集**：MSDN 的 DXGI Desktop Duplication、GDI BitBlt 文档。
+- **QSV 零拷贝**：oneVPL 关于 GPU-to-GPU 直通的资料。
+

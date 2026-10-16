@@ -2,6 +2,8 @@ site_name: DevVault
 site_description: 技术文章与工程笔记
 site_author: liucl
 
+docs_dir: mkdocs-docs
+
 extra_css:
   - stylesheets/extra.css
 
@@ -47,6 +49,18 @@ nav:
       - 08 依赖缓存与增量: cpp-engineering/08-cache.md
       - 09 Pipeline语法: cpp-engineering/09-pipeline.md
       - 10 C++流水线实战: cpp-engineering/10-pipeline-real.md
+  - 低延迟桌面串流全栈实战:
+      - 导读: streaming/guide.md
+      - 01 系统总览与架构: streaming/01-architecture.md
+      - 02 FFmpeg 基础: streaming/02-ffmpeg-basics.md
+      - 03 屏幕采集: streaming/03-capture-interface.md
+      - 04 采集自动降级链: streaming/04-capture-degrade.md
+      - 05 硬件编码接入 FFmpeg: streaming/05-hw-encode.md
+      - 06 RTP 推流与 RTCP 反馈: streaming/06-rtp.md
+      - 07 私有控制面与自定义 SEI: streaming/07-control-sei.md
+      - 08 RTP 接收与硬件解码: streaming/08-receive-decode.md
+      - 09 SDL 上屏与 Qt 嵌入: streaming/09-sdl-qt.md
+      - 10 采集端状态机与延迟控制: streaming/10-state-latency.md
 
 markdown_extensions:
   - admonition

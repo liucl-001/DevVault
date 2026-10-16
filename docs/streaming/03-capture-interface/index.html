@@ -1,0 +1,1759 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="技术文章与工程笔记">
+      
+      
+        <meta name="author" content="liucl">
+      
+      
+      
+        <link rel="prev" href="../02-ffmpeg-basics/">
+      
+      
+        <link rel="next" href="../04-capture-degrade/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>屏幕采集：接口与两种后端 - DevVault</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#03" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="DevVault" class="md-header__button md-logo" aria-label="DevVault" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DevVault
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              屏幕采集：接口与两种后端
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换暗色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换暗色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换亮色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换亮色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../cpp-engineering/" class="md-tabs__link">
+          
+  
+  
+  C++工程化实战
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../guide/" class="md-tabs__link">
+          
+  
+  
+  低延迟桌面串流全栈实战
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DevVault" class="md-nav__button md-logo" aria-label="DevVault" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DevVault
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++工程化实战
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    C++工程化实战
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    导读
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/01-toolchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 工具链与vcpkg
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/02-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Docker环境
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/03-jenkins-master/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Jenkins主节点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/04-jenkins-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 三平台从节点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/05-min-cmake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 最小CMake工程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/06-parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 CMake并发编译
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/07-matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 多平台并行构建
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/08-cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 依赖缓存与增量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/09-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Pipeline语法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/10-pipeline-real/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 C++流水线实战
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    低延迟桌面串流全栈实战
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    低延迟桌面串流全栈实战
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    导读
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 系统总览与架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-ffmpeg-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 FFmpeg 基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 屏幕采集
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 屏幕采集
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计意图
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-iscreencapturer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 采集抽象：IScreenCapturer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 两种后端的能力边界（先看结论）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-dxgi-desktop-duplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 后端一：DXGI Desktop Duplication（主路径）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 后端一：DXGI Desktop Duplication（主路径）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 初始化四步
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-captureframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 每帧采集 captureFrame()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35-wts-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 锁屏状态检测（WTS API，降级的前提）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#36" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 两种后端的失败场景（选型依据）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-gdi-bitblt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 后端二：GDI BitBlt（锁屏降级路径）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 后端二：GDI BitBlt（锁屏降级路径）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        安全桌面采集（锁屏/登录界面）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 两种后端怎么选（设计决策）
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-capture-degrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 采集自动降级链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-hw-encode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 硬件编码接入 FFmpeg
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-rtp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 RTP 推流与 RTCP 反馈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-control-sei/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 私有控制面与自定义 SEI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-receive-decode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 RTP 接收与硬件解码
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-sdl-qt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 SDL 上屏与 Qt 嵌入
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-state-latency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 采集端状态机与延迟控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        设计意图
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-iscreencapturer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 采集抽象：IScreenCapturer
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 两种后端的能力边界（先看结论）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-dxgi-desktop-duplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 后端一：DXGI Desktop Duplication（主路径）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 后端一：DXGI Desktop Duplication（主路径）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 初始化四步
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-captureframe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 每帧采集 captureFrame()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#35-wts-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 锁屏状态检测（WTS API，降级的前提）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#36" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 两种后端的失败场景（选型依据）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-gdi-bitblt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 后端二：GDI BitBlt（锁屏降级路径）
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 后端二：GDI BitBlt（锁屏降级路径）">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        安全桌面采集（锁屏/登录界面）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. 两种后端怎么选（设计决策）
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+
+<h1 id="03">03 · 屏幕采集：接口与两种后端<a class="headerlink" href="#03" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>讲清楚"怎么把屏幕变成 FFmpeg 能编码的帧"，以及两种后端各自的能力与坑。
+涉及模块：<strong>屏幕采集层</strong>（接口 <code>IScreenCapturer</code>，后端 DXGI / GDI 两个实现）
+术语约定：DXGI/GDI、D3D11、NV12 等见本系列《导读与术语表》。</p>
+</blockquote>
+<hr />
+<h2 id="_1">设计意图<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>采集是整条链的<strong>第一环</strong>，也是差异最大的一环：Windows 上抓屏有两条主流路（DXGI 合成器
+复制、GDI 位图拷贝），能力、延迟、适用场景天差地别。这一篇要立住
+三个设计点：</p>
+<ol>
+<li><strong>用统一接口 <code>IScreenCapturer</code> 把两种后端包装成同一个东西</strong>——上层（编码、状态机）
+   永远只对着一个接口说话，不关心底下是谁在抓。</li>
+<li><strong>接口天生为"延迟优先 + 降级"设计</strong>：返回状态里就带"这帧怎么了"，把"该不该切换"的
+   判断权留给上层（降级链），后端只负责老实回答。</li>
+<li><strong>后端优先打通"GPU 零拷贝直通"</strong>：DXGI 直接把 D3D11 纹理交给编码器，CPU 零往返。</li>
+</ol>
+<hr />
+<h2 id="1-iscreencapturer">1. 采集抽象：IScreenCapturer<a class="headerlink" href="#1-iscreencapturer" title="Permanent link">&para;</a></h2>
+<p>核心设计：<strong>后端只回答"这一帧怎么了"，不做降级决策</strong>。接口返回四种状态：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">CaptureStatus</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="n">kFrame</span><span class="p">,</span><span class="w">    </span><span class="c1">// 成功出一帧</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="n">kNoFrame</span><span class="p">,</span><span class="w">  </span><span class="c1">// 正常空转（桌面没变化，对应 WouldBlock 语义）</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="n">kLost</span><span class="p">,</span><span class="w">     </span><span class="c1">// 链路失效（ACCESS_LOST/设备丢失/切会话）→ 可重建自愈</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="n">kFailed</span><span class="p">,</span><span class="w">   </span><span class="c1">// 后端不可用 → 应降级到下一个后端</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">};</span>
+</code></pre></div>
+<p>接口方法（要点）：</p>
+<ul>
+<li><code>bool init(const CaptureOptions&amp; opts)</code> —— 统一参数（显示器名、DPI 缩放、等待超时）。</li>
+<li><code>CaptureStatus captureFrame(AVFrame* out, const FrameCallback&amp; cb)</code> —— 非阻塞轮询模型。</li>
+<li><code>bool reinit()</code> —— 重建链路（分辨率变化、设备丢失、锁屏恢复）。</li>
+<li><code>const AVFrame* lastFrame()</code> —— <strong>持久引用最近一帧</strong>，供静止桌面重推。</li>
+<li><code>bool isHwDirect()</code> / <code>AVBufferRef* hwCtx()</code> / <code>AVBufferRef* framesCtx()</code> —— 标识 GPU
+  零拷贝路径并共享 D3D11 硬件设备/帧池给编码器（这是"零拷贝"的关键接口）。</li>
+<li><code>cursorInfo(x, y, visible)</code> —— 光标状态（输出分辨率坐标）。</li>
+<li><code>setSecureDesktopCapture(bool)</code> —— 是否采集安全桌面（锁屏/登录界面）。</li>
+</ul>
+<blockquote>
+<p><strong>设计意图 · 为什么要 WouldBlock 模式</strong>：
+① 静态桌面占用户时间的大头，若没有"没变化"这一档，采集会为毫无意义的重复帧持续
+占用 CPU/GPU；
+② 新增采集方式只需实现接口 + 在 <code>win_backends.cpp</code> 注册一行，上层永远无感
+（降级链本身也是一个 <code>IScreenCapturer</code>，见第 4 篇）。</p>
+</blockquote>
+<h2 id="2">2. 两种后端的能力边界（先看结论）<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>后端</th>
+<th>锁屏</th>
+<th>延迟</th>
+<th>路径</th>
+<th>参与 auto 链</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DXGI Desktop Duplication</td>
+<td>❌</td>
+<td>&lt; 5ms</td>
+<td>D3D11 纹理 → NVENC/QSV/AMF 零拷贝</td>
+<td>✅ 首选</td>
+</tr>
+<tr>
+<td>GDI BitBlt</td>
+<td>✅</td>
+<td>10-30ms</td>
+<td>CPU BGRA →（可选 sws）→ 编码器</td>
+<td>✅ 降级</td>
+</tr>
+<tr>
+<td>设计意图小结：<strong>DXGI 快但锁屏就断；GDI 正是为锁屏采集而生</strong>——安全桌面（锁屏/登录界面）</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>只有 GDI 能采，虽慢但锁屏能扛。所以主路径 + 锁屏专用两条腿。</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-dxgi-desktop-duplication">3. 后端一：DXGI Desktop Duplication（主路径）<a class="headerlink" href="#3-dxgi-desktop-duplication" title="Permanent link">&para;</a></h2>
+<p>目标：<strong>D3D11 纹理直接喂编码器，全程 GPU，零 CPU 往返</strong>。</p>
+<h3 id="31">3.1 初始化四步<a class="headerlink" href="#31" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>创建 D3D11 设备</strong>（<code>BGRA_SUPPORT | VIDEO_SUPPORT</code> 旗标，失败回退 WARP 软渲染），
+   并启用多线程保护（QSV/oneVPL 复用设备必需）：
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">ComPtr</span><span class="o">&lt;</span><span class="n">ID3D10Multithread</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mt</span><span class="p">;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">SUCCEEDED</span><span class="p">(</span><span class="n">device_</span><span class="o">-&gt;</span><span class="n">QueryInterface</span><span class="p">(</span><span class="n">IID_PPV_ARGS</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mt</span><span class="p">))))</span><span class="w"> </span><span class="n">mt</span><span class="o">-&gt;</span><span class="n">SetMultithreadProtected</span><span class="p">(</span><span class="n">TRUE</span><span class="p">);</span>
+</code></pre></div>
+   设计意图：这个设备要被<strong>采集器 + 编码器（+ 派生 QSV 设备）共享</strong>，所以必须开多线程
+   保护，否则 GPU 资源跨线程访问会偶发崩溃。</li>
+<li><strong>组装 FFmpeg D3D11VA 硬件设备上下文</strong>（要共享给编码器）：
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">hw_ctx_</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">av_hwdevice_ctx_alloc</span><span class="p">(</span><span class="n">AV_HWDEVICE_TYPE_D3D11VA</span><span class="p">));</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">AVHWDeviceContext</span><span class="o">*</span><span class="w"> </span><span class="n">hwdev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">AVHWDeviceContext</span><span class="o">*</span><span class="p">)</span><span class="n">hw_ctx_</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">AVD3D11VADeviceContext</span><span class="o">*</span><span class="w"> </span><span class="n">d3d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">AVD3D11VADeviceContext</span><span class="o">*</span><span class="p">)</span><span class="n">hwdev</span><span class="o">-&gt;</span><span class="n">hwctx</span><span class="p">;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">d3d</span><span class="o">-&gt;</span><span class="n">device</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">device_</span><span class="p">;</span><span class="w">           </span><span class="c1">// 必填：ffmpeg 释放时统一 Release</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">d3d</span><span class="o">-&gt;</span><span class="n">device_context</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctx_</span><span class="p">;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">d3d</span><span class="o">-&gt;</span><span class="n">BindFlags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">D3D11_BIND_RENDER_TARGET</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">D3D11_BIND_SHADER_RESOURCE</span><span class="p">;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">av_hwdevice_ctx_init</span><span class="p">(</span><span class="n">hw_ctx_</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+</code></pre></div></li>
+<li><strong>选择要复制的 DXGI 输出</strong>：按 <code>CaptureOptions::display_name</code> 匹配显示器设备名，
+   遍历所有 adapter 的 output，找不到则退回第一个可用 output。
+   设计意图：支持多显示器——指定哪台就抓哪台，这是"被控机多屏远程切换"的基础。</li>
+<li><strong>创建输出复制 + 硬件帧池</strong>：</li>
+<li>先试 <code>IDXGIOutput5::DuplicateOutput1</code> 请求 <strong>NV12</strong>（桌面合成器直接输出 NV12，
+     QSV 编码器原生消费、免转换，"源头零拷贝"最简路径）；不支持则回退 <code>DuplicateOutput</code>（BGRA）。</li>
+<li>硬件帧池与抓屏帧同格式：
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">frames_ctx_</span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">av_hwframe_ctx_alloc</span><span class="p">(</span><span class="n">hw_ctx_</span><span class="p">.</span><span class="n">get</span><span class="p">()));</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">AVHWFramesContext</span><span class="o">*</span><span class="w"> </span><span class="n">fc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">AVHWFramesContext</span><span class="o">*</span><span class="p">)</span><span class="n">frames_ctx_</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">fc</span><span class="o">-&gt;</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AV_PIX_FMT_D3D11</span><span class="p">;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">fc</span><span class="o">-&gt;</span><span class="n">sw_format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dup_nv12_</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">AV_PIX_FMT_NV12</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">AV_PIX_FMT_BGRA</span><span class="p">;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">fc</span><span class="o">-&gt;</span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">width_</span><span class="p">;</span><span class="w"> </span><span class="n">fc</span><span class="o">-&gt;</span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">height_</span><span class="p">;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">fc</span><span class="o">-&gt;</span><span class="n">initial_pool_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span><span class="w">   </span><span class="c1">// 采集器与编码器共享此池，池太小会导致异步编码持有帧被覆盖</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">av_hwframe_ctx_init</span><span class="p">(</span><span class="n">frames_ctx_</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+</code></pre></div>
+   设计意图：<strong>帧池是共享的</strong>——采集器从池里拿一帧拷贝屏幕，编码器再从同一个池拿同一帧
+   编码，二者共用一块显存，没有第二次拷贝。<code>initial_pool_size=8</code> 给异步编码留余量，
+   池太小会出现"编码还没读完，帧已被覆盖"。</li>
+</ol>
+<h3 id="32-captureframe">3.2 每帧采集 captureFrame()<a class="headerlink" href="#32-captureframe" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">dup_</span><span class="o">-&gt;</span><span class="n">AcquireNextFrame</span><span class="p">(</span><span class="n">wait_ms</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">info</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">res</span><span class="p">);</span><span class="w">   </span><span class="c1">// wait_ms=8ms，静止立刻返回</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">DXGI_ERROR_WAIT_TIMEOUT</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">kNoFrame</span><span class="p">;</span><span class="w">   </span><span class="c1">// 桌面没变化，正常空转</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hr</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">DXGI_ERROR_ACCESS_LOST</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">DXGI_ERROR_DEVICE_REMOVED</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">recreateDuplication</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">kLost</span><span class="p">;</span><span class="w">      </span><span class="c1">// 就地重建输出复制，重试一次</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">}</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="c1">// 从帧池分配合法 D3D11 帧（必须带 hw_frames_ctx，裸指针帧编码器不接受）</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">f</span><span class="o">-&gt;</span><span class="n">hw_frames_ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">av_buffer_ref</span><span class="p">(</span><span class="n">frames_ctx_</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">av_hwframe_get_buffer</span><span class="p">(</span><span class="n">frames_ctx_</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="c1">// GPU→GPU 拷贝到池帧纹理（零拷贝直通编码器）</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="n">ctx_</span><span class="o">-&gt;</span><span class="n">CopySubresourceRegion</span><span class="p">((</span><span class="n">ID3D11Texture2D</span><span class="o">*</span><span class="p">)</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">tex</span><span class="p">.</span><span class="n">Get</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">box</span><span class="p">);</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="n">dup_</span><span class="o">-&gt;</span><span class="n">ReleaseFrame</span><span class="p">();</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="n">f</span><span class="o">-&gt;</span><span class="n">pts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">frame_counter_</span><span class="o">++</span><span class="p">;</span>
+</code></pre></div>
+<ul>
+<li><strong>DPI 缩放模式</strong>：硬件路径下池帧先 <code>hwdownload</code> 到 CPU，再 sws 缩放到逻辑分辨率 NV12。
+  一个坑——<strong>不能用 <code>av_hwframe_transfer_data</code> 直接下载</strong>，其内部 staging 的 Copy 与 Map
+  之间没有 Flush，会读到旧内容（全黑帧）。代码里显式 <code>Copy → ctx_-&gt;Flush() → Map</code>。
+  设计意图：<strong>拷贝完必须 Flush 再 Map</strong>，这是 D3D11 命令队列异步语义的直接后果。</li>
+<li><strong>光标</strong>：统一用 <code>GetCursorInfo</code>（位置+可见性一次获取），因为光标单独移动不触发桌面帧，
+  每轮轮询保证光标跟手；且相对 <code>PointerPosition.Visible</code> 不会在移动瞬间跳变。</li>
+</ul>
+<h2 id="35-wts-api">3.5 锁屏状态检测（WTS API，降级的前提）<a class="headerlink" href="#35-wts-api" title="Permanent link">&para;</a></h2>
+<p>采集端必须<strong>主动知道"现在锁没锁屏"</strong>，才能决定用哪个后端、要不要采集安全桌面。
+用 Windows Terminal Services（WTS）API 检测会话锁定状态（需链接 <code>wtsapi32.lib</code>）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">BOOL</span><span class="w"> </span><span class="nf">IsSessionLocked</span><span class="p">(</span><span class="n">DWORD</span><span class="w"> </span><span class="n">sessionId</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="n">PWTSINFOEXW</span><span class="w"> </span><span class="n">pInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span><span class="w"> </span><span class="n">DWORD</span><span class="w"> </span><span class="n">bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sessionId</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">0xFFFFFFFF</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">FALSE</span><span class="p">;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">WTSQuerySessionInformationW</span><span class="p">(</span><span class="n">WTS_CURRENT_SERVER_HANDLE</span><span class="p">,</span><span class="w"> </span><span class="n">sessionId</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">      </span><span class="n">WTSSessionInfoEx</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">LPWSTR</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">pInfo</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bytes</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">pInfo</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">pInfo</span><span class="o">-&gt;</span><span class="n">Level</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">pInfo</span><span class="o">-&gt;</span><span class="n">Data</span><span class="p">.</span><span class="n">WTSInfoExLevel1</span><span class="p">.</span><span class="n">SessionFlags</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">WTS_SESSIONSTATE_LOCK</span><span class="p">;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">FALSE</span><span class="p">;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">}</span>
+</code></pre></div>
+<p>还有配套的<strong>会话类型判断</strong>（<code>WTSClientProtocolType</code> 判 RDP/ICA）与<strong>活动会话/用户名获取</strong>
+（<code>WTSGetActiveConsoleSessionId</code>、<code>WTSEnumerateSessionsA</code>、<code>WTSUserName</code>）。通常封装成
+一个 <code>SessionManager</code>（<code>IsLocked</code> / <code>GetCurrentSessionId</code> / <code>GetActiveUsername</code>）供采集链查询。</p>
+<blockquote>
+<p>设计意图：<strong>锁屏检测是"事件驱动降级"的前提</strong>——只有先知道锁没锁，降级链才能
+"事件抢先切"而不是"等失败再降级"（见第 4 篇）。</p>
+</blockquote>
+<h2 id="36">3.6 两种后端的失败场景（选型依据）<a class="headerlink" href="#36" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>后端</th>
+<th>失败场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DXGI</td>
+<td>用户锁屏（Win+L）、RDP 会话断开、Ctrl+Alt+Del 桌面切换、显示器睡眠、无 D3D11 显卡</td>
+</tr>
+<tr>
+<td>GDI</td>
+<td>某些虚拟机环境、极低权限进程（需 SeDebugPrivilege）、完全禁用 DWM</td>
+</tr>
+</tbody>
+</table>
+<p>GDI 性能优化方向（参考）：部分区域更新（只捕获变化区）、降低捕获频率、先降分辨率再放大、
+多线程并行处理多个显示器。</p>
+<h2 id="4-gdi-bitblt">4. 后端二：GDI BitBlt（锁屏降级路径）<a class="headerlink" href="#4-gdi-bitblt" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>CreateDCW(display_name)</code> → <code>GetDeviceCaps(HORZRES, VERTRES)</code> 取桌面尺寸 →
+  <code>CreateCompatibleDC</code> + <code>CreateCompatibleBitmap</code>。</li>
+<li>每帧：<code>BitBlt(mem_dc_, ..., screen_dc_, SRCCOPY | CAPTUREBLT)</code>（<code>CAPTUREBLT</code> 捕获
+  分层窗口/光标）→ <code>GetDIBits</code> 取 BGRA 到缓冲区。</li>
+<li>输出：DPI 缩放时 <code>sws_scale(BGRA → NV12)</code>；非缩放时输出 BGRA CPU 帧（<strong>独立分配 +
+  逐行拷贝</strong>，避免与成员缓冲生命周期耦合——硬件编码器可能异步持有输入帧）。
+  设计意图：编码器可能异步持有输入帧，所以<strong>绝不能复用成员缓冲</strong>，否则下一帧会改掉
+  编码器还在读的旧帧。</li>
+<li><strong>SEH 兜底</strong>：<code>captureFrame</code> 外层 <code>__try/__except</code>，GDI 位图/DC 异常（如会话切换中访问
+  失效句柄）不崩溃进程，降级为 <code>kFailed</code> 交给采集链。
+  设计意图：守护进程最怕"一个瞬间异常就整进程崩"。GDI 句柄在会话切换时最容易失效，
+  SEH 兜住 = 最多降级一帧，不炸进程。</li>
+</ul>
+<h3 id="_2">安全桌面采集（锁屏/登录界面）<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<p>锁屏/登录界面的实际 UI 运行在<strong>当前输入桌面</strong>（锁屏壁纸阶段是 Default，密码界面变成
+Winlogon 桌面）。进程需以 SYSTEM 运行在本会话、由特权 host 注入 winlogon 令牌，
+然后把采集线程切到当前输入桌面再 BitBlt：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">HDESK</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OpenInputDesktop</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">DESKTOP_READOBJECTS</span><span class="o">|</span><span class="p">...);</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">SetThreadDesktop</span><span class="p">(</span><span class="n">input</span><span class="p">);</span><span class="w">              </span><span class="c1">// 跟随真正显示安全 UI 的桌面</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">screen_dc_</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CreateDCW</span><span class="p">(</span><span class="sa">L</span><span class="s">"DISPLAY"</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+</code></pre></div>
+<p>设计意图：安全桌面（锁屏/登录）UI 不在普通桌面，要抓到它必须<strong>切到当前输入桌面</strong>再
+GDI 抓——这正是"锁屏后仍能看到登录画面"的原因，也是本系列"锁屏降级"的价值所在。</p>
+<h2 id="5">5. 两种后端怎么选（设计决策）<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>默认 auto</strong>：未锁屏 <code>[DXGI, GDI]</code>，锁屏 <code>[GDI]</code>——DXGI 主路径 + GDI 锁屏专用两条腿（第 4 篇详解）。</li>
+<li><strong>多显示器</strong>：<code>--capture-backend dxgi --display &lt;名&gt;</code> 指定抓哪台。</li>
+<li><strong>DPI 缩放</strong>：硬件直通 + <code>sws</code> 缩放到逻辑分辨率，保证远程看到的尺寸与本地一致。</li>
+</ul>
+<hr />
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+  <a href="/" class="back-to-home" title="返回首页">&#8962;</a>
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../02-ffmpeg-basics/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 02 FFmpeg 基础">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                02 FFmpeg 基础
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../04-capture-degrade/" class="md-footer__link md-footer__link--next" aria-label="下一页: 04 采集自动降级链">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                04 采集自动降级链
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "navigation.footer", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

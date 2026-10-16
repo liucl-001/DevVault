@@ -1,0 +1,1982 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="技术文章与工程笔记">
+      
+      
+        <meta name="author" content="liucl">
+      
+      
+      
+        <link rel="prev" href="../../cpp-engineering/10-pipeline-real/">
+      
+      
+        <link rel="next" href="../01-architecture/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>桌面串流全栈实战 · 导读与术语表 - DevVault</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../.." title="DevVault" class="md-header__button md-logo" aria-label="DevVault" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DevVault
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              桌面串流全栈实战 · 导读与术语表
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换暗色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换暗色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换亮色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换亮色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../cpp-engineering/" class="md-tabs__link">
+          
+  
+  
+  C++工程化实战
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  低延迟桌面串流全栈实战
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="DevVault" class="md-nav__button md-logo" aria-label="DevVault" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DevVault
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++工程化实战
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    C++工程化实战
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    导读
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/01-toolchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 工具链与vcpkg
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/02-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Docker环境
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/03-jenkins-master/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Jenkins主节点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/04-jenkins-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 三平台从节点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/05-min-cmake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 最小CMake工程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/06-parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 CMake并发编译
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/07-matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 多平台并行构建
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/08-cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 依赖缓存与增量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/09-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Pipeline语法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cpp-engineering/10-pipeline-real/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 C++流水线实战
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    低延迟桌面串流全栈实战
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    低延迟桌面串流全栈实战
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    导读
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    导读
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ 本系列要求：先读导读
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        术语表
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="术语表">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. 视频基础
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-ffmpeg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. FFmpeg 核心对象与调用模型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C. 硬件加速
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D. Windows 屏幕采集
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E. 传输与反馈
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-sdl-qt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F. 显示（SDL / Qt）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G. 自定义协议
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        全链路速览
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        推荐的阅读路径
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        如何使用本系列
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 系统总览与架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-ffmpeg-basics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 FFmpeg 基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-capture-interface/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 屏幕采集
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-capture-degrade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 采集自动降级链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-hw-encode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 硬件编码接入 FFmpeg
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-rtp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 RTP 推流与 RTCP 反馈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-control-sei/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 私有控制面与自定义 SEI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../08-receive-decode/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 RTP 接收与硬件解码
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../09-sdl-qt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 SDL 上屏与 Qt 嵌入
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../10-state-latency/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 采集端状态机与延迟控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ 本系列要求：先读导读
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        术语表
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="术语表">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A. 视频基础
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-ffmpeg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        B. FFmpeg 核心对象与调用模型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C. 硬件加速
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-windows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D. Windows 屏幕采集
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        E. 传输与反馈
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-sdl-qt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F. 显示（SDL / Qt）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        G. 自定义协议
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        全链路速览
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        推荐的阅读路径
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        如何使用本系列
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+
+<h1 id="_1">桌面串流全栈实战 · 导读与术语表<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>一套完整、自包含的 Windows 桌面串流系统实现讲解，拆成十篇逐层讲透。
+技术主线：<strong>屏幕采集 → HEVC 硬件编码 → RTP/UDP 传输 → 硬件解码 → SDL/Qt 上屏</strong>。</p>
+<p><strong>本文不依赖任何特定工程源码</strong>：文中的分层、代码片段均为可直接照抄或改编的
+<strong>参考实现</strong>，你可以完全按本系列从头写出一套可运行的系统。</p>
+<p>指标基线：<strong>首帧 ≤ 50ms，端到端 ≤ 100ms</strong>，局域网 / 家用 WiFi 下不花屏、不白屏、不绿屏。</p>
+</blockquote>
+<hr />
+<h2 id="_2">⚠️ 本系列要求：先读导读<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>导读不只是目录，它同时是<strong>术语表 + 全局图 + 阅读路径</strong>：</p>
+<ul>
+<li><strong>术语表</strong>（本页下方）集中定义了后续十篇会用到的全部专业术语；</li>
+<li>后续十篇<strong>默认你已掌握本表术语</strong>，不再逐一解释，只在使用处点出关键设计意图；</li>
+<li>读到不认识的词，先回本页术语表，再决定要不要看对应篇。</li>
+</ul>
+<p><strong>十篇正文：</strong></p>
+<table>
+<thead>
+<tr>
+<th>篇</th>
+<th>标题</th>
+<th>本篇设计意图（一句话）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td>系统总览与架构</td>
+<td>先把链路、分层、取舍立起来，后面每章才有上下文</td>
+</tr>
+<tr>
+<td>02</td>
+<td>FFmpeg 基础</td>
+<td>用最少篇幅建立"对象+send/receive+hw上下文"心智模型</td>
+</tr>
+<tr>
+<td>03</td>
+<td>屏幕采集：接口与两种后端</td>
+<td>用统一接口封装两种抓屏后端，向上层屏蔽差异</td>
+</tr>
+<tr>
+<td>04</td>
+<td>采集自动降级链</td>
+<td>把"选后端/切换/自愈"从业务里剥离成一条自治链</td>
+</tr>
+<tr>
+<td>05</td>
+<td>硬件编码接入 FFmpeg</td>
+<td>让 GPU 编码器吃原生抓屏帧，零拷贝、低延迟</td>
+</tr>
+<tr>
+<td>06</td>
+<td>RTP 推流与 RTCP 反馈</td>
+<td>复用标准 muxer 推流，用标准 RTCP 做关键帧反馈</td>
+</tr>
+<tr>
+<td>07</td>
+<td>私有控制面与自定义 SEI</td>
+<td>策略与媒体分离，时间戳进码流以测端到端延迟</td>
+</tr>
+<tr>
+<td>08</td>
+<td>RTP 接收与硬件解码</td>
+<td>播放器式接收改成实时式，丢包靠同步窗口+PLI 恢复</td>
+</tr>
+<tr>
+<td>09</td>
+<td>SDL 上屏与 Qt 嵌入</td>
+<td>渲染线程与界面线程解耦，零拷贝三缓冲上屏</td>
+</tr>
+<tr>
+<td>10</td>
+<td>采集端状态机与延迟控制</td>
+<td>状态机串起整条链路，量化并压住端到端延迟</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_3">术语表<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>按主题分组。每组一张表（术语 | 含义）。这是后续十篇的<strong>共同语言</strong>。</p>
+<h3 id="a">A. 视频基础<a class="headerlink" href="#a" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>帧（Frame）</strong></td>
+<td>一张完整图像。视频 = 一串连续帧。</td>
+</tr>
+<tr>
+<td><strong>I 帧 / 关键帧（Keyframe / IDR）</strong></td>
+<td>可独立解码的完整帧，不依赖其它帧。解码必须从它开始。</td>
+</tr>
+<tr>
+<td><strong>P 帧 / B 帧</strong></td>
+<td>P 帧依赖前一帧（参考帧）；B 帧依赖前后两帧。B 帧引入重排序延迟，实时流通常关掉。</td>
+</tr>
+<tr>
+<td><strong>IDR</strong></td>
+<td>一种特殊 I 帧（即时刷新），后续所有帧都不再引用它之前任何帧。是"断点重入"的锚点。</td>
+</tr>
+<tr>
+<td><strong>GOP</strong></td>
+<td>两个关键帧之间的帧组。GOP 越大，同码率画质越好，但出错后恢复越慢。</td>
+</tr>
+<tr>
+<td><strong>SPS / PPS</strong></td>
+<td>HEVC/H.264 的参数集 NAL：声明分辨率、档次、熵编码方式等。解码任何帧前必须先有它。</td>
+</tr>
+<tr>
+<td><strong>NAL / annexb</strong></td>
+<td>NAL = 网络抽象层单元，HEVC 码流的最小单元；annexb 是用 <code>00 00 01</code> 起始码分隔 NAL 的封装方式。</td>
+</tr>
+<tr>
+<td><strong>SEI</strong></td>
+<td>辅助增强信息 NAL（type 39/40），携带非解码必需的元数据（时间戳等），解码器自动忽略。</td>
+</tr>
+<tr>
+<td><strong>PTS / DTS</strong></td>
+<td>显示时间戳 / 解码时间戳。无 B 帧时两者相等。</td>
+</tr>
+<tr>
+<td><strong>码率（kbps）</strong></td>
+<td>每秒传输的比特数。码率 ↑ 画质 ↑ 带宽/延迟成本 ↑。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="b-ffmpeg">B. FFmpeg 核心对象与调用模型<a class="headerlink" href="#b-ffmpeg" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AVFormatContext</strong></td>
+<td>容器/格式层：封装一条流（文件或网络），管理若干 AVStream。</td>
+</tr>
+<tr>
+<td><strong>AVStream</strong></td>
+<td>一条流（一路视频/音频），携带 codecpar（编码参数）。</td>
+</tr>
+<tr>
+<td><strong>AVCodec</strong></td>
+<td>编解码器描述（哪个厂商、哪个格式），<code>avcodec_find_*</code> 查找。</td>
+</tr>
+<tr>
+<td><strong>AVCodecContext</strong></td>
+<td>编解码上下文：真正干活的引擎，含尺寸/像素格式/hw_device_ctx 等。</td>
+</tr>
+<tr>
+<td><strong>AVFrame</strong></td>
+<td>未压缩的原始图像（解码输出 / 编码输入），可能引用 GPU 硬件帧。</td>
+</tr>
+<tr>
+<td><strong>AVPacket</strong></td>
+<td>已压缩的码流数据（编码输出 / 解码输入）。</td>
+</tr>
+<tr>
+<td><strong>send / receive</strong></td>
+<td><code>avcodec_send_frame/send_packet</code> + <code>avcodec_receive_packet/receive_frame</code> 的异步编解码对。</td>
+</tr>
+<tr>
+<td><strong>EAGAIN / EINVAL</strong></td>
+<td>send/receive 的返回码：EAGAIN=缓冲未就绪（正常，继续喂即可）；EINVAL=参数错误或需 drain。</td>
+</tr>
+<tr>
+<td><strong>demuxer / muxer</strong></td>
+<td>解封装器（读流，如 sdp）/ 封装器（写流，如 rtp）。</td>
+</tr>
+<tr>
+<td><strong>extradata</strong></td>
+<td>编码参数带外数据（如 HEVC 的 SPS/PPS），随参数集传入。</td>
+</tr>
+<tr>
+<td><strong>swscale（sws_scale）</strong></td>
+<td>FFmpeg 软件像素格式/尺寸转换器（如 NV12→RGB）。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="c">C. 硬件加速<a class="headerlink" href="#c" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>hw_device_ctx</strong></td>
+<td><code>AVHWDeviceContext</code>，挂在编解码上下文上，告诉编解码器用哪个 GPU 设备。</td>
+</tr>
+<tr>
+<td><strong>hw_frames_ctx</strong></td>
+<td><code>AVHWFramesContext</code>，硬件帧池：定义帧的硬件格式与内部软件格式。</td>
+</tr>
+<tr>
+<td><strong>AV_HWDEVICE_TYPE_</strong>*</td>
+<td>硬件类型枚举：D3D11VA / QSV / CUDA / …</td>
+</tr>
+<tr>
+<td><strong>硬件帧</strong></td>
+<td><code>AVFrame.data[0]</code> 是 GPU 纹理指针（如 <code>ID3D11Texture2D*</code>），不是 CPU 数据。</td>
+</tr>
+<tr>
+<td><strong>D3D11VA</strong></td>
+<td>D3D11 视频加速，Windows 上 FFmpeg 硬件编解码的基础设备类型。</td>
+</tr>
+<tr>
+<td><strong>NVENC / QSV / AMF</strong></td>
+<td>三大 GPU 编码器：NVIDIA NVENC、Intel QSV（基于 oneVPL）、AMD AMF。</td>
+</tr>
+<tr>
+<td><strong>CUVID / NVDEC</strong></td>
+<td>NVIDIA 的硬解方案：CUVID（旧）/ NVDEC（新）。</td>
+</tr>
+<tr>
+<td><strong>hevc_nvenc / hevc_qsv / hevc_amf</strong></td>
+<td>FFmpeg 编码器名（按 GPU 厂商选）。</td>
+</tr>
+<tr>
+<td><strong>hevc_cuvid / hevc_nvdec / hevc_d3d11va</strong></td>
+<td>FFmpeg 解码器名。</td>
+</tr>
+<tr>
+<td><strong>oneVPL</strong></td>
+<td>Intel 的视频处理库，QSV 的现代实现。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="d-windows">D. Windows 屏幕采集<a class="headerlink" href="#d-windows" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DXGI</strong></td>
+<td>DirectX 图形基础设施，负责显示器/交换链管理。</td>
+</tr>
+<tr>
+<td><strong>Desktop Duplication</strong></td>
+<td>DXGI 的桌面复制 API，直接从桌面合成器拿帧（最快、可 GPU 直通），锁屏不可用。</td>
+</tr>
+<tr>
+<td><strong>GDI / BitBlt</strong></td>
+<td>传统位图拷贝抓屏。存在的原因：锁屏/登录界面（安全桌面）DXGI 不可用，只能靠它采集；CPU 拷贝、慢。</td>
+</tr>
+<tr>
+<td><strong>D3D11 / D3D11VA 设备</strong></td>
+<td>与 GPU 打交道的底层设备对象；采集与编码共享它实现零拷贝。</td>
+</tr>
+<tr>
+<td><strong>BGRA / NV12</strong></td>
+<td>像素格式：BGRA=32 位带透明通道；NV12=半平面 YUV（广泛用于硬件编解码）。</td>
+</tr>
+<tr>
+<td><strong>锁屏 / 安全桌面 / Winlogon</strong></td>
+<td>锁屏/登录界面运行在独立的"安全桌面"，抓它需特权 + 切换桌面。</td>
+</tr>
+<tr>
+<td><strong>DPI 缩放</strong></td>
+<td>高分辨率屏幕的逻辑/物理像素换算（如 125%）。</td>
+</tr>
+<tr>
+<td><strong>WARP</strong></td>
+<td>D3D11 的软件渲染器，无 GPU 时兜底。</td>
+</tr>
+<tr>
+<td><strong>WTS API</strong></td>
+<td>Windows Terminal Services：查询会话锁定状态、活动会话、用户名（锁屏检测的依据）。</td>
+</tr>
+<tr>
+<td><strong>Session（会话）</strong></td>
+<td>Windows 会话（控制台 / RDP / Session 3 等）。锁屏后进程落入独立会话，采集安全桌面需切换。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="e">E. 传输与反馈<a class="headerlink" href="#e" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RTP / RTCP / RTSP</strong></td>
+<td>RTP=媒体数据承载；RTCP=媒体质量反馈（SR/SR、PLI）；RTSP=会话控制（本项目不用）。</td>
+</tr>
+<tr>
+<td><strong>SDP</strong></td>
+<td>会话描述格式，描述媒体流（编码、端口、PT 映射）。接收端靠它才能解析动态 PT。</td>
+</tr>
+<tr>
+<td><strong>SSRC</strong></td>
+<td>RTP 流标识符。</td>
+</tr>
+<tr>
+<td><strong>PT（payload type）</strong></td>
+<td>RTP 载荷类型。HEVC 无静态 PT，用动态值（本项目 96）。</td>
+</tr>
+<tr>
+<td><strong>FU-A</strong></td>
+<td>HEVC over RTP 的分片单元：大帧切成多个 RTP 包传输。</td>
+</tr>
+<tr>
+<td><strong>pkt_size / MTU</strong></td>
+<td>RTP 分片粒度 / 网络最大传输单元。</td>
+</tr>
+<tr>
+<td><strong>UDP / 连接式 UDP（connect=1）</strong></td>
+<td>无连接 UDP vs 连接式 UDP（性能好、可感知对端不可达）。</td>
+</tr>
+<tr>
+<td><strong>PLI（RFC 4585 / PSFB）</strong></td>
+<td>Picture Loss Indication：接收端请求"立刻给我一个 IDR"的标准 RTCP 消息。</td>
+</tr>
+<tr>
+<td><strong>墙钟 / 时钟偏移 / RTT</strong></td>
+<td>墙上时钟毫秒 / 两端时钟差 / 往返时间。测端到端延迟要先扣除时钟偏移。</td>
+</tr>
+<tr>
+<td><strong>AU（接入单元）</strong></td>
+<td>同一 RTP 时间戳的全部 NAL（即一帧）。解码器要求参数集先于 VCL 帧。</td>
+</tr>
+<tr>
+<td><strong>RR（接收端报告）</strong></td>
+<td>RTCP 中收流方发的报告（丢包计数 / jitter / LSR）。本项目无码率自适应故暂未用。</td>
+</tr>
+<tr>
+<td><strong>jitter buffer（抖动缓冲）</strong></td>
+<td>按 RTP 序列号排乱序的小窗口。低延迟关键：窗口要小、超时即丢。</td>
+</tr>
+<tr>
+<td><strong>STAP-A</strong></td>
+<td>HEVC over RTP 的聚合单元，把多个小 NAL（如 SPS/PPS/SEI）合成一个 RTP 包。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="f-sdl-qt">F. 显示（SDL / Qt）<a class="headerlink" href="#f-sdl-qt" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SDL</strong></td>
+<td>跨平台图形/输入库，本项目用它的 D3D11 渲染器做上屏。</td>
+</tr>
+<tr>
+<td><strong>SDL_CreateWindowFrom</strong></td>
+<td>让 SDL 绑定一个外部原生窗口（如 Qt 的 HWND），只接管其渲染。</td>
+</tr>
+<tr>
+<td><strong>STREAMING 纹理</strong></td>
+<td>SDL 中"每帧更新内容"的纹理访问模式。</td>
+</tr>
+<tr>
+<td><strong>交换链 / ResizeBuffers</strong></td>
+<td>D3D11 的显示缓冲重建机制；窗口缩放时靠它避免黑屏。</td>
+</tr>
+<tr>
+<td><strong>QWidget / HWND</strong></td>
+<td>Qt 控件 / Windows 原生窗口句柄。</td>
+</tr>
+<tr>
+<td><strong>WA_PaintOnScreen / WA_NativeWindow</strong></td>
+<td>Qt 属性：让渲染直写原生表面 / 强制成为原生窗口（SDL 嵌入的前提）。</td>
+</tr>
+<tr>
+<td><strong>三缓冲 / present</strong></td>
+<td>多块帧槽轮转 + 渲染提交，解码与渲染线程解耦、零拷贝。</td>
+</tr>
+<tr>
+<td><strong>present</strong></td>
+<td>把一帧提交到屏幕渲染（耗时、放渲染线程）。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="g">G. 自定义协议<a class="headerlink" href="#g" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>控制面</strong></td>
+<td>与媒体分离的策略通道（心跳、帧率协商、暂停等）。</td>
+</tr>
+<tr>
+<td><strong>magic / version / seq</strong></td>
+<td>私有协议头字段：防串包 / 版本演进 / 序号。</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_4">全链路速览<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>端口：数据面 RTP/UDP 8554 · RTCP 9560 · 私有控制面 UDP 8555
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>延迟预算：采集 DXGI(≤8ms) + 编码(≤8ms) + 网络(1~3ms)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        + 接收/排序(≤4ms) + 解码(≤5ms) + 渲染(≤1帧) ≈ 40~60ms
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>首帧：连接(≈5ms) + 起推 IDR(≈10ms) + 收齐(≈16ms) ≈ 30~50ms
+</code></pre></div>
+<h2 id="_5">推荐的阅读路径<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>零基础 / 想系统学一遍</strong>：01 → 02 → 03 → … → 10（按序，推荐）。</li>
+<li><strong>只关心某一段</strong>：直接看对应篇，每篇开头有设计意图 + 上下文回顾，可独立阅读。</li>
+<li><strong>工程视角 / 想抓主干</strong>：01 → 03 → 05 → 06 → 08 → 09，其余按需补。</li>
+</ul>
+<h2 id="_6">如何使用本系列<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<ul>
+<li>每篇都是<strong>自包含单元</strong>：开头有"设计意图 + 上下文回顾"，关键实现都有可照抄的代码片段。</li>
+<li>涉及的模块名（如 <code>ScreenCapturerChain</code>、<code>hw_codec</code>）仅作<strong>概念命名</strong>，便于在你自己
+  的代码里对应，不依赖任何现成仓库。</li>
+<li>十篇讲完，你会同时拿到：<strong>代码怎么写</strong>（参考实现）+ <strong>为什么这么写</strong>（设计意图）。</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+  <a href="/" class="back-to-home" title="返回首页">&#8962;</a>
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../../cpp-engineering/10-pipeline-real/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 10 C++流水线实战">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                10 C++流水线实战
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../01-architecture/" class="md-footer__link md-footer__link--next" aria-label="下一页: 01 系统总览与架构">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                下一页
+              </span>
+              <div class="md-ellipsis">
+                01 系统总览与架构
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "navigation.footer", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
