@@ -35,6 +35,14 @@ hide:
 
     Loading→Linking→字节码改写 · Java 官方后门
 
+-   [![OpenPlugins插件化架构](assets/images/plugins.jpg)](open-plugins/index.md)
+
+    **[OpenPlugins插件化架构](open-plugins/index.md)**
+
+    插件契约 → 加载与生命周期 → 依赖解析 → 函数路由 → 序列化 → 安全
+
+    基于 AnycubicSlicerNext 插件化基础库
+
 </div>
 
 ---
@@ -43,8 +51,8 @@ hide:
 
 | 日期 | 标题 |
 |------|------|
+| 2026-10-16 | [OpenPlugins 插件化架构导读](open-plugins/index.md) |
+| 2026-10-16 | [配套工程体系](open-plugins/10-配套工程体系.md) |
+| 2026-10-16 | [WebView 与 WebAPI](open-plugins/09-WebView与WebAPI.md) |
 | 2026-10-16 | [Java Agent 与字节码改写](java-agent-bytecode.md) |
 | 2026-10-16 | [采集端状态机与延迟控制](desktop-streaming/10-采集端状态机与延迟控制.md) |
-| 2026-10-16 | [SDL 上屏与 Qt 嵌入](desktop-streaming/09-SDL上屏与Qt嵌入.md) |
-| 2026-10-16 | [硬件编码接入 FFmpeg](desktop-streaming/05-硬件编码接入FFmpeg.md) |
-| 2026-10-12 | [C++ SDK 流水线实战拆解](cpp-engineering/10-pipeline-real.md) |

@@ -59,6 +59,18 @@ nav:
       - 09 SDL上屏与Qt嵌入: desktop-streaming/09-SDL上屏与Qt嵌入.md
       - 10 采集端状态机与延迟控制: desktop-streaming/10-采集端状态机与延迟控制.md
   - Java Agent与字节码改写: java-agent-bytecode.md
+  - OpenPlugins插件化架构:
+      - 导读: open-plugins/index.md
+      - 01 项目定位与全景: open-plugins/01-项目定位与全景.md
+      - 02 架构分层: open-plugins/02-架构分层.md
+      - 03 插件契约: open-plugins/03-插件契约.md
+      - 04 加载与生命周期: open-plugins/04-加载与生命周期.md
+      - 05 依赖解析: open-plugins/05-依赖解析.md
+      - 06 函数路由与内存流通信: open-plugins/06-函数路由与内存流通信.md
+      - 07 序列化机制: open-plugins/07-序列化机制.md
+      - 08 插件包与安全: open-plugins/08-插件包与安全.md
+      - 09 WebView与WebAPI: open-plugins/09-WebView与WebAPI.md
+      - 10 配套工程体系: open-plugins/10-配套工程体系.md
 
 markdown_extensions:
   - admonition
