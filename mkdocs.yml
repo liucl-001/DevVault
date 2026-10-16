@@ -58,6 +58,7 @@ nav:
       - 08 RTP接收与硬件解码: desktop-streaming/08-RTP接收与硬件解码.md
       - 09 SDL上屏与Qt嵌入: desktop-streaming/09-SDL上屏与Qt嵌入.md
       - 10 采集端状态机与延迟控制: desktop-streaming/10-采集端状态机与延迟控制.md
+  - Java Agent与字节码改写: java-agent-bytecode.md
 
 markdown_extensions:
   - admonition

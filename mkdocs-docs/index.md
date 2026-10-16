@@ -27,11 +27,13 @@ hide:
 
     首帧≤50ms · 端到端≤100ms
 
--   ![踩坑记录](assets/images/debug.jpg)
+-   [![Java Agent与字节码](assets/images/go.jpg)](java-agent-bytecode.md)
 
-    **踩坑记录**
+    **[Java Agent 与字节码改写](java-agent-bytecode.md)**
 
-    待更新
+    从一行 `-javaagent` 启动参数讲透 JVM 机制
+
+    Loading→Linking→字节码改写 · Java 官方后门
 
 </div>
 
@@ -41,11 +43,11 @@ hide:
 
 | 日期 | 标题 |
 |------|------|
+| 2026-10-16 | [Java Agent 与字节码改写](java-agent-bytecode.md) |
 | 2026-10-16 | [采集端状态机与延迟控制](desktop-streaming/10-采集端状态机与延迟控制.md) |
 | 2026-10-16 | [SDL 上屏与 Qt 嵌入](desktop-streaming/09-SDL上屏与Qt嵌入.md) |
 | 2026-10-16 | [硬件编码接入 FFmpeg](desktop-streaming/05-硬件编码接入FFmpeg.md) |
 | 2026-10-12 | [C++ SDK 流水线实战拆解](cpp-engineering/10-pipeline-real.md) |
-| 2026-10-12 | [依赖缓存与增量构建](cpp-engineering/08-cache.md) |
 
 ---
 

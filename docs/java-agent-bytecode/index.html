@@ -1,0 +1,2150 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="技术文章与工程笔记">
+      
+      
+        <meta name="author" content="liucl">
+      
+      
+      
+        <link rel="prev" href="../desktop-streaming/10-%E9%87%87%E9%9B%86%E7%AB%AF%E7%8A%B6%E6%80%81%E6%9C%BA%E4%B8%8E%E5%BB%B6%E8%BF%9F%E6%8E%A7%E5%88%B6/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Java Agent 与字节码改写 - DevVault</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#java-agent" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href=".." title="DevVault" class="md-header__button md-logo" aria-label="DevVault" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DevVault
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Java Agent 与字节码改写
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换暗色"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换暗色" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换亮色"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换亮色" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../cpp-engineering/" class="md-tabs__link">
+          
+  
+  
+  C++工程化实战
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../desktop-streaming/" class="md-tabs__link">
+          
+  
+  
+  低延迟桌面串流
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Java Agent与字节码改写
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="DevVault" class="md-nav__button md-logo" aria-label="DevVault" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    DevVault
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C++工程化实战
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    C++工程化实战
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpp-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    导读
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpp-engineering/01-toolchain/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 工具链与vcpkg
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpp-engineering/02-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 Docker环境
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpp-engineering/03-jenkins-master/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 Jenkins主节点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpp-engineering/04-jenkins-agents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 三平台从节点
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpp-engineering/05-min-cmake/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 最小CMake工程
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpp-engineering/06-parallel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 CMake并发编译
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpp-engineering/07-matrix/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 多平台并行构建
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpp-engineering/08-cache/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 依赖缓存与增量
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpp-engineering/09-pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 Pipeline语法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cpp-engineering/10-pipeline-real/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 C++流水线实战
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    低延迟桌面串流
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    低延迟桌面串流
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../desktop-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    导读(术语表)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../desktop-streaming/01-%E7%B3%BB%E7%BB%9F%E6%80%BB%E8%A7%88%E4%B8%8E%E6%9E%B6%E6%9E%84/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    01 系统总览与架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../desktop-streaming/02-FFmpeg%E5%9F%BA%E7%A1%80/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    02 FFmpeg 基础
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../desktop-streaming/03-%E5%B1%8F%E5%B9%95%E9%87%87%E9%9B%86%E6%8E%A5%E5%8F%A3%E4%B8%8E%E4%B8%A4%E7%A7%8D%E5%90%8E%E7%AB%AF/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    03 屏幕采集接口
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../desktop-streaming/04-%E9%87%87%E9%9B%86%E8%87%AA%E5%8A%A8%E9%99%8D%E7%BA%A7%E9%93%BE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    04 采集自动降级链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../desktop-streaming/05-%E7%A1%AC%E4%BB%B6%E7%BC%96%E7%A0%81%E6%8E%A5%E5%85%A5FFmpeg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    05 硬件编码接入FFmpeg
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../desktop-streaming/06-RTP%E6%8E%A8%E6%B5%81%E4%B8%8ERTCP%E5%8F%8D%E9%A6%88/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    06 RTP推流与RTCP反馈
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../desktop-streaming/07-%E7%A7%81%E6%9C%89%E6%8E%A7%E5%88%B6%E9%9D%A2%E4%B8%8E%E8%87%AA%E5%AE%9A%E4%B9%89SEI/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    07 私有控制面与自定义SEI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../desktop-streaming/08-RTP%E6%8E%A5%E6%94%B6%E4%B8%8E%E7%A1%AC%E4%BB%B6%E8%A7%A3%E7%A0%81/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    08 RTP接收与硬件解码
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../desktop-streaming/09-SDL%E4%B8%8A%E5%B1%8F%E4%B8%8EQt%E5%B5%8C%E5%85%A5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    09 SDL上屏与Qt嵌入
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../desktop-streaming/10-%E9%87%87%E9%9B%86%E7%AB%AF%E7%8A%B6%E6%80%81%E6%9C%BA%E4%B8%8E%E5%BB%B6%E8%BF%9F%E6%8E%A7%E5%88%B6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10 采集端状态机与延迟控制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Agent与字节码改写
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Agent与字节码改写
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        先从"一个类是怎么活起来的"说起
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#java-agentjvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Java Agent：JVM 留给外界的官方后门
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        进场之后，第一件事：怎么认出"这是哪个类"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第二件事：怎么认出"要改哪个方法"、它的参数和返回值
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第三件事：核心——怎么"修改"而不是"增加"
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="第三件事：核心——怎么&#34;修改&#34;而不是&#34;增加&#34;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        改字节码到底改的是什么
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        典型操作一：改方法的返回值
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        典型操作二：改方法内部的一个调用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        典型操作三：跳过 / 翻转分支
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stackmaptable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么改动必须"合法"：验证器与 StackMapTable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        往下钻一层：这一切在 JVM 底层是怎么撑起来的
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#-add-opens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么非要 --add-opens 不可
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        把整条链串起来
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        附：一个最小可运行的 Demo（动手验证）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        这套机制的正当用途
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参考资料来源（按可信度分级）
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        先从"一个类是怎么活起来的"说起
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#java-agentjvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Java Agent：JVM 留给外界的官方后门
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        进场之后，第一件事：怎么认出"这是哪个类"
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第二件事：怎么认出"要改哪个方法"、它的参数和返回值
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第三件事：核心——怎么"修改"而不是"增加"
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="第三件事：核心——怎么&#34;修改&#34;而不是&#34;增加&#34;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        改字节码到底改的是什么
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        典型操作一：改方法的返回值
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        典型操作二：改方法内部的一个调用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        典型操作三：跳过 / 翻转分支
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#stackmaptable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么改动必须"合法"：验证器与 StackMapTable
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#jvm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        往下钻一层：这一切在 JVM 底层是怎么撑起来的
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#-add-opens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么非要 --add-opens 不可
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        把整条链串起来
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        附：一个最小可运行的 Demo（动手验证）
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        这套机制的正当用途
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参考资料来源（按可信度分级）
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="java-agent">Java Agent 与字节码改写：从一行启动参数开始<a class="headerlink" href="#java-agent" title="Permanent link">&para;</a></h1>
+<p>先说个事儿，讲讲我为什么写这篇。</p>
+<p>最近在研究一类"激活工具"——就是那种在 IDE 的启动参数里加上 <code>-javaagent:xxx.jar</code> 和 <code>--add-opens=...</code> 这么两行，软件就"变样"了的东西。起因特别简单：我很好奇，<strong>凭什么往启动参数里加两行，一个程序的整个行为就被改了？</strong></p>
+<p>追下去之后发现，这背后的东西一点都不神秘，就是 JVM 生态里几项通用的机制——和 SkyWalking 做链路追踪、Arthas 做线上诊断，用的是<strong>同一套底层能力</strong>。这篇文章就是我把这条链从现象追到 JVM 底层的过程。读完你就知道，这类工具不是黑科技，它只是把几项官方能力拼在了一起。</p>
+<p>先说清楚范围：我只讲这套通用机制本身，不讲任何针对具体软件的绕过步骤。机制是中性的，至于拿来干嘛，你自己心里有数，也请遵守对应软件的许可协议。</p>
+<hr />
+<h2 id="_1">先从"一个类是怎么活起来的"说起<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>要理解 agent 为什么能插手，得先知道一个类从 <code>.class</code> 字节码到真正能跑，JVM 中间经历了什么。这个过程规范叫 <strong>LOADING（加载）→ LINKING（链接）→ INITIALIZING（初始化）</strong>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>字节码(.class)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>   ↓ LOADING：读字节码，生成 Class 对象
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>   ↓ LINKING
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>   │   ├ 验证（VERIFY）：字节码合不合法、能不能过类型检查
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>   │   ├ 准备（PREPARE）：静态字段分配内存
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>   │   └ 解析（RESOLVE）：符号引用转直接引用
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>   ↓ INITIALIZING：执行静态初始化块 &lt;clinit&gt;
+</code></pre></div>
+<p>这里有个很关键的点：<strong>JVM 真正消费的，是"验证通过的那份字节码"。</strong> 而在验证之前、LOADING 阶段，字节码还有一次被替换的机会——这正是 agent 下手的时机。JVM 把这个入口留在 JVMTI 层（后面第四章会讲到），Java 这边则通过 <code>java.lang.instrument</code> 暴露出来。</p>
+<h2 id="java-agentjvm">Java Agent：JVM 留给外界的官方后门<a class="headerlink" href="#java-agentjvm" title="Permanent link">&para;</a></h2>
+<p>Java Agent 就是一个<strong>遵循 <code>java.lang.instrument</code> 规范的 jar</strong>，装载后能拿到一个 <code>Instrumentation</code> 对象——这是 JVM 给 Java 代码"改写已加载类"的唯一官方通道。</p>
+<p>它有两条装载路径，你大概都见过：</p>
+<ul>
+<li><strong>启动时装载</strong>：<code>java -javaagent:agent.jar -jar app.jar</code>，走 <code>premain(String, Instrumentation)</code>。APM、覆盖率采集、安全防护都是这条路。</li>
+<li><strong>运行中 attach</strong>：Arthas 走这条路，工具 attach 进一个正在跑的 JVM，走 <code>agentmain(String, Instrumentation)</code>，所以它能不动声色地"钻进"别人的进程。</li>
+</ul>
+<p>启动时那条路，时机是酱紫的：JVM 初始化完系统类加载器、但还没加载主类之前，就会把一个叫 <strong>JPLISAgent</strong> 的本地组件拉起来，调用你的 <code>premain</code>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>JVM 启动
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  ├ ① 解析命令行，认出 -javaagent
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  ├ ② 初始化系统类加载器
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  ├ ③ 装载 agent，调用 premain()   ← 在这里拿到 Instrumentation
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  ├ ④ 加载主类，进 main()
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>  └ ⑤ 业务类懒加载（每个都会被 agent 的转换器过一遍）
+</code></pre></div>
+<p>因为 <code>premain</code> 跑在所有业务类加载之前，agent 就能提前把"转换器"注册好，之后每一个类加载都会被它过一遍手。</p>
+<p>agent jar 的清单文件（<code>META-INF/MANIFEST.MF</code>）里，有几个属性决定了它的能力：</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>干嘛的</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Premain-Class</code> / <code>Agent-Class</code></td>
+<td>两条装载路径各自的入口类</td>
+</tr>
+<tr>
+<td><code>Can-Redefine-Classes</code> / <code>Can-Retransform-Classes</code></td>
+<td>允不允许重定义 / 重转换已加载类</td>
+</tr>
+<tr>
+<td><code>Boot-Class-Path</code></td>
+<td>追加到 Bootstrap 类加载器搜索路径</td>
+</tr>
+</tbody>
+</table>
+<p>一个最小的 agent 其实就这么点东西：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="na">Premain-Class</span><span class="o">:</span><span class="w"> </span><span class="s">com.example.MyAgent</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="na">Can-Redefine-Classes</span><span class="o">:</span><span class="w"> </span><span class="s">true</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="na">Can-Retransform-Classes</span><span class="o">:</span><span class="w"> </span><span class="s">true</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyAgent</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">premain</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">Instrumentation</span><span class="w"> </span><span class="n">inst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">        </span><span class="n">inst</span><span class="p">.</span><span class="na">addTransformer</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">MyTransformer</span><span class="p">(),</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="_2">进场之后，第一件事：怎么认出"这是哪个类"<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>好，agent 进场了，<code>addTransformer</code> 注册的转换器会在每个类加载时被回调。现在问题来了——<strong>回调来了，你总得知道眼前这个类是哪个吧？不然改谁都不知道。</strong></p>
+<p>这就是 <code>transform</code> 方法签名里 <code>className</code> 参数的意义。它给你的是 JVM 内部的<strong>类名表示法</strong>：包路径用斜杠、类名直连。比如 Java 里 <code>com.example.LicenseCheck</code>，传进来就是：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">className</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"com/example/LicenseCheck"</span><span class="w">   </span><span class="c1">// 包名 + 类名，斜杠分隔</span>
+</code></pre></div>
+<p>你平时写的 <code>com.example.LicenseCheck</code> 是"点号分隔"的，这里变成了斜杠。记住这个换算，别在匹配时踩坑。</p>
+<p>拿到这个名字，接下来就是<strong>目标匹配</strong>。实际工具通常先粗筛再精筛：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">public</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="n">ClassLoader</span><span class="w"> </span><span class="n">loader</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">className</span><span class="p">,</span><span class="w"> </span><span class="p">...)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="c1">// 粗筛：只看我关心的包（前缀匹配）</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">className</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">className</span><span class="p">.</span><span class="na">startsWith</span><span class="p">(</span><span class="s">"com/example/"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span><span class="w">                    </span><span class="c1">// 不是目标，原样返回</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="c1">// 精筛：精确到类</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">className</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">"com/example/LicenseCheck"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="c1">// 命中目标，进入改写</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rewrite</span><span class="p">(</span><span class="n">className</span><span class="p">,</span><span class="w"> </span><span class="n">classfileBuffer</span><span class="p">);</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">}</span>
+</code></pre></div>
+<p>粗筛用<strong>包名前缀</strong>（<code>startsWith</code>），一次挡掉绝大多数无关类；精筛再对到具体类。为什么先粗筛？因为 JVM 里要加载的类成千上万，每个都去解析字节码太浪费，先用一个字符串比较把 99% 挡在外面。</p>
+<p>有些场景只靠类名不够，比如要看注解、父类、接口——这时就得把字节码交给 <code>ClassReader</code> 解析，在 <code>visitAnnotation</code> / <code>visitMethod</code> 里做二次判断。但<strong>第一步永远是"看名字"，这是性能的关键</strong>。</p>
+<h2 id="_3">第二件事：怎么认出"要改哪个方法"、它的参数和返回值<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p>类认出来了，下一步是定位到具体方法。这里就用到 ASM 回调 <code>visitMethod</code> 时给的几个参数：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">public</span><span class="w"> </span><span class="n">MethodVisitor</span><span class="w"> </span><span class="nf">visitMethod</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">access</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">desc</span><span class="p">,</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">                                 </span><span class="n">String</span><span class="w"> </span><span class="n">signature</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">exceptions</span><span class="p">)</span>
+</code></pre></div>
+<ul>
+<li><code>name</code>：方法名，一目了然，比如 <code>check</code>。</li>
+<li><code>desc</code>：<strong>方法描述符</strong>，参数列表和返回值全编码在这一个字符串里。</li>
+<li><code>signature</code> / <code>exceptions</code>：泛型签名和声明抛出的异常，一般不用管。</li>
+</ul>
+<p><code>desc</code> 是 JVM 对方法类型的标准编码，格式是 <code>(参数类型)返回类型</code>。比如：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>()V                 → 无参、返回 void
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>(IJ)Z               → 参数为 int、long，返回 boolean
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>(Ljava/lang/String;)Z  → 参数为 String，返回 boolean
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>(Ljava/lang/String;ILjava/util/List;)Ljava/lang/String;
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>                    → 三个参数（String、int、List），返回 String
+</code></pre></div>
+<p>基本类型记这几个：<code>V</code>=void、<code>Z</code>=boolean、<code>I</code>=int、<code>J</code>=long、<code>D</code>=double、<code>F</code>=float、<code>C</code>=char、<code>B</code>=byte、<code>S</code>=short；引用类型一律 <code>L包名/类名;</code>（注意分号结尾）。数组就是 <code>[</code> 加元素类型。</p>
+<p>所以定位一个方法，就是<strong>用 <code>name</code> + <code>desc</code> 一起匹配</strong>——同名方法可能有好几个（重载），靠 desc 区分它们：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nd">@Override</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">public</span><span class="w"> </span><span class="n">MethodVisitor</span><span class="w"> </span><span class="nf">visitMethod</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">access</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">desc</span><span class="p">,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">                                 </span><span class="n">String</span><span class="w"> </span><span class="n">signature</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">exceptions</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="c1">// 只改：名为 check、参数 String、返回 boolean 的那个方法</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">"check"</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">desc</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">"(Ljava/lang/String;)Z"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">AdviceAdapter</span><span class="p">(</span><span class="n">Opcodes</span><span class="p">.</span><span class="na">ASM9</span><span class="p">,</span><span class="w"> </span><span class="kd">super</span><span class="p">.</span><span class="na">visitMethod</span><span class="p">(...),</span><span class="w"> </span><span class="p">...)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">            </span><span class="c1">// 在这里对方法体做手脚</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">        </span><span class="p">};</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kd">super</span><span class="p">.</span><span class="na">visitMethod</span><span class="p">(</span><span class="n">access</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">desc</span><span class="p">,</span><span class="w"> </span><span class="n">signature</span><span class="p">,</span><span class="w"> </span><span class="n">exceptions</span><span class="p">);</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>到这一步，你手里已经攥着三样东西：目标类、目标方法名、方法的完整参数/返回签名。</strong> 这就是"改谁"的全部信息。</p>
+<h2 id="_4">第三件事：核心——怎么"修改"而不是"增加"<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>这是你最容易想歪的地方，也是激活这类场景和普通插桩最根本的差别。</p>
+<p>普通 APM 工具做的是<strong>增加</strong>：往方法里塞入埋点打印，方法原来的逻辑照跑。但激活类工具要的是<strong>修改</strong>：把软件里那一段"许可证校验"的已有逻辑，在字节码层面改掉——比如让某个返回 <code>false</code>（未授权）的校验方法，直接返回 <code>true</code>（已授权）。<strong>不是在旁边加东西，而是让原来的代码"变了"。</strong></p>
+<h3 id="_5">改字节码到底改的是什么<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>ASM 把一个方法体看成一条<strong>指令事件流</strong>，<code>visitMethodInsn</code>（方法调用）、<code>visitVarInsn</code>（局部变量）、<code>visitInsn</code>（栈操作/返回）、<code>visitJumpInsn</code>（跳转）……一个个按顺序回调给你。你做的"修改"，就是在这条流里<strong>拦截、替换、跳过</strong>某些事件。</p>
+<p>比如 <code>AdviceAdapter</code> 提供了两个好用的时机钩子：</p>
+<ul>
+<li><code>onMethodEnter()</code>：方法第一条指令前</li>
+<li><code>onMethodExit(int opcode)</code>：每个 return 之前</li>
+</ul>
+<h3 id="_6">典型操作一：改方法的返回值<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>目标：<code>boolean check(String key)</code> 原本算完返回 <code>false</code>，我要让它返回 <code>true</code>。</p>
+<p>在 <code>onMethodExit</code> 里，当检测到这个方法以 <code>IRETURN</code>（返回 int/boolean）结尾时，把栈顶上原来的返回值<strong>丢掉、换成一个常量 1</strong>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nd">@Override</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="kd">protected</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onMethodExit</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">opcode</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">opcode</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">IRETURN</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">          </span><span class="c1">// 这是个返回 boolean/int 的方法</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">        </span><span class="n">mv</span><span class="p">.</span><span class="na">visitInsn</span><span class="p">(</span><span class="n">POP</span><span class="p">);</span><span class="w">            </span><span class="c1">// 丢掉原来栈顶的返回值</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">        </span><span class="n">mv</span><span class="p">.</span><span class="na">visitInsn</span><span class="p">(</span><span class="n">ICONST_1</span><span class="p">);</span><span class="w">       </span><span class="c1">// 压入常量 1（即 true）</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">        </span><span class="c1">// 然后 JVM 会接着执行原来的 IRETURN，返回的变成 1</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">}</span>
+</code></pre></div>
+<p>效果等价于把源码里的 <code>return 原结果;</code> 改成了 <code>return true;</code>——<strong>方法体里其他逻辑一行都没加，只是改了最终返回值</strong>。这就是最典型的"改而不是加"。</p>
+<h3 id="_7">典型操作二：改方法内部的一个调用<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>如果不想整个替换返回值，只想把方法里某次"关键调用"的结果改掉，可以在方法体里<strong>拦下那次 <code>visitMethodInsn</code></strong>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nd">@Override</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kd">public</span><span class="w"> </span><span class="n">MethodVisitor</span><span class="w"> </span><span class="nf">visitMethodInsn</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">opcode</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">owner</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">desc</span><span class="p">,</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="n">itf</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="c1">// 只拦截：对某个类的 validate 调用，参数 String、返回 boolean</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">"validate"</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">desc</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">"(Ljava/lang/String;)Z"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">        </span><span class="c1">// 先调它，但把结果覆盖</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">        </span><span class="kd">super</span><span class="p">.</span><span class="na">visitMethodInsn</span><span class="p">(</span><span class="n">opcode</span><span class="p">,</span><span class="w"> </span><span class="n">owner</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">desc</span><span class="p">,</span><span class="w"> </span><span class="n">itf</span><span class="p">);</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">        </span><span class="n">mv</span><span class="p">.</span><span class="na">visitInsn</span><span class="p">(</span><span class="n">POP</span><span class="p">);</span><span class="w">            </span><span class="c1">// 丢掉调用的返回值</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">        </span><span class="n">mv</span><span class="p">.</span><span class="na">visitInsn</span><span class="p">(</span><span class="n">ICONST_1</span><span class="p">);</span><span class="w">       </span><span class="c1">// 压入 true</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">mv</span><span class="p">;</span><span class="w">                     </span><span class="c1">// 不再继续原始回调</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kd">super</span><span class="p">.</span><span class="na">visitMethodInsn</span><span class="p">(</span><span class="n">opcode</span><span class="p">,</span><span class="w"> </span><span class="n">owner</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">desc</span><span class="p">,</span><span class="w"> </span><span class="n">itf</span><span class="p">);</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="p">}</span>
+</code></pre></div>
+<p>这个语义就是：<strong>"原来这里调用 validate 拿结果，现在调用照旧，但结果我接管、换成 true"</strong>。粒度比改整个方法返回值更细，你只动了方法体里那一处。</p>
+<h3 id="_8">典型操作三：跳过 / 翻转分支<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>还有一种思路：不替换值，而是<strong>让某段校验代码根本别执行</strong>——用 <code>GOTO</code> 直接跳到方法末尾，或者在分支处翻转判断条件（<code>IFNE</code> 换 <code>IFEQ</code>）。这类属于"控制流"层面的修改，实现上要小心维护局部变量表和 StackMapTable，所以工具一般尽量用前两种"改值"的方式，少动控制流。</p>
+<h3 id="stackmaptable">为什么改动必须"合法"：验证器与 StackMapTable<a class="headerlink" href="#stackmaptable" title="Permanent link">&para;</a></h3>
+<p>不管你用哪种改法，<strong>插进去 / 替换出来的字节码必须能通过验证器</strong>。JVM 会做严格的类型检查：</p>
+<ul>
+<li><strong>操作数栈类型一致</strong>：你压了个 <code>String</code> 后面当 <code>int</code> 用，直接 <code>VerifyError</code></li>
+<li><strong>局部变量表匹配</strong>：索引、类型要对上</li>
+<li><strong>StackMapTable（堆栈映射表）</strong>：Java 6 起 JVM 在每个分支汇合点做增量类型检查。你一旦动了控制流（加跳转），改变了栈和局部变量的形状，就得同步更新映射表</li>
+</ul>
+<p>这也是为什么正经工具都用 <code>AdviceAdapter</code>、<code>GeneratorAdapter</code> 这类<strong>帮你维护栈帧</strong>的封装，而不是裸写 <code>MethodVisitor</code>——它们知道该在什么时候更新映射表、怎么保证你压栈出栈的类型对得上。</p>
+<p>一句话记住：<strong>你改的不是源码，而是 JVM 最终验证并执行的那份字节码</strong>；改完还得让它稳稳过验证器。</p>
+<h2 id="jvm">往下钻一层：这一切在 JVM 底层是怎么撑起来的<a class="headerlink" href="#jvm" title="Permanent link">&para;</a></h2>
+<p>到这儿你可能会想：<code>java.lang.instrument</code> 这套东西，总不会是凭空冒出来的吧？对，它建立在 <strong>JVMTI（JVM Tool Interface）</strong> 之上。</p>
+<p>具体来说，JDK 里有个专门的本地代理，叫 <strong>JPLISAgent</strong>（源码在 OpenJDK 的 <code>jdk/src/java.instrument/.../libinstrument/</code>）。它干的事，就是把 Java 层的调用翻译成 JVMTI 的本地接口：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Instrumentation.addTransformer(tr)
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>   ↓
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>JPLISAgent.c 里 SetEventCallbacks 注册 onClassFileLoadHook
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>   ↓
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>只要 JVM 要 define 一个类，就会回调 ClassFileLoadHook 事件
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>   ↓
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>在回调里把 Java 层所有已注册的 transformer 依次跑一遍
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>   ↓
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>收集返回的新字节码，取最后一个非 null 的作为最终字节码
+</code></pre></div>
+<p>所以<strong>"改写字节码能生效"的底层真相</strong>是：不是在源码层面改了东西，而是在字节码被验证器消费之前，于 JVMTI 的 <code>ClassFileLoadHook</code> 这个 hook 处，把整份字节码替换掉了。</p>
+<p>redefine 和 retransform 在 JVMTI 层也各有对应：redefine 对应 <code>RedefineClasses</code>，retransform 对应 <code>RetransformClasses</code>（它会再次触发 <code>ClassFileLoadHook</code>，让转换器再跑一遍）。这里有个硬性约束很多人会搞混：<strong>这两者都改不了类的基本结构</strong>——增减字段、方法、改签名都不行，只能改方法体里的实现。这是 JVMTI 规范规定的。</p>
+<h2 id="-add-opens">为什么非要 <code>--add-opens</code> 不可<a class="headerlink" href="#-add-opens" title="Permanent link">&para;</a></h2>
+<p>前面那几行启动参数里，<code>--add-opens</code> 是很多人一头雾水的地方。这要从 JDK 9 的模块系统说起。</p>
+<p>JDK 9 引入了模块化，<code>java.base</code> 模块的内部包（<code>jdk.internal.*</code> 那一堆）默认<strong>强封装</strong>——除了模块自己，谁都不许反射访问，硬来就抛 <code>InaccessibleObjectException</code>。</p>
+<p>这里有个特别容易混淆的点，值得单独拎出来说清楚：<code>--add-exports</code> 和 <code>--add-opens</code> 是两码事。</p>
+<ul>
+<li><strong><code>--add-exports</code></strong> 管的是<strong>编译期</strong>：让别的模块在编译时能看到这个包的公开类型。</li>
+<li><strong><code>--add-opens</code></strong> 管的是<strong>运行期深反射</strong>：允许别的模块对这个包做 <code>setAccessible(true)</code>。</li>
+</ul>
+<p>agent 需要的是 <code>--add-opens</code>，因为它在运行期要用反射 / 字节码访问内部类，而不是编译期去引用它们：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>--add-opens<span class="o">=</span>java.base/jdk.internal.org.objectweb.asm<span class="o">=</span>ALL-UNNAMED
+</code></pre></div>
+<p>语法是 <code>--add-opens=&lt;模块&gt;/&lt;包&gt;=&lt;目标模块&gt;</code>，<code>ALL-UNNAMED</code> 表示"所有未命名模块"——也就是跑在类路径上的所有代码，agent 就在其中。</p>
+<p>那为什么偏偏要碰内部包？因为 ASM 这类库要"读懂并改写字节码"，而 JVM 自己就带了一份 ASM 的副本（<code>jdk.internal.org.objectweb.asm</code>）。有的实现为了省依赖，会直接复用它；就算不复用，想深反射到 JVM 内部的数据结构，也得 <code>--add-opens</code>。所以结论很实在：<strong>在 JDK 9+ 上做字节码操作，这行参数基本躲不掉。</strong></p>
+<h2 id="_9">把整条链串起来<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<p>把这些串成一条线，就是开头那句"魔法"的完整真相：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>java -javaagent:agent.jar --add-opens=...=ALL-UNNAMED -jar app.jar
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>   ↓ JVM 启动早期
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>JPLISAgent 装载 → premain() 拿到 Instrumentation
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>   ↓ addTransformer() 注册 → 本地 SetEventCallbacks 挂上 ClassFileLoadHook
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>   业务类 defineClass 时
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>   ↓ ClassFileLoadHook 事件 → 逐个跑 Java transformer
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>   ↓ transformer 先按 className 粗筛/精筛出目标类
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>   ↓ 再按 visitMethod 的 name + desc 定位目标方法
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>   ↓ 用 ASM 改方法体（改返回值 / 改某处调用）→ 新字节码
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>   ↓ 新字节码过 VERIFY（含 StackMapTable 检查）→ 生成 Class
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>   ↓ 程序行为在字节码层面被改变
+</code></pre></div>
+<p>四个环节，环环相扣，缺一不可：</p>
+<table>
+<thead>
+<tr>
+<th>Java 层</th>
+<th>JVMTI / 规范层</th>
+<th>缺了会怎样</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-javaagent:</code></td>
+<td>启动器装载 JPLISAgent</td>
+<td>agent 根本不进场</td>
+</tr>
+<tr>
+<td><code>Instrumentation.addTransformer</code></td>
+<td>挂 <code>ClassFileLoadHook</code> 回调</td>
+<td>没法干预类定义</td>
+</tr>
+<tr>
+<td>ASM 改写</td>
+<td>在 hook 里替换字节码（得过验证器）</td>
+<td>改不动字节码</td>
+</tr>
+<tr>
+<td><code>--add-opens</code></td>
+<td>模块系统强封装</td>
+<td>JDK 9+ 反射被拒</td>
+</tr>
+</tbody>
+</table>
+<h2 id="demo">附：一个最小可运行的 Demo（动手验证）<a class="headerlink" href="#demo" title="Permanent link">&para;</a></h2>
+<p>上面讲了半天机制，不自己跑一遍很难有实感。这里给一个<strong>真正能编译运行</strong>的最小例子，把前面三步完整走一遍：认类 → 定位方法 → 改返回值。</p>
+<p>Demo 的目标非常小：一个 <code>Target.isLicensed()</code> 本来返回 <code>false</code>，我们用 agent 把它在字节码层面改成返回 <code>true</code>。跑之前打印 <code>false</code>，挂上 agent 打印 <code>true</code>——"改而不是加"的完整效果。</p>
+<p><strong>环境要求（保证可复现、与本文实测一致）</strong>：</p>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JDK</td>
+<td>Temurin 21.0.12.1+1（x64 Windows，HotSpot，即安装目录形如 <code>jdk-21.0.12.101-hotspot</code>）</td>
+</tr>
+<tr>
+<td>下载来源</td>
+<td>清华大学开源软件镜像站 · Adoptium 21 JDK</td>
+</tr>
+<tr>
+<td>目录</td>
+<td><code>https://mirrors.tuna.tsinghua.edu.cn/Adoptium/21/jdk/x64/windows/</code></td>
+</tr>
+<tr>
+<td>具体文件</td>
+<td><code>OpenJDK21U-jdk_x64_windows_hotspot_21.0.12.1_1.zip</code>（解压即用）或同名 <code>.msi</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>demo 的编译 / 打包 / 运行依赖 JDK 21 的 <code>javac</code> / <code>jar</code> / <code>java</code>，请确保它们在 PATH 中（或改用该 JDK <code>bin</code> 下的全路径）。其他 JDK 版本通常也能跑（ASM 兼容），但为复现本文"实测通过"的结果，建议使用上面同一版本。</p>
+</blockquote>
+<p>整个 demo 只有 <strong>2 个 Java 源文件</strong>（完整文件也在本项目 <code>demo/</code> 目录里）：</p>
+<p><strong>1. <code>MyAgent.java</code></strong> — agent 入口 + 转换器（同文件两个类，对应正文三步）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.lang.instrument.ClassFileTransformer</span><span class="p">;</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.lang.instrument.Instrumentation</span><span class="p">;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">java.security.ProtectionDomain</span><span class="p">;</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="kn">import</span><span class="w"> </span><span class="nn">org.objectweb.asm.*</span><span class="p">;</span>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyAgent</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="c1">// premain 在业务类加载前执行，这里只注册转换器</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">premain</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">Instrumentation</span><span class="w"> </span><span class="n">inst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">        </span><span class="n">inst</span><span class="p">.</span><span class="na">addTransformer</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">LicenseTransformer</span><span class="p">(),</span><span class="w"> </span><span class="kc">true</span><span class="p">);</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="p">}</span>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="kd">class</span> <span class="nc">LicenseTransformer</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">ClassFileTransformer</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="nf">transform</span><span class="p">(</span><span class="n">ClassLoader</span><span class="w"> </span><span class="n">loader</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">className</span><span class="p">,</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">            </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">classBeingRedefined</span><span class="p">,</span><span class="w"> </span><span class="n">ProtectionDomain</span><span class="w"> </span><span class="n">pd</span><span class="p">,</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">            </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">classfileBuffer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">        </span><span class="c1">// ① 认类：className 是 JVM 内部形式，Target 在默认包所以就是 "Target"</span>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="s">"Target"</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">className</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">        </span><span class="n">ClassReader</span><span class="w"> </span><span class="n">cr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ClassReader</span><span class="p">(</span><span class="n">classfileBuffer</span><span class="p">);</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">        </span><span class="c1">// COMPUTE_MAXS/COMPUTE_FRAMES：让 ASM 自动重算栈上限和 StackMapTable，改完不用手动维护帧</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="w">        </span><span class="n">ClassWriter</span><span class="w"> </span><span class="n">cw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ClassWriter</span><span class="p">(</span><span class="n">cr</span><span class="p">,</span><span class="w"> </span><span class="n">ClassWriter</span><span class="p">.</span><span class="na">COMPUTE_MAXS</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">ClassWriter</span><span class="p">.</span><span class="na">COMPUTE_FRAMES</span><span class="p">);</span>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="w">        </span><span class="n">ClassVisitor</span><span class="w"> </span><span class="n">cv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ClassVisitor</span><span class="p">(</span><span class="n">Opcodes</span><span class="p">.</span><span class="na">ASM9</span><span class="p">,</span><span class="w"> </span><span class="n">cw</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="w">            </span><span class="nd">@Override</span>
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a><span class="w">            </span><span class="kd">public</span><span class="w"> </span><span class="n">MethodVisitor</span><span class="w"> </span><span class="nf">visitMethod</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">access</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">desc</span><span class="p">,</span>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a><span class="w">                    </span><span class="n">String</span><span class="w"> </span><span class="n">signature</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">exceptions</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a><span class="w">                </span><span class="n">MethodVisitor</span><span class="w"> </span><span class="n">mv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kd">super</span><span class="p">.</span><span class="na">visitMethod</span><span class="p">(</span><span class="n">access</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">desc</span><span class="p">,</span><span class="w"> </span><span class="n">signature</span><span class="p">,</span><span class="w"> </span><span class="n">exceptions</span><span class="p">);</span>
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a><span class="w">                </span><span class="c1">// ② 定位方法：name=isLicensed，desc "()Z" = 无参、返回 boolean</span>
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a><span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">"isLicensed"</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">desc</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="s">"()Z"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-31" name="__codelineno-14-31" href="#__codelineno-14-31"></a><span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MethodVisitor</span><span class="p">(</span><span class="n">Opcodes</span><span class="p">.</span><span class="na">ASM9</span><span class="p">,</span><span class="w"> </span><span class="n">mv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-32" name="__codelineno-14-32" href="#__codelineno-14-32"></a><span class="w">                        </span><span class="nd">@Override</span>
+<a id="__codelineno-14-33" name="__codelineno-14-33" href="#__codelineno-14-33"></a><span class="w">                        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">visitInsn</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">opcode</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-34" name="__codelineno-14-34" href="#__codelineno-14-34"></a><span class="w">                            </span><span class="c1">// ③ 改返回值：拦 IRETURN，return 前丢掉原值、压入 true</span>
+<a id="__codelineno-14-35" name="__codelineno-14-35" href="#__codelineno-14-35"></a><span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">opcode</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">Opcodes</span><span class="p">.</span><span class="na">IRETURN</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-14-36" name="__codelineno-14-36" href="#__codelineno-14-36"></a><span class="w">                                </span><span class="kd">super</span><span class="p">.</span><span class="na">visitInsn</span><span class="p">(</span><span class="n">Opcodes</span><span class="p">.</span><span class="na">POP</span><span class="p">);</span><span class="w">       </span><span class="c1">// 丢掉栈顶原返回值</span>
+<a id="__codelineno-14-37" name="__codelineno-14-37" href="#__codelineno-14-37"></a><span class="w">                                </span><span class="kd">super</span><span class="p">.</span><span class="na">visitInsn</span><span class="p">(</span><span class="n">Opcodes</span><span class="p">.</span><span class="na">ICONST_1</span><span class="p">);</span><span class="w">  </span><span class="c1">// 压入 true</span>
+<a id="__codelineno-14-38" name="__codelineno-14-38" href="#__codelineno-14-38"></a><span class="w">                            </span><span class="p">}</span>
+<a id="__codelineno-14-39" name="__codelineno-14-39" href="#__codelineno-14-39"></a><span class="w">                            </span><span class="kd">super</span><span class="p">.</span><span class="na">visitInsn</span><span class="p">(</span><span class="n">opcode</span><span class="p">);</span><span class="w">                </span><span class="c1">// 继续原来的 IRETURN</span>
+<a id="__codelineno-14-40" name="__codelineno-14-40" href="#__codelineno-14-40"></a><span class="w">                        </span><span class="p">}</span>
+<a id="__codelineno-14-41" name="__codelineno-14-41" href="#__codelineno-14-41"></a><span class="w">                    </span><span class="p">};</span>
+<a id="__codelineno-14-42" name="__codelineno-14-42" href="#__codelineno-14-42"></a><span class="w">                </span><span class="p">}</span>
+<a id="__codelineno-14-43" name="__codelineno-14-43" href="#__codelineno-14-43"></a><span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">mv</span><span class="p">;</span>
+<a id="__codelineno-14-44" name="__codelineno-14-44" href="#__codelineno-14-44"></a><span class="w">            </span><span class="p">}</span>
+<a id="__codelineno-14-45" name="__codelineno-14-45" href="#__codelineno-14-45"></a><span class="w">        </span><span class="p">};</span>
+<a id="__codelineno-14-46" name="__codelineno-14-46" href="#__codelineno-14-46"></a>
+<a id="__codelineno-14-47" name="__codelineno-14-47" href="#__codelineno-14-47"></a><span class="w">        </span><span class="n">cr</span><span class="p">.</span><span class="na">accept</span><span class="p">(</span><span class="n">cv</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<a id="__codelineno-14-48" name="__codelineno-14-48" href="#__codelineno-14-48"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">cw</span><span class="p">.</span><span class="na">toByteArray</span><span class="p">();</span>
+<a id="__codelineno-14-49" name="__codelineno-14-49" href="#__codelineno-14-49"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-14-50" name="__codelineno-14-50" href="#__codelineno-14-50"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>2. <code>Main.java</code></strong> — 入口 + 目标类（同文件两个类）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Main</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">"isLicensed = "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Target</span><span class="p">().</span><span class="na">isLicensed</span><span class="p">());</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="p">}</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="kd">class</span> <span class="nc">Target</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isLicensed</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">   </span><span class="c1">// 模拟校验未通过</span>
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>3. <code>MANIFEST.MF</code></strong> — 声明 agent 入口（注意结尾要有空行）：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Premain-Class: MyAgent
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>Can-Retransform-Classes: true
+</code></pre></div>
+<p><strong>一键构建 + 运行（PowerShell，<code>build-run.ps1</code>）</strong>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nv">$ErrorActionPreference</span> <span class="p">=</span> <span class="s2">"Stop"</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="n">-Path</span> <span class="s2">"lib"</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="c"># ① 下载 ASM 核心 jar（只用核心 asm.jar，不依赖 asm-commons）</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nb">Invoke-WebRequest</span> <span class="n">-Uri</span> <span class="s2">"https://repo1.maven.org/maven2/org/ow2/asm/asm/9.7/asm-9.7.jar"</span> <span class="n">-OutFile</span> <span class="s2">"lib\asm.jar"</span>
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="c"># ② 编译（仅 2 个源文件）</span>
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="n">javac</span> <span class="n">-encoding</span> <span class="n">UTF</span><span class="p">-</span><span class="n">8</span> <span class="n">-cp</span> <span class="s2">"lib\asm.jar"</span> <span class="n">Main</span><span class="p">.</span><span class="n">java</span> <span class="n">MyAgent</span><span class="p">.</span><span class="n">java</span>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="c"># ③ 打包 agent：把 asm 解包进 agent.jar，自包含（生产形态）。</span>
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="c">#    -javaagent 会把 agent.jar 加入系统类加载器搜索路径，asm 打进 jar 后运行时无需额外 classpath</span>
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="n">-Path</span> <span class="s2">"build"</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="nb">Push-Location</span> <span class="n">build</span>
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a><span class="n">jar</span> <span class="n">xf</span> <span class="p">..\</span><span class="n">lib</span><span class="p">\</span><span class="n">asm</span><span class="p">.</span><span class="n">jar</span>                  <span class="c"># 解出 org/objectweb/asm/...</span>
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a><span class="nb">Pop-Location</span>
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a><span class="n">jar</span> <span class="n">cfm</span> <span class="n">agent</span><span class="p">.</span><span class="n">jar</span> <span class="n">MANIFEST</span><span class="p">.</span><span class="n">MF</span> <span class="n">MyAgent</span><span class="p">.</span><span class="n">class</span> <span class="n">LicenseTransformer</span><span class="p">.</span><span class="n">class</span> <span class="n">-C</span> <span class="n">build</span> <span class="n">org</span>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a><span class="nb">Remove-Item</span> <span class="n">-Recurse</span> <span class="n">-Force</span> <span class="n">build</span>
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a><span class="c"># ④ 对比运行（agent.jar 已自包含 asm，classpath 都只需 .）</span>
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a><span class="nb">Write-Host</span> <span class="s2">"--- 不带 agent（预期：false）---"</span>
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a><span class="n">java</span> <span class="n">-cp</span> <span class="p">.</span> <span class="n">Main</span>
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a><span class="nb">Write-Host</span> <span class="s2">"--- 带 agent（预期：true）---"</span>
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a><span class="n">java</span> <span class="n">-javaagent</span><span class="p">:</span><span class="n">agent</span><span class="p">.</span><span class="n">jar</span> <span class="n">-cp</span> <span class="p">.</span> <span class="n">Main</span>
+</code></pre></div>
+<p><strong>预期输出</strong>：</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>--- 不带 agent（预期：false）---
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>isLicensed = false
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>--- 带 agent（预期：true）---
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>isLicensed = true
+</code></pre></div>
+<blockquote>
+<p>说明：demo 只用 ASM 核心包（<code>asm.jar</code>），<code>COMPUTE_FRAMES</code> 自动补栈帧，依赖最小、最贴近机制本身。<strong>已在 JDK 21（Temurin 21.0.12.1）实测通过</strong>，输出如上方预期。完整源码（含 <code>demo/build-run.ps1</code> 一键运行）可在仓库获取：<code>https://gitee.com/goccoder/jbactive</code></p>
+</blockquote>
+<h2 id="_10">这套机制的正当用途<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
+<p>说了半天，这套东西在正经工程里用得可广了：</p>
+<ul>
+<li><strong>APM</strong>：SkyWalking、New Relic，无侵入埋点、方法耗时统计（这是"增加"路线的典型）</li>
+<li><strong>运行时诊断</strong>：Arthas，观测方法入参出参、在线热更新</li>
+<li><strong>测试 / 质量</strong>：Jacoco 覆盖率采集、Mockito 行为替换</li>
+<li><strong>热部署 / 修复</strong>：线上临时改方法体逻辑（"修改"路线的典型）</li>
+<li><strong>安全</strong>：RASP 做方法级拦截</li>
+</ul>
+<p>"增加"和"修改"两种路线，底层是同一套机制，差别只在改写方式：<strong>APM 大多在方法里"加"东西，修复/激活类场景大多"改"已有逻辑。</strong> 而这套机制本身是中性的，用途由使用者决定。</p>
+<hr />
+<h2 id="_11">参考资料来源（按可信度分级）<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h2>
+<p>写这篇文章，每个关键论断都能在这里找到出处核对。排序原则是：<strong>先第一手规范和 JDK 源码，再官方文档，最后才是开源实现</strong>（开源实现用来参考"怎么落地"，不是规范依据）。</p>
+<p><strong>A 级：官方规范与 JDK 源码（结论以此为准）</strong></p>
+<table>
+<thead>
+<tr>
+<th>主题</th>
+<th>来源</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>java.lang.instrument</code> 包规范（agent 装载、Manifest 属性、transformer 语义）</td>
+<td>Oracle 官方 Javadoc</td>
+<td>http://docs.oracle.com/en/java/javase/25/docs/api/java.instrument/java/lang/instrument/package-summary.html</td>
+</tr>
+<tr>
+<td><code>Instrumentation</code> 接口（addTransformer / retransform / redefine）</td>
+<td>Oracle 官方 Javadoc</td>
+<td>http://docs.oracle.com/en/java/javase/24/docs/api/java.instrument/java/lang/instrument/Instrumentation.html</td>
+</tr>
+<tr>
+<td>JVMTI 规范（<code>ClassFileLoadHook</code>、<code>RedefineClasses</code>、<code>RetransformClasses</code>）</td>
+<td>Oracle JVMTI 文档</td>
+<td>https://docs.oracle.com/en/java/javase/23/docs/specs/jvmti.html</td>
+</tr>
+<tr>
+<td>类加载 / 链接 / 验证 / StackMapTable</td>
+<td>Oracle JVMS</td>
+<td>https://docs.oracle.com/javase/specs/jvms/se23/html/jvms-4.html</td>
+</tr>
+<tr>
+<td>方法描述符 desc 编码规则</td>
+<td>Oracle JVMS（第 4 章）</td>
+<td>https://docs.oracle.com/javase/specs/jvms/se23/html/jvms-4.html</td>
+</tr>
+<tr>
+<td>JPLISAgent 本地代理实现</td>
+<td>OpenJDK 源码（java.instrument 模块）</td>
+<td>https://github.com/openjdk/jdk/tree/master/src/java.instrument</td>
+</tr>
+<tr>
+<td><code>--add-opens</code> / <code>--add-exports</code> 语法与深反射</td>
+<td>Oracle 迁移指南</td>
+<td>http://docs.oracle.com/en/java/javase/23/migrate/migrating-jdk-8-later-jdk-releases.html</td>
+</tr>
+</tbody>
+</table>
+<p><strong>B 级：官方库文档（面向使用）</strong></p>
+<table>
+<thead>
+<tr>
+<th>主题</th>
+<th>来源</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ASM 框架概述</td>
+<td>OW2 官方</td>
+<td>https://asm.ow2.io/</td>
+</tr>
+<tr>
+<td>ASM 开发者指南（ClassReader/ClassWriter/ClassVisitor、AdviceAdapter）</td>
+<td>OW2 官方</td>
+<td>https://asm.ow2.io/developer-guide.html</td>
+</tr>
+<tr>
+<td><code>AdviceAdapter</code>（onMethodEnter / onMethodExit、方法修改）</td>
+<td>ASM Javadoc</td>
+<td>https://asm.ow2.io/javadoc/org/objectweb/asm/commons/AdviceAdapter.html</td>
+</tr>
+</tbody>
+</table>
+<p><strong>C 级：知名开源实现（参考落地，非规范依据）</strong></p>
+<table>
+<thead>
+<tr>
+<th>主题</th>
+<th>来源</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SkyWalking Java Agent（<code>-javaagent</code> 自动埋点）</td>
+<td>Apache 官方</td>
+<td>https://skywalking.apache.org/docs/skywalking-java/latest/en/setup/service-agent/java-agent/readme/</td>
+</tr>
+<tr>
+<td>Arthas（运行时诊断 / redefine）</td>
+<td>阿里开源</td>
+<td>https://arthas.aliyun.com/</td>
+</tr>
+</tbody>
+</table>
+<p>正文里的规范语义、事件机制、阶段顺序，都以 <strong>A 级</strong> 为准；ASM 具体用法看 <strong>B 级</strong>；C 级用来理解"大厂怎么把机制落成产品"。如果正文和 A 级有出入，以 A 级为准。</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  回到页面顶部
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="页脚" >
+        
+          
+          <a href="../desktop-streaming/10-%E9%87%87%E9%9B%86%E7%AB%AF%E7%8A%B6%E6%80%81%E6%9C%BA%E4%B8%8E%E5%BB%B6%E8%BF%9F%E6%8E%A7%E5%88%B6/" class="md-footer__link md-footer__link--prev" aria-label="上一页: 10 采集端状态机与延迟控制">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                上一页
+              </span>
+              <div class="md-ellipsis">
+                10 采集端状态机与延迟控制
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "navigation.tracking", "navigation.footer", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
