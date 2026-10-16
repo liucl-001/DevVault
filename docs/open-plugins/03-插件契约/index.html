@@ -2028,7 +2028,7 @@
 <ul>
 <li><code>BOOST_PP_CAT</code> 把插件名拼进符号：<code>&lt;plugin&gt;_getInfo</code> / <code>&lt;plugin&gt;_setup</code>；</li>
 <li>宿主通过 <code>GetProcAddress</code> 取这两个符号（见 <code>LibraryBase.hxx</code> 的 <code>GetProcAddressAll</code>）；</li>
-<li>名称匹配严格：动态插件输出名 <code>plugin_&lt;name&gt;</code>，运行期再按前缀 <code>plugin_</code> + 扩展名过滤识别（见第 8 章 <code>IsPlugins</code>）。</li>
+<li>名称匹配严格：动态插件输出名按平台前缀 <code>plugin_</code>（Windows）/ <code>libplugin_</code>（macOS/Linux），运行期再按 <code>PLUGIN_PREFIX</code> + 扩展名过滤识别（见第 8 章 <code>IsPlugins</code>）。</li>
 </ul>
 <h3 id="351-vs-librarybase">3.5.1 动态 vs 静态：LibraryBase 统一抽象<a class="headerlink" href="#351-vs-librarybase" title="Permanent link">&para;</a></h3>
 <p>无论是动态库（<code>wxDynamicLibrary</code> 加载）还是静态插件（编译期注册），manager 都用同一套接口驱动：</p>

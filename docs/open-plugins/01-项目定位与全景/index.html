@@ -1926,7 +1926,7 @@
 <tr>
 <td>macOS（arm64 / x86_64）</td>
 <td>Ninja（标注"XCode build"）</td>
-<td><code>macos_base_arm64</code> / <code>macos_base_x8664</code>，默认部署目标 11.5，禁用代码签名</td>
+<td><code>macos_base_arm64</code> / <code>macos_base_x8664</code>，preset 设部署目标 11.3（顶层 CMake fallback 11.5），禁用代码签名</td>
 </tr>
 <tr>
 <td>Windows</td>
@@ -1936,7 +1936,7 @@
 <tr>
 <td>Linux</td>
 <td>Unix Makefiles</td>
-<td><code>linux_base</code>（文档注明 Linux 未充分测试）</td>
+<td><code>linux_base</code>（面向插件作者的 <code>docs/create_plugin.md</code> 注明 Linux 未测试）</td>
 </tr>
 </tbody>
 </table>

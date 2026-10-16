@@ -55,7 +55,7 @@ private:
 
 ## 9.3 路由：RouterBase
 
-`RouterBase` 支持完整的 HTTP 方法枚举（`docs/mechanism.md`）：
+`RouterBase` 的路由按 HTTP 方法分桶（源码 `plugins_sdk/webview/object_base.hxx`；注意 `docs/mechanism.md` 文档与真实源码存在出入）：
 
 ```cpp
 class RouterBase {
@@ -64,14 +64,15 @@ public:
     MethodGET = 0,     // 数据查询
     MethodPOST,        // 数据创建
     MethodDELETE,      // 数据删除
-    MethodPUT,         // 数据更新
-    MethodOPTIONS      // CORS 预检
+    MethodPUT          // 数据更新
   };
   virtual bool RegisterHandler(METHOD_TYPE method,
                                const wxString &pattern,
                                HandlerBase *handler) = 0;
 };
 ```
+
+> 说明：`MethodOPTIONS` **并不在**真实枚举里（`mechanism.md` 文档有、源码没有）。CORS 预检的 OPTIONS 请求由 `Router::Execute`（`plugins_sdk/webview/detail/router.cpp`）里的 `if (method == "OPTIONS")` 分支直接返回 200，不进入路由表。
 
 路由匹配策略：**精确匹配优先，其次正则匹配**（`detail/router.{hpp,cpp}`），支持复杂路径模式。
 
