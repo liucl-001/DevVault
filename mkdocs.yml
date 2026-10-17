@@ -2,8 +2,15 @@ site_name: DevVault
 site_description: 技术文章与工程笔记
 site_author: liucl
 
+copyright: >-
+  <span id="busuanzi_container_site_pv">总访问量 <span id="busuanzi_value_site_pv"></span> 次</span>
+  · <span id="busuanzi_container_site_uv">访客 <span id="busuanzi_value_site_uv"></span> 人</span>
+
 extra_css:
   - stylesheets/extra.css
+
+extra_javascript:
+  - //busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js
 
 theme:
   name: material
