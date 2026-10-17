@@ -46,6 +46,16 @@ nav:
       - 08 依赖缓存与增量: cpp-engineering/08-cache.md
       - 09 Pipeline语法: cpp-engineering/09-pipeline.md
       - 10 C++流水线实战: cpp-engineering/10-pipeline-real.md
+      - 11 共享库实战语法: cpp-engineering/11-sharedlib.md
+      - 12 共享库函数拆解: cpp-engineering/12-sharedlib-funcs.md
+      - 13 Dockerfile最佳实践: cpp-engineering/13-dockerfile.md
+      - 14 C++构建镜像实战: cpp-engineering/14-cpp-image.md
+      - 15 私有镜像仓库: cpp-engineering/15-private-registry.md
+      - 16 docker-compose编排: cpp-engineering/16-docker-compose.md
+      - 17 镜像管理与故障: cpp-engineering/17-image-mgmt.md
+      - 18 流水线引用Docker: cpp-engineering/18-pipeline-docker.md
+      - 19 符号服务与签名网关: cpp-engineering/19-symbol-sign.md
+      - 20 完整闭环: cpp-engineering/20-full-loop.md
   - 低延迟桌面串流:
       - 导读(术语表): desktop-streaming/index.md
       - 01 系统总览与架构: desktop-streaming/01-系统总览与架构.md

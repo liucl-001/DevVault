@@ -1,6 +1,6 @@
 # 依赖缓存与增量构建：把几十分钟压缩成秒
 
-> 本节解决：C++ 依赖编译一次几十分钟，每次构建都重编就是灾难。用生产流水线（Jenkinsfile.fdm）的真实代码，讲透三层缓存体系：`finished` 哨兵、源码下载缓存、CLEAN_BUILD 全量开关。
+> 本节解决：C++ 依赖编译一次几十分钟，每次构建都重编就是灾难。用生产流水线的真实代码，讲透三层缓存体系：`finished` 哨兵、源码下载缓存、CLEAN_BUILD 全量开关。
 > 相关代码以OrcaSlicer的依赖为例说明。
 
 ## 依赖编译是 C++ CI 最大的时间黑洞
@@ -142,7 +142,7 @@ foreachBuild(plat, { arch, buildType ->
 缓存最大的敌人是"假成功"：三方库源码更新了，但旧编译产物还躺着，新版本不生效——构建"成功"了，产物是旧的。生产环境的解法是**分层清理 + 显式全量开关**：
 
 ```groovy
-// 来源：Jenkinsfile.fdm → buildStage('xxx') → stage('环境清理')
+// 来源：生产 Jenkinsfile → buildStage('xxx') → stage('环境清理')
 [env.INSTALL_DIR, env.DEBUG_SYMBOLS_DIR, env.BUILD_DIR, env.CACHE_DIR,
  env.VCPKG_ROOT_DIR + "/buildtrees",
  env.VCPKG_ROOT_DIR + "/packages",

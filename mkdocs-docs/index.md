@@ -51,8 +51,8 @@ hide:
 
 | 日期 | 标题 |
 |------|------|
+| 2026-10-17 | [完整闭环](cpp-engineering/20-full-loop.md) |
+| 2026-10-17 | [符号服务与签名网关](cpp-engineering/19-symbol-sign.md) |
+| 2026-10-17 | [流水线引用 Docker](cpp-engineering/18-pipeline-docker.md) |
+| 2026-10-17 | [共享库实战语法](cpp-engineering/11-sharedlib.md) |
 | 2026-10-16 | [OpenPlugins 插件化架构导读](open-plugins/index.md) |
-| 2026-10-16 | [配套工程体系](open-plugins/10-配套工程体系.md) |
-| 2026-10-16 | [WebView 与 WebAPI](open-plugins/09-WebView与WebAPI.md) |
-| 2026-10-16 | [Java Agent 与字节码改写](java-agent-bytecode.md) |
-| 2026-10-16 | [采集端状态机与延迟控制](desktop-streaming/10-采集端状态机与延迟控制.md) |

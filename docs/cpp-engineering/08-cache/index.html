@@ -908,6 +908,286 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../11-sharedlib/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    11 共享库实战语法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../12-sharedlib-funcs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    12 共享库函数拆解
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../13-dockerfile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    13 Dockerfile最佳实践
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../14-cpp-image/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    14 C++构建镜像实战
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-private-registry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    15 私有镜像仓库
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-docker-compose/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    16 docker-compose编排
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../17-image-mgmt/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    17 镜像管理与故障
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../18-pipeline-docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    18 流水线引用Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../19-symbol-sign/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    19 符号服务与签名网关
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-full-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    20 完整闭环
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1852,7 +2132,7 @@
 
 <h1 id="_1">依赖缓存与增量构建：把几十分钟压缩成秒<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
 <blockquote>
-<p>本节解决：C++ 依赖编译一次几十分钟，每次构建都重编就是灾难。用生产流水线（Jenkinsfile.fdm）的真实代码，讲透三层缓存体系：<code>finished</code> 哨兵、源码下载缓存、CLEAN_BUILD 全量开关。
+<p>本节解决：C++ 依赖编译一次几十分钟，每次构建都重编就是灾难。用生产流水线的真实代码，讲透三层缓存体系：<code>finished</code> 哨兵、源码下载缓存、CLEAN_BUILD 全量开关。
 相关代码以OrcaSlicer的依赖为例说明。</p>
 </blockquote>
 <h2 id="c-ci">依赖编译是 C++ CI 最大的时间黑洞<a class="headerlink" href="#c-ci" title="Permanent link">&para;</a></h2>
@@ -1969,7 +2249,7 @@
 <p>这解决的是<strong>下载</strong>这个时间黑洞：依赖要下载几十个源码包，GitHub 慢的时候光下载就十几分钟；有了共享缓存，<strong>下载只发生一次，8 个组合复用</strong>。这也是为什么环境清理时 <code>DEPS_CACHE_DIR</code> 绝不能被清（见第三层）。</p>
 <h2 id="clean_build">第三层：环境清理 + CLEAN_BUILD——缓存什么时候失效<a class="headerlink" href="#clean_build" title="Permanent link">&para;</a></h2>
 <p>缓存最大的敌人是"假成功"：三方库源码更新了，但旧编译产物还躺着，新版本不生效——构建"成功"了，产物是旧的。生产环境的解法是<strong>分层清理 + 显式全量开关</strong>：</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// 来源：Jenkinsfile.fdm → buildStage('xxx') → stage('环境清理')</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// 来源：生产 Jenkinsfile → buildStage('xxx') → stage('环境清理')</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="o">[</span><span class="n">env</span><span class="o">.</span><span class="na">INSTALL_DIR</span><span class="o">,</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">DEBUG_SYMBOLS_DIR</span><span class="o">,</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">BUILD_DIR</span><span class="o">,</span><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">CACHE_DIR</span><span class="o">,</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">VCPKG_ROOT_DIR</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">"/buildtrees"</span><span class="o">,</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w"> </span><span class="n">env</span><span class="o">.</span><span class="na">VCPKG_ROOT_DIR</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s2">"/packages"</span><span class="o">,</span>
